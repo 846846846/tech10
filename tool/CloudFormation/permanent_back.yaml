@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  MyS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+  MyCloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt [MyS3Bucket, DomainName]
+            Id: MyS3Origin
+            S3OriginConfig: {}
+        Enabled: "true"
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: MyS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          ForwardedValues:
+            QueryString: "false"
+            Cookies:
+              Forward: none
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: "true"
+Outputs:
+  WebsiteURL:
+    Value: !GetAtt
+      - MyS3Bucket
+      - WebsiteURL
+    Description: URL for website hosted on S3
+  MyS3BucketSecureURL:
+    Value: !Join
+      - ""
+      - - "https://"
+        - !GetAtt
+          - MyS3Bucket
+          - DomainName
+    Description: Name of S3 bucket to hold website content
+  DistributionId:
+    Description: "CloudFront Distribution ID"
+    Value: !Ref MyCloudFrontDistribution
+  DistributionDomainName:
+    Description: "CloudFront Distribution Domain Name (URL)"
+    Value: !GetAtt [MyCloudFrontDistribution, DomainName]

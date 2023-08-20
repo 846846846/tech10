@@ -1,0 +1,24 @@
+version: "3"
+services:
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "10081:8080"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "10082:8080"
+    volumes:
+      - ./memo.yaml:/usr/share/nginx/html/memo.yaml
+    environment:
+      API_URL: memo.yaml
+  swagger-api:
+    image: stoplight/prism:3
+    container_name: "swagger-api"
+    ports:
+      - "10083:4010"
+    command: mock -h 0.0.0.0 /memo.yaml
+    volumes:
+      - ./memo.yaml:/memo.yaml
