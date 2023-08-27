@@ -1,0 +1,148 @@
+openapi: 3.0.0
+
+info:
+  title: ECSite API
+  description: ECSiteのWebAPI仕様。
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: localhost
+  - url: https://{cloudfront-url}/api/v1
+    description: dev server
+
+paths:
+  /goods:
+    get:
+      summary: 販売者が所有する商品の一覧を取得する。
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 販売者が所有する商品の一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Goods"
+              examples:
+                goodsList:
+                  $ref: "#/components/examples/GoodsList"
+  /goods/new:
+    post:
+      summary: 商品を新規登録する。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Goods"
+            examples:
+              goods:
+                $ref: "#/components/examples/Goods"
+      responses:
+        "201":
+          description: Created
+
+  /goods/{id}:
+    get:
+      summary: 指定された商品IDの情報を取得する。
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 商品ID
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Goods"
+              examples:
+                goods:
+                  $ref: "#/components/examples/Goods"
+    put:
+      summary: 指定された商品IDの情報を更新する。
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 商品ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Goods"
+            examples:
+              goods:
+                $ref: "#/components/examples/Goods"
+      responses:
+        "200":
+          description: Successful update
+    delete:
+      summary: 指定された商品IDの情報を削除する。
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 商品ID
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Successfully deleted
+
+components:
+  schemas:
+    Goods:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 商品ID。各商品を一意に識別するための番号やコード。
+        name:
+          type: string
+          description: 商品名。ユーザーが商品を検索や認識するための名前。
+        explanation:
+          type: string
+          description: 商品説明。商品の詳細な情報や特徴を説明するテキスト。
+        price:
+          type: integer
+          description: 商品の販売価格。
+        image:
+          type: string
+          description: 商品の実際の見た目を示す画像(写真やイラスト)が格納されたS3のURL。
+        category:
+          type: string
+          description: 商品の分類。例：「家電」「ファッション」「食品」など。
+      required:
+        - id
+        - name
+        - price
+  examples:
+    GoodsList:
+      value:
+        - id: 1
+          name: けろけろ
+        - id: 2
+          name: ドドドドドドドドド
+    Goods:
+      value:
+        id: 1
+        name: けろけろ
+        explanation: けろ？けろけろけろ・・・けろ！
+        price: 2980
+        image: s3://{}
+        category: カエル
