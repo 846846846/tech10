@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "local": "sls offline start",
+    "deploy": "sls deploy",
+    "remove": "sls remove",
     "type-check": "tsc --noEmit",
-    "deploy": "serverless deploy",
-    "remove": "serverless remove",
-    "local": "serverless offline",
-    "ddb:s": "docker compose up -d",
-    "ddb:d": "docker compose down"
+    "ddb:up": "docker compose up -d",
+    "ddb:dn": "docker compose down",
+    "ddb:ct": "aws dynamodb create-table --cli-input-yaml file://env/local/dynamodb/table.yml --endpoint-url http://localhost:8000"
   },
   "dependencies": {
     "@vendia/serverless-express": "^4.10.1",

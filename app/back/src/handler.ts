@@ -3,7 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
-import * as memos from './functions/memos'
+import * as goods from './functions/goods'
 
 sourceMapSupport.install()
 
@@ -18,16 +18,16 @@ router.use(bodyParser.urlencoded({ extended: true }))
 router.use(cors())
 
 // health check.
-router.get('/health', (_req, res, _next) => {
+router.get('/api/v1/health', (_req, res, _next) => {
   return res.status(200).json({
     message: 'Hello World!!',
   })
 })
 
-// memos.
-router.get('/api/v1/memos', async (_req, res, _next) => {
+// goods.
+router.get('/api/v1/goods', async (_req, res, _next) => {
   try {
-    const result = await memos.readAll(_req)
+    const result = await goods.readAll(_req)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {
@@ -36,10 +36,10 @@ router.get('/api/v1/memos', async (_req, res, _next) => {
   }
 })
 
-router.get('/api/v1/memos/:id', async (_req, res, _next) => {
+router.get('/api/v1/goods/:id', async (_req, res, _next) => {
   const id = _req.params.id
   try {
-    const result = await memos.readByID(_req, id)
+    const result = await goods.readByID(_req, id)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {
@@ -48,9 +48,9 @@ router.get('/api/v1/memos/:id', async (_req, res, _next) => {
   }
 })
 
-router.post('/api/v1/memos', async (_req, res, _next) => {
+router.post('/api/v1/goods', async (_req, res, _next) => {
   try {
-    const result = await memos.create(_req)
+    const result = await goods.create(_req)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {
@@ -59,10 +59,10 @@ router.post('/api/v1/memos', async (_req, res, _next) => {
   }
 })
 
-router.put('/api/v1/memos/:id', async (_req, res, _next) => {
+router.put('/api/v1/goods/:id', async (_req, res, _next) => {
   const id = _req.params.id
   try {
-    const result = await memos.update(_req, id)
+    const result = await goods.update(_req, id)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {
@@ -71,10 +71,10 @@ router.put('/api/v1/memos/:id', async (_req, res, _next) => {
   }
 })
 
-router.delete('/api/v1/memos/:id', async (_req, res, _next) => {
+router.delete('/api/v1/goods/:id', async (_req, res, _next) => {
   const id = _req.params.id
   try {
-    const result = await memos.deleteMemo(_req, id)
+    const result = await goods.deleteCus(_req, id)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {
@@ -85,6 +85,7 @@ router.delete('/api/v1/memos/:id', async (_req, res, _next) => {
 
 // [middleware] unexpected.
 router.use((_req, res, _next) => {
+  console.log(_req)
   return res.status(404).json({
     error: 'Not Found API',
   })

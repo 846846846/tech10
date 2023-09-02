@@ -1,7 +1,0 @@
-{
-  "TableName": "memos",
-  "KeyConditionExpression": "id = :id",
-  "ExpressionAttributeValues": {
-    ":id": { "S": "71ceccca-a5e9-324d-6fb1-f53201d08e29" }
-  }
-}

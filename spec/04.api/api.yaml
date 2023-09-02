@@ -6,14 +6,36 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:3001/api/v1
+  - url: http://localhost:3001/dev/api/v1
     description: localhost
-  - url: https://{cloudfront-url}/api/v1
+  - url: https://{cloudfront-url}/dev/api/v1
     description: dev server
 
+tags:
+  - name: meta
+    description: メタ情報を扱うAPI。
+  - name: goods
+    description: 商品情報を扱うAPI。
+
 paths:
+  /health:
+    get:
+      tags:
+        - meta
+      description: 疎通確認用のAPI
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Hello World!!
+
   /goods:
     get:
+      tags:
+        - goods
       summary: 販売者が所有する商品の一覧を取得する。
       parameters:
         - name: Authorization
@@ -36,6 +58,8 @@ paths:
                   $ref: "#/components/examples/GoodsList"
   /goods/new:
     post:
+      tags:
+        - goods
       summary: 商品を新規登録する。
       requestBody:
         required: true
@@ -52,6 +76,8 @@ paths:
 
   /goods/{id}:
     get:
+      tags:
+        - goods
       summary: 指定された商品IDの情報を取得する。
       parameters:
         - name: id
@@ -71,6 +97,8 @@ paths:
                 goods:
                   $ref: "#/components/examples/Goods"
     put:
+      tags:
+        - goods
       summary: 指定された商品IDの情報を更新する。
       parameters:
         - name: id
@@ -92,6 +120,8 @@ paths:
         "200":
           description: Successful update
     delete:
+      tags:
+        - goods
       summary: 指定された商品IDの情報を削除する。
       parameters:
         - name: id
@@ -127,6 +157,12 @@ components:
         category:
           type: string
           description: 商品の分類。例：「家電」「ファッション」「食品」など。
+        createAt:
+          type: string
+          description: 商品情報の作成日時。
+        updateAt:
+          type: string
+          description: 商品情報の更新日時。
       required:
         - id
         - name
@@ -146,3 +182,5 @@ components:
         price: 2980
         image: s3://{}
         category: カエル
+        createAt: 20230828T050442+0900
+        updateAt: 20230828T050442+0900
