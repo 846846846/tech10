@@ -1,10 +1,23 @@
-service: back
 frameworkVersion: '3'
 
+service: tech10-back
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+# デプロイ用のパッケージの作成に関するオプションを指定できます。
 package:
   individually: true
 
+# ユーザーが任意のカスタム変数や設定を保存するための場所として機能します。
+# customセクションで定義された変数は、serverless.ymlの他の部分で参照できます。
+# また、多くのプラグインがカスタム設定をこのセクション内で要求します。
 custom:
+  defaultStage: dev
+  # environment:
+  #   dev: ${file(../env/dev.yml)}
+  #  JavaScript、TypeScript、およびJSXのための超高速なバンドラーとミニファイア
   esbuild:
     bundle: true
     minify: false
@@ -15,8 +28,8 @@ custom:
     platform: 'node'
     concurrency: 10
     watch:
-      pattern: ['src/**/*.ts'] # match only typescript files in src directory
-      ignore: ['temp/**/*']
+      pattern: ['src/**/*.ts'] # コンパイル対象のディレクトリを指定する
+      ignore: ['temp/**/*'] # コンパイル対象外のディレクトリを指定する
   dynamodb:
     stages:
       - dev
@@ -25,16 +38,20 @@ custom:
       port: 8000
       migrate: true
     table:
-      - 'memos-${sls:stage}'
+      - 'ecsite-${sls:stage}'
     gsi:
       - GSI-General
+      - GSI-OwnerGoodsList
   serverless-offline:
     httpPort: 3001
 
+# サービスプロバイダーの詳細（AWS、Azure、Google Cloudなど）。
+# ランタイム、リージョン、認証プロファイル、環境変数などもここで設定します。
 provider:
   name: aws
   runtime: nodejs18.x
   region: ap-northeast-1
+  stage: ${opt:stage, self:custom.defaultStage}
   iam:
     role:
       statements:
@@ -48,51 +65,52 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [MemosTable, Arn]
+            - Fn::GetAtt: [ECSiteTable, Arn]
         - Effect: Allow
           Action:
             - dynamodb:Query
             - dynamodb:Scan
           Resource:
-            # TODO: Fn::GetAtt でGSIを指定する方法が分からない...
             - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.dynamodb.table.0}/index/*'
   environment:
     REGION: ${self:provider.region}
     TABLE_NAME: ${self:custom.dynamodb.table.0}
-    GSI1: ${self:custom.dynamodb.gsi.0}
+    GSI_GENERAL: ${self:custom.dynamodb.gsi.0}
+    GSI_OWNERGOODSLIST: ${self:custom.dynamodb.gsi.1}
 
+# このセクションには、サービスで定義するすべての関数が含まれます。
+# 各関数は、実行するハンドラと、関数をトリガするイベント（HTTPリクエスト、S3バケットの変更など）を指定します。
 functions:
   app:
     handler: src/handler.handler
     events:
       - http:
           method: ANY
-          path: '/'
+          path: api/v1
           cors: true
       - http:
           method: ANY
-          path: '/{any+}'
+          path: api/v1/{any+}
           cors: true
 
-plugins:
-  - serverless-esbuild
-  - serverless-offline
-
-resources: # CloudFormation template syntax
+# AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
+resources:
   Resources:
-    MemosTable:
+    ECSiteTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.dynamodb.table.0}
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: uuid
             AttributeType: S
           - AttributeName: type
             AttributeType: S
           - AttributeName: value
             AttributeType: S
+          - AttributeName: ownerid
+            AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: uuid
             KeyType: HASH
           - AttributeName: type
             KeyType: RANGE
@@ -106,3 +124,12 @@ resources: # CloudFormation template syntax
                 KeyType: RANGE
             Projection:
               ProjectionType: KEYS_ONLY
+          - IndexName: ${self:custom.dynamodb.gsi.1}
+            KeySchema:
+              - AttributeName: ownerid
+                KeyType: HASH
+            Projection:
+              ProjectionType: INCLUDE
+              NonKeyAttributes:
+                - 'key'
+                - 'value'

@@ -82,3 +82,9 @@
 
 # 参考
   - 
+
+  docker ps -q -f ancestor=amazon/dynamodb-local
+
+  docker rm $(docker ps -a -q -f ancestor=amazon/dynamodb-local)
+
+  docker inspect --format '{{.State}}' $(docker ps -a -q -f ancestor=amazon/dynamodb-local)

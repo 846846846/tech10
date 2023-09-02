@@ -58,51 +58,78 @@ def ddb(arg1, arg2):
 
 # http req.
 def req(arg1, arg2):
-  # domain = "http://localhost:3001/dev"
-  domain = "https://llt3b0cr2h.execute-api.ap-northeast-1.amazonaws.com/dev/"
+  domain = "http://localhost:3001/dev"
+  # domain = "https://llt3b0cr2h.execute-api.ap-northeast-1.amazonaws.com/dev/"
   response = ""
   if arg1 == "":
     endpoint = '/health'
     response = requests.get(domain + endpoint)
 
   elif arg1 == "getAll":
-    endpoint = '/api/v1/memos/' + arg2
-    response = requests.get(domain + endpoint)
+    endpoint = '/api/v1/goods/' + arg2
+    headers = {'Authorization': 'dummy'}
+    response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "get":
-    endpoint = '/api/v1/memos/' + arg2
+    endpoint = '/api/v1/goods/' + arg2
     response = requests.get(domain + endpoint)
 
   elif arg1 == "post":
-    endpoint = '/api/v1/memos/'
+    endpoint = '/api/v1/goods/'
     payload = {
-      'title': 'ノート1', 
-      'mainText': 'これは最初のノートの本文です。ノート作成アプリのテストデータとして使用します。'
+      'id': '1', 
+      'name': 'りんご', 
+      'explanation': 'おいしいりんごだよ。', 
+      'price': '100', 
+      'image': 's3://{ownerid}/apple.png', 
+      'category': 'food', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 
-  elif arg1 == "dummy":
+  elif arg1 == "post2":
+    endpoint = '/api/v1/goods/'
+    payload = {
+      'id': '2', 
+      'name': 'みかん', 
+      'explanation': 'くさったみかん。', 
+      'price': '10', 
+      'image': 's3://{ownerid}/orange.png', 
+      'category': 'food', 
+    }
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(domain + endpoint, headers=headers, json=payload)
+
+
+  elif arg1 == "dummyPost":
     for _ in range(int(arg2)):
-      endpoint = '/api/v1/memos/'
+      endpoint = '/api/v1/goods/'
       payload = {
-        'title': generate_random_string(10), 
-        'mainText': generate_random_string(50)
+        'id': generate_random_string(10), 
+        'name': generate_random_string(10), 
+        'explanation': generate_random_string(50), 
+        'price': generate_random_string(10), 
+        'image': generate_random_string(50), 
+        'category': generate_random_string(10), 
       }
       headers = {'Content-Type': 'application/json'}
       response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "put":
-    endpoint = '/api/v1/memos/' + arg2
+    endpoint = '/api/v1/goods/' + arg2
     payload = {
-      'title': 'ノート2', 
-      'mainText': 'これは二つ目のノートの本文です。日々の学習やアイデアを記録するためのサンプルです。'
+      'id': '1', 
+      'name': 'みかん', 
+      'explanation': 'くさったみかん。', 
+      'price': '10', 
+      'image': 's3://{ownerid}/orange.png', 
+      'category': 'food', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.put(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "delete":
-    endpoint = '/api/v1/memos/' + arg2
+    endpoint = '/api/v1/goods/' + arg2
     response = requests.delete(domain + endpoint)
 
   # disp res.
