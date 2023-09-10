@@ -88,3 +88,9 @@
   docker rm $(docker ps -a -q -f ancestor=amazon/dynamodb-local)
 
   docker inspect --format '{{.State}}' $(docker ps -a -q -f ancestor=amazon/dynamodb-local)
+
+
+  aws --endpoint-url=http://localhost:4566 s3api put-bucket-cors --bucket goods --cors-configuration file://cors-config.xml
+
+
+  aws s3 cp s3://goods/temp/ ./down.jpeg  --endpoint-url=http://localhost:4566 

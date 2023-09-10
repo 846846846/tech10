@@ -1,8 +1,8 @@
-import crypto from 'crypto'
 import { Request } from 'express'
 import * as ddb from '../libs/database/ddb'
 import moment from 'moment'
 import 'moment-timezone'
+import crypto from 'crypto'
 
 const TABLE_NAME = process.env.TABLE_NAME!
 const GSI_GENERAL = process.env.GSI_GENERAL!
@@ -33,7 +33,7 @@ export const create = async (req: Request) => {
             value: valueList[index],
           }
     )
-    // console.dir(items, { depth: null })
+    console.dir(items, { depth: null })
 
     // 3. データを新規作成する
     await ddb.transactWrite('Put', TABLE_NAME, items)
@@ -49,6 +49,7 @@ export const readAll = async (req: Request) => {
     const ownerId = req.headers['authorization'] // [TODO] チケットECSITE-14で対応予定.
     if (ownerId === undefined) throw new Error('404:specified data not found.')
 
+    // 1. オーナーが所有するリストを取得.
     const data = await ddb.query(
       TABLE_NAME,
       '#ownerid = :v1',
@@ -61,8 +62,8 @@ export const readAll = async (req: Request) => {
       GSI_OWNERGOODSLIST
     )
     if (!data.Count || data.Items === undefined) throw new Error('404:specified data not found.')
-    console.log(data.Items)
-    console.log(toResFormatList(data.Items))
+
+    // 2. 仕様に沿った形式に整形して返却
     return JSON.stringify(toResFormatList(data.Items))
   } catch (err) {
     throw err
@@ -112,7 +113,6 @@ export const update = async (req: Request, id: string) => {
       // valueキーの値を上書き.
       .then(function (result) {
         return result.Items?.map((item) => {
-          console.log(item)
           const index = typeList.indexOf(item.type)
           // 更新対象外アイテムのみ上書きする
           if (index !== -1) item.value = valueList[index]

@@ -1,3 +1,4 @@
+# debug用スクリプト
 import os
 import sys
 import subprocess
@@ -55,24 +56,92 @@ def ddb(arg1, arg2):
   print(cmd)
   subprocess.run(cmd)
 
+# S3.
+def s3(arg1, arg2):
+
+  # cmd parts.
+  BSE = "aws s3api "
+  BSE2 = "aws s3 "
+ 
+  ## bucket.
+  CB = "create-bucket "
+  LB = "list-buckets "
+  DB = "delete-bucket "
+
+  ## bucket(cors).
+  GBC = "get-bucket-cors "
+  PBC = "put-bucket-cors "
+
+  ## object(=file).
+  LO = "list-objects "
+  GO = "get-object "
+  DO = "delete-object "
+  RM = "rm "
+
+  ## variable.
+  BUKET = "--bucket goods "
+  KEY = "--key temp/90e1a7ae-c98f-4945-85d5-cca89b32ab27.jpeg "
+
+  COCON = "--cors-configuration file://s3cors.json "
+
+  ENDP = "--endpoint-url=http://localhost:4566 "
+  PROF = "--profile localstack "
+  REG = "--region ap-northeast-1 --create-bucket-configuration LocationConstraint=ap-northeast-1 "
+
+  DMY = ""
+
+  # alias to cmd.
+  a2c = {
+    # arg1.
+    ## bucket.
+    "cb": BSE + CB + BUKET + ENDP + PROF + REG,
+    "lb": BSE + LB + ENDP + PROF,
+    "db": BSE + DB + BUKET + ENDP,
+
+    ## bucket(cors).
+    "gbc": BSE + GBC + BUKET + ENDP,
+    "pbc": BSE + PBC + BUKET + COCON + ENDP,
+
+    ## object(=file).
+    "lo": BSE + LO + BUKET + ENDP,
+    "dall": "aws s3 rm s3://goods --recursive " + ENDP,
+    "do": BSE + DO + BUKET + KEY + ENDP,
+
+    # n/a.
+    "": DMY,
+  }
+  cmd = a2c[arg1] + a2c[arg2]
+
+  # exec command.
+  print(cmd)
+  subprocess.run(cmd)
 
 # http req.
 def req(arg1, arg2):
+
   domain = "http://localhost:3001/dev"
   # domain = "https://llt3b0cr2h.execute-api.ap-northeast-1.amazonaws.com/dev/"
+  authorization = 'dummy'
+
   response = ""
   if arg1 == "":
-    endpoint = '/health'
+    endpoint = '/api/v1/health'
     response = requests.get(domain + endpoint)
+
+  elif arg1 == "preSigned":
+    endpoint = '/api/v1/generate-presigned-url'
+    headers = {'Authorization': authorization}
+    response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "getAll":
     endpoint = '/api/v1/goods/' + arg2
-    headers = {'Authorization': 'dummy'}
+    headers = {'Authorization': authorization}
     response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "get":
     endpoint = '/api/v1/goods/' + arg2
-    response = requests.get(domain + endpoint)
+    headers = {'Authorization': authorization}
+    response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "post":
     endpoint = '/api/v1/goods/'
@@ -84,7 +153,7 @@ def req(arg1, arg2):
       'image': 's3://{ownerid}/apple.png', 
       'category': 'food', 
     }
-    headers = {'Content-Type': 'application/json'}
+    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "post2":
@@ -97,7 +166,7 @@ def req(arg1, arg2):
       'image': 's3://{ownerid}/orange.png', 
       'category': 'food', 
     }
-    headers = {'Content-Type': 'application/json'}
+    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 
 
@@ -112,7 +181,7 @@ def req(arg1, arg2):
         'image': generate_random_string(50), 
         'category': generate_random_string(10), 
       }
-      headers = {'Content-Type': 'application/json'}
+      headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
       response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "put":
@@ -125,12 +194,16 @@ def req(arg1, arg2):
       'image': 's3://{ownerid}/orange.png', 
       'category': 'food', 
     }
-    headers = {'Content-Type': 'application/json'}
+    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
     response = requests.put(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "delete":
     endpoint = '/api/v1/goods/' + arg2
-    response = requests.delete(domain + endpoint)
+    headers = {'Authorization': authorization}
+    response = requests.delete(domain + endpoint, headers=headers)
+
+  elif arg1 == "localstack":
+    response = requests.get('http://localhost:4566/health')
 
   # disp res.
   print(response.status_code)
@@ -149,6 +222,7 @@ def run():
     funcs = {
       "ddb": ddb,
       "req": req,
+      "s3": s3,
     }
 
     # take out args.

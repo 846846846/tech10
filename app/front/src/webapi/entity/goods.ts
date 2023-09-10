@@ -1,10 +1,10 @@
-import SuperClass, { Request } from './clientLib/axios'
+import ClientLib, { Request } from '../libs/axios'
 
-const ENDPOINT = '/api/v1/memos/'
+const ENDPOINT = '/api/v1/goods/'
 
 export type APIType = 'create' | 'read' | 'update' | 'delete'
 
-export class MemoClass extends SuperClass {
+export class GoodsAPI extends ClientLib {
   constructor() {
     super()
   }
@@ -14,6 +14,10 @@ export class MemoClass extends SuperClass {
       const req: Request = {
         url: ENDPOINT,
         params: params,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+        },
       }
       return super.post(req)
     } catch (err) {
@@ -25,6 +29,10 @@ export class MemoClass extends SuperClass {
     try {
       const req: Request = {
         url: ENDPOINT,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+        },
       }
       return super.get(req)
     } catch (err) {
@@ -37,6 +45,10 @@ export class MemoClass extends SuperClass {
       const req: Request = {
         url: ENDPOINT + params.id,
         params: params,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+        },
       }
       return super.put(req)
     } catch (err) {
@@ -48,6 +60,10 @@ export class MemoClass extends SuperClass {
     try {
       const req: Request = {
         url: ENDPOINT + params.id,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+        },
       }
       return super.delete(req)
     } catch (err) {

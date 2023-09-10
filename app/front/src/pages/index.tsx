@@ -1,7 +1,7 @@
 'use strict'
 import Head from 'next/head'
 import Link from 'next/link'
-import Memo from './Memo'
+import GoodsRegist from './Seller/GoodsRegist'
 
 const Top = () => {
   return (
@@ -10,7 +10,7 @@ const Top = () => {
         <title>top</title>
       </Head>
       <main>
-        <Link href="/Memo">メモアプリ</Link>
+        <Link href="Seller/GoodsRegist">販売者/商品登録</Link>
       </main>
     </>
   )

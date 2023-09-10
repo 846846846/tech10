@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: ECSite API
-  description: ECSiteのWebAPI仕様。
+  description: ECSiteのWebAPI仕様。URL定義はケバブケース(-)を採用。
   version: 1.0.0
 
 servers:
@@ -22,7 +22,8 @@ paths:
     get:
       tags:
         - meta
-      description: 疎通確認用のAPI
+      summary: 疎通確認をする。
+      description: 疎通確認をする。
       responses:
         "200":
           description: Success
@@ -31,6 +32,35 @@ paths:
               schema:
                 type: string
                 example: Hello World!!
+
+  /generate-presigned-url:
+    get:
+      tags:
+        - meta
+      summary: 画像アップロード用の一時URLを取得する。
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
+      description: 画像アップロード用の一時URL(AWS S3 Presigned URL)を取得する。
+      operationId: generatePresignedUrl
+      responses:
+        "200":
+          description: 画像アップロード用の一時URL(AWS S3 Presigned URL)の生成に成功。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presignedUrl:
+                    type: string
+        "400":
+          description: Invalid input
+        "500":
+          description: Server error
 
   /goods:
     get:
@@ -61,6 +91,13 @@ paths:
       tags:
         - goods
       summary: 商品を新規登録する。
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -80,6 +117,12 @@ paths:
         - goods
       summary: 指定された商品IDの情報を取得する。
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -101,6 +144,12 @@ paths:
         - goods
       summary: 指定された商品IDの情報を更新する。
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
         - name: id
           in: path
           required: true
@@ -124,6 +173,12 @@ paths:
         - goods
       summary: 指定された商品IDの情報を削除する。
       parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
         - name: id
           in: path
           required: true

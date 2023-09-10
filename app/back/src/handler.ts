@@ -3,7 +3,8 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
-import * as goods from './functions/goods'
+import * as goods from './entity/goods'
+import * as meta from './entity/meta'
 
 sourceMapSupport.install()
 
@@ -17,11 +18,27 @@ router.use(bodyParser.urlencoded({ extended: true }))
 // [middleware] cors.
 router.use(cors())
 
-// health check.
-router.get('/api/v1/health', (_req, res, _next) => {
-  return res.status(200).json({
-    message: 'Hello World!!',
-  })
+// meta.
+router.get('/api/v1/health', async (_req, res, _next) => {
+  try {
+    const result = await meta.health(_req)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    _next(error)
+  }
+})
+
+router.get('/api/v1/generate-presigned-url', async (_req, res, _next) => {
+  try {
+    const result = await meta.generatePresignedUrl(_req)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    _next(error)
+  }
 })
 
 // goods.
