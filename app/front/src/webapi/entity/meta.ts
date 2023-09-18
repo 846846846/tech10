@@ -40,10 +40,11 @@ export class MetaAPI extends ClientLib {
         url,
         params,
         headers: {
-          'Content-Type': 'image/jpeg',
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          'Content-Type': params.type,
+          // Authorization: 'dummy', // PreSignedURLを利用する場合は付加してはいけない.
         },
       }
+      console.log(req)
       return super.put(req, false)
     } catch (err) {
       throw err

@@ -42,6 +42,8 @@ custom:
     gsi:
       - GSI-General
       - GSI-OwnerGoodsList
+  s3:
+    bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-${sls:instanceId}'
   serverless-offline:
     httpPort: 3001
 
@@ -65,18 +67,24 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [ECSiteTable, Arn]
+            - Fn::GetAtt: [DBTable, Arn]
         - Effect: Allow
           Action:
             - dynamodb:Query
             - dynamodb:Scan
           Resource:
             - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.dynamodb.table.0}/index/*'
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+          Resource: !Sub 'arn:aws:s3:::${self:custom.s3.bucketName}/*'
+
   environment:
     REGION: ${self:provider.region}
     TABLE_NAME: ${self:custom.dynamodb.table.0}
     GSI_GENERAL: ${self:custom.dynamodb.gsi.0}
     GSI_OWNERGOODSLIST: ${self:custom.dynamodb.gsi.1}
+    IMAGE_S3_BUCKET: ${self:custom.s3.bucketName}
 
 # このセクションには、サービスで定義するすべての関数が含まれます。
 # 各関数は、実行するハンドラと、関数をトリガするイベント（HTTPリクエスト、S3バケットの変更など）を指定します。
@@ -96,7 +104,7 @@ functions:
 # AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
 resources:
   Resources:
-    ECSiteTable:
+    DBTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.dynamodb.table.0}
@@ -133,3 +141,22 @@ resources:
               NonKeyAttributes:
                 - 'key'
                 - 'value'
+    ImageS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.s3.bucketName}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - 'GET'
+                - 'POST'
+                - 'PUT'
+              AllowedOrigins:
+                - '*'
+              ExposedHeaders:
+                - 'x-amz-server-side-encryption'
+                - 'x-amz-request-id'
+              Id: 'ImageS3BucketCORSRuleID'
+              MaxAge: 3000

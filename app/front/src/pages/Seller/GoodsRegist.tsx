@@ -18,7 +18,7 @@ type Goods = {
   name: string
   explanation: string
   price: string
-  image: string
+  image: any
   category: string
 }
 
@@ -63,9 +63,14 @@ const GoodsRegist: NextPage = () => {
       setUpload(UploadStatus.Doing)
 
       // 1. image upload.
+      console.log(data.image)
+      const formData = new FormData()
+      formData.append('file', data.image[0], data.image[0].name)
+      console.log(formData)
+
       const metaApi = new MetaAPI()
       const res = await metaApi.generatePresignedUrl()
-      const res2 = await metaApi.uploadPresignedUrl(res.data.url, data.image)
+      const res2 = await metaApi.uploadPresignedUrl(res.data.url, data.image[0])
       const { status: status2 } = { ...res2 }
       if (status2 !== 200) {
         throw new Error(`image upload err: ${status2}`)

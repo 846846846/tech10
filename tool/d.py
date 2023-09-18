@@ -116,35 +116,72 @@ def s3(arg1, arg2):
   print(cmd)
   subprocess.run(cmd)
 
+# cloudformation
+def cf(arg1, arg2):
+
+  # cmd parts.
+  BSE = "aws cloudformation "
+
+  ## command.
+  VT = "validate-template "
+  CS = "create-stack --stack-name "
+  US = "update-stack --stack-name "
+  DES = "describe-stacks --stack-name "
+  DS = "delete-stack --stack-name "
+
+  ## variable.
+  SN = "tech10-front-dev "
+  YML = "--template-body file://../app/front/cf.yaml"
+
+
+  DMY = ""
+
+  # alias to cmd.
+  a2c = {
+    # arg1.
+    "vt": BSE + VT + YML,
+    "cs": BSE + CS + SN + YML,
+    "us": BSE + US + SN + YML,
+    "des": BSE + DES + SN,
+    "ds": BSE + DS + SN,
+
+    # n/a.
+    "": DMY,
+  }
+  cmd = a2c[arg1] + a2c[arg2]
+
+  print(cmd)
+  subprocess.run(cmd)
+
 # http req.
 def req(arg1, arg2):
 
-  domain = "http://localhost:3001/dev"
-  # domain = "https://llt3b0cr2h.execute-api.ap-northeast-1.amazonaws.com/dev/"
+  # domain = "http://localhost:3001/dev"
+  domain = "https://4yukoj6p01.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
   authorization = 'dummy'
 
   response = ""
   if arg1 == "":
-    endpoint = '/api/v1/health'
+    endpoint = '/health'
     response = requests.get(domain + endpoint)
 
   elif arg1 == "preSigned":
-    endpoint = '/api/v1/generate-presigned-url'
+    endpoint = '/generate-presigned-url'
     headers = {'Authorization': authorization}
     response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "getAll":
-    endpoint = '/api/v1/goods/' + arg2
+    endpoint = '/goods/' + arg2
     headers = {'Authorization': authorization}
     response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "get":
-    endpoint = '/api/v1/goods/' + arg2
+    endpoint = '/goods/' + arg2
     headers = {'Authorization': authorization}
     response = requests.get(domain + endpoint, headers=headers)
 
   elif arg1 == "post":
-    endpoint = '/api/v1/goods/'
+    endpoint = '/goods/'
     payload = {
       'id': '1', 
       'name': 'りんご', 
@@ -157,7 +194,7 @@ def req(arg1, arg2):
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "post2":
-    endpoint = '/api/v1/goods/'
+    endpoint = '/goods/'
     payload = {
       'id': '2', 
       'name': 'みかん', 
@@ -172,7 +209,7 @@ def req(arg1, arg2):
 
   elif arg1 == "dummyPost":
     for _ in range(int(arg2)):
-      endpoint = '/api/v1/goods/'
+      endpoint = '/goods/'
       payload = {
         'id': generate_random_string(10), 
         'name': generate_random_string(10), 
@@ -185,7 +222,7 @@ def req(arg1, arg2):
       response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "put":
-    endpoint = '/api/v1/goods/' + arg2
+    endpoint = '/goods/' + arg2
     payload = {
       'id': '1', 
       'name': 'みかん', 
@@ -198,7 +235,7 @@ def req(arg1, arg2):
     response = requests.put(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "delete":
-    endpoint = '/api/v1/goods/' + arg2
+    endpoint = '/goods/' + arg2
     headers = {'Authorization': authorization}
     response = requests.delete(domain + endpoint, headers=headers)
 
@@ -223,6 +260,7 @@ def run():
       "ddb": ddb,
       "req": req,
       "s3": s3,
+      "cf": cf,
     }
 
     # take out args.

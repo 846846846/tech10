@@ -1,0 +1,104 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  NextJS:
+    Type: AWS::S3::Bucket
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: 404.html
+
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Access identity for CloudFront-S3 access(tech10)
+
+  NextJSBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref NextJS
+      PolicyDocument:
+        Statement:
+          - Sid: AllowCloudFrontAccess
+            Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
+            Action:
+              - s3:GetObject
+            Resource: !Sub 'arn:aws:s3:::${NextJS}/*'
+
+  CloudFrontLogs:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: LogDeliveryWrite
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+
+  CloudFrontLogsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CloudFrontLogs
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontLogging
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action:
+              - s3:PutObject
+            Resource: !Sub arn:aws:s3:::${CloudFrontLogs}/*
+            Condition:
+              StringEquals:
+                s3:x-amz-acl: bucket-owner-full-control
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            # リージョン間のS3バケット名の伝播まで最大24時間かかる.
+            # 直ぐ見たい場合は、Consoleにてリージョンを含んだ名称に変更すること.
+            # https://repost.aws/ja/knowledge-center/s3-http-307-response
+            DomainName: !GetAtt NextJS.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: 'true'
+          ForwardedValues:
+            QueryString: 'false'
+            Cookies:
+              Forward: none
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponsePagePath: '/index.html'
+            ResponseCode: '200'
+            ErrorCachingMinTTL: 300
+          - ErrorCode: 404
+            ResponsePagePath: '/index.html'
+            ResponseCode: '200'
+            ErrorCachingMinTTL: 300
+        Logging:
+          Bucket: !GetAtt [CloudFrontLogs, DomainName]
+          IncludeCookies: 'false'
+          Prefix: 'my-log-prefix/'
+
+Outputs:
+  CloudFrontDistributionUrl:
+    Value: !Sub 'https://${CloudFrontDistribution.DomainName}'
+    Description: CloudFront distribution URL
+  S3BucketName:
+    Value: !Ref NextJS
+    Description: Name of the S3 bucket

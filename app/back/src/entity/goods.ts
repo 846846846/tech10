@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import * as ddb from '../libs/database/ddb'
+import * as ddb from '../libs/ddb'
 import moment from 'moment'
 import 'moment-timezone'
 import crypto from 'crypto'

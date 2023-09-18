@@ -112,9 +112,9 @@ router.use((_req, res, _next) => {
 router.use((err, req, res, next) => {
   console.error(err.message)
   const status = err.message.split(':')[0]
-  console.log(status)
+  console.error(status)
   const message = err.message.split(':')[1]
-  console.log(message)
+  console.error(message)
   res.status(status).json({ message: message })
 
   // res.status(500).json({ error: err.message })

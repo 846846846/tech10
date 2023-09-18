@@ -63,34 +63,46 @@
     - 不要
 
 # 忘備録
+## 別チケット化候補
+  - バリテーション
+    - 画像ファイル保存期間の注意喚起
+  - jpeg以外のフォーマットに対応する
+    - 
+  - 開発者として、保存されなった商品に関してはS3の画像ファイルを定期的に削除したい。なぜなら、容量の削減に繋がるからだ。
+  - バックエンド側のdynamoDBとS3を毎回消さない
+
+## 参考
+  - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
+    - https://repost.aws/ja/knowledge-center/s3-http-307-response
+
 ## git
   - git switch -c develop
   - git push -u origin develop
   - git branch -u origin/develop
   - git branch -vv
 
-## aws cli
-  - aws cloudformation validate-template --template-body file://permanent.yaml
-  - aws cloudformation create-stack --stack-name tech10 --template-body file://permanent.yaml
-  - aws cloudformation update-stack --stack-name tech10 --template-body file://permanent.yaml
-  - aws cloudformation describe-stacks --stack-name tech10
-  - aws cloudformation delete-stack --stack-name tech10
-
-  - aws s3 sync out/ s3://tech09-s3bucketforcloudfront-ec4rmmi7se4n
-  - aws s3 ls s3://tech09-s3bucketforcloudfront-ec4rmmi7se4n
-  - aws s3 rm s3://tech09-s3bucketforcloudfront-ec4rmmi7se4n
-
-# 参考
-  - 
-
-  docker ps -q -f ancestor=amazon/dynamodb-local
-
-  docker rm $(docker ps -a -q -f ancestor=amazon/dynamodb-local)
-
-  docker inspect --format '{{.State}}' $(docker ps -a -q -f ancestor=amazon/dynamodb-local)
-
+## 一時メモ
+  ap-northeast-1
 
   aws --endpoint-url=http://localhost:4566 s3api put-bucket-cors --bucket goods --cors-configuration file://cors-config.xml
-
-
   aws s3 cp s3://goods/temp/ ./down.jpeg  --endpoint-url=http://localhost:4566 
+
+
+awsexamplebucketname.s3.amazonaws.com
+awsexamplebucket.s3.ap-northeast-1.amazonaws.com 
+
+tech10-front-dev-nextjs-15l0zggnq3h7n.s3.amazonaws.com
+tech10-front-dev-nextjs-15l0zggnq3h7n.s3.ap-northeast-1.amazonaws.com
+
+
+tech10-back-dev-ap-northeast-1-image-1694828604730
+tech10-back-dev-ap-northeast-1-image-1694828604730
+
+CORS
+Access 権限
+
+arn:aws:s3:::tech10-back-dev-ap-northeast-1-image-1695033895143
+arn:aws:s3:::tech10-back-dev-ap-northeast-1-image-1695033895143
+
+1b4d1727-bc59-4aa3-8c8c-2e826e35d2a0.png
+1b4d1727-bc59-4aa3-8c8c-2e826e35d2a0.jpeg
