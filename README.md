@@ -75,11 +75,18 @@
   - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
     - https://repost.aws/ja/knowledge-center/s3-http-307-response
 
+  - クライアントからS3に署名付きURLでアップロードする
+    - https://r-tech14.com/pre-signed-url-upload/
+
 ## git
   - git switch -c develop
   - git push -u origin develop
   - git branch -u origin/develop
   - git branch -vv
+
+  - git add .
+  - git commit -m "ECSITE-10:追加要件の実装(バリテーション)"
+  - git push
 
 ## 一時メモ
   ap-northeast-1

@@ -27,6 +27,7 @@ type FormItem = {
   type: string
   label: string
   text: string
+  options?: any
 }
 
 enum UploadStatus {
@@ -63,11 +64,6 @@ const GoodsRegist: NextPage = () => {
       setUpload(UploadStatus.Doing)
 
       // 1. image upload.
-      console.log(data.image)
-      const formData = new FormData()
-      formData.append('file', data.image[0], data.image[0].name)
-      console.log(formData)
-
       const metaApi = new MetaAPI()
       const res = await metaApi.generatePresignedUrl()
       const res2 = await metaApi.uploadPresignedUrl(res.data.url, data.image[0])
@@ -109,30 +105,60 @@ const GoodsRegist: NextPage = () => {
       type: 'text',
       label: '商品ID',
       text: '一意の識別子。各商品を一意に識別するための番号やコード。',
+      options: {
+        required: { value: true, message: '入力必須のパラメータです。' },
+        pattern: {
+          value: /^[a-zA-Z0-9]{1,10}$/,
+          message: '半角英数字かつ1文字から10文字で入力してください。',
+        },
+      },
     },
     {
       id: 'name',
       type: 'text',
       label: '商品名',
       text: '商品の名称。顧客（購入者）が商品を検索や認識するための名前。',
+      options: {
+        required: { value: true, message: '入力必須のパラメータです。' },
+        pattern: {
+          value: /^.{0,30}$/,
+          message: '30文字以内で入力してください。',
+        },
+      },
     },
     {
       id: 'explanation',
       type: 'textarea',
       label: '商品説明',
       text: '商品の詳細な情報や特徴を説明するテキスト。',
+      options: {
+        pattern: {
+          value: /^.{0,1000}$/,
+          message: '1000文字以内で入力してください。',
+        },
+      },
     },
     {
       id: 'price',
       type: 'number',
       label: '商品価格',
       text: '商品の販売価格。',
+      options: {
+        required: { value: true, message: '入力必須のパラメータです。' },
+        pattern: {
+          value: /^[1-9][0-9]{0,9}$/,
+          message: '10桁以内の数値で入力してください(0は不可です)。',
+        },
+      },
     },
     {
       id: 'image',
       type: 'file',
       label: '商品画像',
       text: '商品の実際の見た目を示す写真やイラスト。',
+      options: {
+        required: { value: true, message: '入力必須のパラメータです。' },
+      },
     },
     {
       id: 'category',
@@ -156,7 +182,7 @@ const GoodsRegist: NextPage = () => {
           <div className={styles.main}>
             <Form ref={formRef} className={styles.form}>
               {formItems.map((item, index) => {
-                const { label, text, type, id } = { ...item }
+                const { label, text, type, id, options } = { ...item }
                 return (
                   <Form.Group className="mb-3" key={index}>
                     <Form.Label className={styles.label}>{label}</Form.Label>
@@ -164,9 +190,23 @@ const GoodsRegist: NextPage = () => {
                       {text}
                     </Form.Text>
                     {type === 'textarea' ? (
-                      <Form.Control as={type} rows={3} {...register(id)} />
+                      <Form.Control
+                        as={type}
+                        rows={3}
+                        isInvalid={errors[id] !== undefined}
+                        {...register(id, options)}
+                      />
                     ) : (
-                      <Form.Control type={type} {...register(id)} />
+                      <Form.Control
+                        type={type}
+                        isInvalid={errors[id] !== undefined}
+                        {...register(id, options)}
+                      />
+                    )}
+                    {errors[id] && (
+                      <Form.Text className={styles.error}>
+                        {errors[id]?.message as string}
+                      </Form.Text>
                     )}
                   </Form.Group>
                 )

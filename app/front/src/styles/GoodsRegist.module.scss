@@ -38,6 +38,10 @@ $temp-border: 0.75px solid $temp-color;
       display: block;
       margin-top: 0px;
     }
+    .error {
+      color: red;
+      font-size: 0.85rem;
+    }
     .buttonUpload {
       flex: 1;
       margin-top: 5px;
