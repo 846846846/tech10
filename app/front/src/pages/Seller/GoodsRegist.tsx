@@ -62,23 +62,22 @@ const GoodsRegist: NextPage = () => {
   const onSubmit = async (data: Goods) => {
     try {
       setUpload(UploadStatus.Doing)
+      console.log(data.image)
 
       // 1. image upload.
       const metaApi = new MetaAPI()
-      const res = await metaApi.generatePresignedUrl()
+      const res = await metaApi.generatePresignedUrl({
+        name: data.image[0].name,
+        type: data.image[0].type,
+      })
       const res2 = await metaApi.uploadPresignedUrl(res.data.url, data.image[0])
       const { status: status2 } = { ...res2 }
       if (status2 !== 200) {
         throw new Error(`image upload err: ${status2}`)
       } else {
-        // pickup s3 key name.
+        // update image name with s3 key name.
         const urlObj = new URL(res.data.url)
-        const match = urlObj.pathname.match(/[^/]+.jpeg$/)
-        if (match !== null) {
-          data.image = match[0] // update image name with s3 key name.
-        } else {
-          throw new Error('not found s3 key name')
-        }
+        data.image = urlObj.pathname.split('/').pop()
       }
 
       // 2. post input info.

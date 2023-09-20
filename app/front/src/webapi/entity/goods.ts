@@ -1,6 +1,6 @@
 import ClientLib, { Request } from '../libs/axios'
 
-const ENDPOINT = '/api/v1/goods/'
+const ENDPOINT = '/goods/'
 
 export type APIType = 'create' | 'read' | 'update' | 'delete'
 

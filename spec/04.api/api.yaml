@@ -8,7 +8,7 @@ info:
 servers:
   - url: http://localhost:3001/dev/api/v1
     description: localhost
-  - url: https://{cloudfront-url}/dev/api/v1
+  - url: https://5adqe2wdk2.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1
     description: dev server
 
 tags:
@@ -43,6 +43,18 @@ paths:
           in: header
           required: true
           description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
+        - name: name
+          in: path
+          required: true
+          description: 画像のファイル名称
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          description: 画像のコンテンツタイプ
           schema:
             type: string
       description: 画像アップロード用の一時URL(AWS S3 Presigned URL)を取得する。

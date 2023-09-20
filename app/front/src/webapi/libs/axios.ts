@@ -6,10 +6,9 @@ export default class ClientLib {
   private host: string
 
   constructor() {
-    console.log(process.env.NEXT_PUBLIC_API_HOST)
     this.host =
       process.env.NEXT_PUBLIC_API_HOST === undefined
-        ? 'http://localhost:3001/dev'
+        ? 'http://localhost:3001/dev/api/v1'
         : process.env.NEXT_PUBLIC_API_HOST
   }
 
@@ -17,6 +16,7 @@ export default class ClientLib {
     try {
       const { url, params, headers } = { ...req }
       const res = await axios.get(this.host + url, {
+        params,
         headers,
       })
       return res

@@ -102,7 +102,7 @@ router.delete('/api/v1/goods/:id', async (_req, res, _next) => {
 
 // [middleware] unexpected.
 router.use((_req, res, _next) => {
-  console.log(_req)
+  console.error(_req)
   return res.status(404).json({
     error: 'Not Found API',
   })

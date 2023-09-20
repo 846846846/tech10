@@ -33,7 +33,6 @@ export const create = async (req: Request) => {
             value: valueList[index],
           }
     )
-    console.dir(items, { depth: null })
 
     // 3. データを新規作成する
     await ddb.transactWrite('Put', TABLE_NAME, items)
@@ -78,7 +77,7 @@ export const readByID = async (req: Request, id: string) => {
     // 2. uuidを元に情報を取得
     const data = await ddb.query(TABLE_NAME, '#uuid = :v1', { ':v1': uuid }, { '#uuid': 'uuid' })
     if (!data.Count || data.Items === undefined) throw new Error('404:specified data not found.')
-    console.dir(data, { depth: null })
+    // console.dir(data, { depth: null })
 
     // 3. 仕様に沿った形式に整形して返却
     return JSON.stringify(toResFormatDetail(data.Items))
@@ -157,7 +156,7 @@ export const deleteCus = async (req: Request, id: string) => {
         })
       })
     if (items === undefined) throw new Error('404:specified items not found.')
-    console.dir(items, { depth: null })
+    // console.dir(items, { depth: null })
 
     // 3. 削除実行.
     await ddb.transactWrite('Delete', TABLE_NAME, items)

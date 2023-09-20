@@ -79,7 +79,7 @@ def s3(arg1, arg2):
   RM = "rm "
 
   ## variable.
-  BUKET = "--bucket goods "
+  BUKET = "--bucket images "
   KEY = "--key temp/90e1a7ae-c98f-4945-85d5-cca89b32ab27.jpeg "
 
   COCON = "--cors-configuration file://s3cors.json "
@@ -104,7 +104,7 @@ def s3(arg1, arg2):
 
     ## object(=file).
     "lo": BSE + LO + BUKET + ENDP,
-    "dall": "aws s3 rm s3://goods --recursive " + ENDP,
+    "dall": "aws s3 rm s3://images --recursive " + ENDP,
     "do": BSE + DO + BUKET + KEY + ENDP,
 
     # n/a.
@@ -156,8 +156,8 @@ def cf(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  # domain = "http://localhost:3001/dev"
-  domain = "https://4yukoj6p01.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  # domain = "http://localhost:3001/dev/api/v1"
+  domain = "https://5adqe2wdk2.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
   authorization = 'dummy'
 
   response = ""

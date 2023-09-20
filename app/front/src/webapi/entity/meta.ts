@@ -1,7 +1,5 @@
 import ClientLib, { Request } from '../libs/axios'
 
-// const ENDPOINT = '/api/v1/goods/'
-
 export type APIType = 'create' | 'read' | 'update' | 'delete'
 
 export class MetaAPI extends ClientLib {
@@ -12,7 +10,7 @@ export class MetaAPI extends ClientLib {
   public async health() {
     try {
       const req: Request = {
-        url: '/api/v1/health',
+        url: '/health',
       }
       return super.get(req)
     } catch (err) {
@@ -20,10 +18,11 @@ export class MetaAPI extends ClientLib {
     }
   }
 
-  public async generatePresignedUrl() {
+  public async generatePresignedUrl(params: any) {
     try {
       const req: Request = {
-        url: '/api/v1/generate-presigned-url',
+        url: '/generate-presigned-url',
+        params,
         headers: {
           Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
         },
@@ -44,7 +43,6 @@ export class MetaAPI extends ClientLib {
           // Authorization: 'dummy', // PreSignedURLを利用する場合は付加してはいけない.
         },
       }
-      console.log(req)
       return super.put(req, false)
     } catch (err) {
       throw err

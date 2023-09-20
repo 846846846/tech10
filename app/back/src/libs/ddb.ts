@@ -1,13 +1,4 @@
-import {
-  DynamoDBClient,
-  AttributeValue,
-  ScanCommand,
-  ScanCommandInput,
-  BatchWriteItemCommand,
-  BatchWriteItemCommandInput,
-  WriteRequest,
-  TransactWriteItem,
-} from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, AttributeValue, ScanCommand, ScanCommandInput, TransactWriteItem } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, QueryCommand, QueryCommandInput, TransactWriteCommand, TransactWriteCommandInput } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
