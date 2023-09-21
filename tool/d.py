@@ -157,7 +157,7 @@ def cf(arg1, arg2):
 def req(arg1, arg2):
 
   # domain = "http://localhost:3001/dev/api/v1"
-  domain = "https://5adqe2wdk2.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  domain = "https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
   authorization = 'dummy'
 
   response = ""

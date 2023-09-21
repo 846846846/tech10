@@ -15,6 +15,7 @@ export const create = async (req: Request) => {
 
     // 1. 登録済みのidはエラーとする
     const registedUuid = await ddb.getUuidByType('id', id, TABLE_NAME, GSI_GENERAL, false)
+    console.log(registedUuid)
     if (registedUuid) throw new Error('409:duplicate id.')
 
     // 2. DBに合う形にデータを整形.
@@ -24,15 +25,17 @@ export const create = async (req: Request) => {
 
     const typeList = ['entity', 'owner', 'id', 'name', 'explanation', 'price', 'image', 'category', 'createAt', 'updateAt']
     const valueList = [MY_ENYITY, ownerId, id, name, explanation, price, image, category, jstTime, jstTime]
-    const items: any = typeList.map((type, index) =>
-      type === 'id' || type === 'name'
-        ? { uuid: uuid, type: type, value: valueList[index], ownerid: ownerId }
-        : {
-            uuid: uuid,
-            type: type,
-            value: valueList[index],
-          }
-    )
+    const items: any = typeList
+      .map((type, index) =>
+        type === 'id' || type === 'name'
+          ? { uuid: uuid, type: type, value: valueList[index], ownerid: ownerId }
+          : {
+              uuid: uuid,
+              type: type,
+              value: valueList[index],
+            }
+      )
+      .filter((item) => item.value !== '') // リクエストボディにないパラメータをフィルタリング([TBD] バリテーション).
 
     // 3. データを新規作成する
     await ddb.transactWrite('Put', TABLE_NAME, items)

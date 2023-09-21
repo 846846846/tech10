@@ -64,10 +64,11 @@
 
 # 忘備録
 ## 別チケット化候補
-  - アップロードする画像ファイルフォーマットの拡張
   - 画像ファイル格納用S3バケットの定期的クリーニング
   - DynamoDBとS3バケットの永続化(デプロイ毎に削除しない)
   - 固定ドメインを得る。
+
+  - https://d3g1t7tx4q2vwo.cloudfront.net/
 
 ## 参考
   - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
@@ -83,7 +84,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-10:追加要件の実装(バリテーション)"
+  - git commit -m "ECSITE-10:追加要件の実装(結果表示)"
   - git push
 
 ## 一時メモ

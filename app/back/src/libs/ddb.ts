@@ -57,7 +57,7 @@ export const query = async (
             ExpressionAttributeNames: expAttrNames,
           }
 
-    console.dir(params, { depth: null })
+    // console.dir(params, { depth: null })
     return await ddbDocClient.send(new QueryCommand(params))
   } catch (err) {
     throw err
@@ -124,7 +124,7 @@ export const transactWrite = async (action: string, tableName: string, items: DD
 }
 
 /*
- * DynamoDB Wrapper APIを利用した特定の役割に特化したAPI群.
+ * DynamoDB Wrapper APIを利用した特化API群.
  */
 // 指定されたTypeからuuidを特定し返却する.
 export const getUuidByType = async (type: string, value: string, tableName: string, gsi: string, errHandling: boolean = true) => {
@@ -142,12 +142,15 @@ export const getUuidByType = async (type: string, value: string, tableName: stri
       },
       gsi
     )
-    if (errHandling) {
-      if (!data.Count || data.Items === undefined) throw new Error('404:unregistered.')
-      return data.Items[0].uuid
-    } else {
-      return null
+
+    if (!data.Count || data.Items === undefined) {
+      if (errHandling) {
+        throw new Error('404:unregistered.')
+      } else {
+        return null
+      }
     }
+    return data.Items[0].uuid
   } catch (err) {
     throw err
   }

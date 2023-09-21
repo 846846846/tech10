@@ -5,12 +5,14 @@ import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
+import Alert from 'react-bootstrap/Alert'
 import GlobalNav from '@/components/GlobalNav'
 import SideMenu from '@/components/SideMenu'
 import NoticeArea from '@/components/NoticeArea'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import styles from '../../styles/GoodsRegist.module.scss'
+import { AxiosError } from 'axios'
 
 // type definition
 type Goods = {
@@ -30,13 +32,6 @@ type FormItem = {
   options?: any
 }
 
-enum UploadStatus {
-  Idle,
-  Doing,
-  Success,
-  Error,
-}
-
 /**
  *
  * @returns
@@ -47,7 +42,6 @@ const GoodsRegist: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
   } = useForm<Goods>()
   const formRef = useRef<HTMLFormElement>(null)
@@ -56,45 +50,42 @@ const GoodsRegist: NextPage = () => {
     reset()
   }, [reset])
 
-  const [upload, setUpload] = useState<UploadStatus>(UploadStatus.Idle)
+  const [upload, setUpload] = useState<number>(0)
 
   // handler.
   const onSubmit = async (data: Goods) => {
     try {
-      setUpload(UploadStatus.Doing)
-      console.log(data.image)
-
       // 1. image upload.
       const metaApi = new MetaAPI()
-      const res = await metaApi.generatePresignedUrl({
+      const resGenPresignedUrl = await metaApi.generatePresignedUrl({
         name: data.image[0].name,
         type: data.image[0].type,
       })
-      const res2 = await metaApi.uploadPresignedUrl(res.data.url, data.image[0])
-      const { status: status2 } = { ...res2 }
-      if (status2 !== 200) {
-        throw new Error(`image upload err: ${status2}`)
-      } else {
-        // update image name with s3 key name.
-        const urlObj = new URL(res.data.url)
-        data.image = urlObj.pathname.split('/').pop()
-      }
+      await metaApi.uploadPresignedUrl(
+        resGenPresignedUrl.data.url,
+        data.image[0]
+      )
+      const urlObj = new URL(resGenPresignedUrl.data.url)
+      data.image = urlObj.pathname.split('/').pop() // update image name with s3 key name.
 
       // 2. post input info.
       const goodsApi = new GoodsAPI()
-      const res3 = await goodsApi.create(data)
-      const { status: status3 } = { ...res3 }
-      if (status3 !== 200) {
-        throw new Error(`post input info: ${status3}`)
-      }
-      setUpload(UploadStatus.Success)
+      const resCreate = await goodsApi.create(data)
+      setUpload(resCreate.status)
+      reset()
     } catch (err) {
-      setUpload(UploadStatus.Error)
+      if (err instanceof AxiosError) {
+        console.log(err?.response)
+        setUpload(err?.response?.status as number)
+      }
       console.error(err)
     }
   }
 
-  const onClose = () => {}
+  const onClose = () => {
+    setUpload(0)
+    reset()
+  }
 
   // display.
   const title = '商品登録'
@@ -179,6 +170,25 @@ const GoodsRegist: NextPage = () => {
         <div className={styles.container}>
           <SideMenu />
           <div className={styles.main}>
+            <Alert
+              variant={upload === 200 ? 'success' : 'danger'}
+              className={styles.alert}
+              onClose={() => setUpload(0)}
+              show={upload !== 0}
+              dismissible
+            >
+              {upload === 200 ? (
+                <span>
+                  商品情報の登録が完了しました。プレビューはこちらから。
+                  <Alert.Link href="#">goods preview(TBD)</Alert.Link>
+                </span>
+              ) : (
+                <span>
+                  商品情報の登録に失敗しました。
+                  {upload === 409 ? '商品IDが重複しています。' : ''}
+                </span>
+              )}
+            </Alert>
             <Form ref={formRef} className={styles.form}>
               {formItems.map((item, index) => {
                 const { label, text, type, id, options } = { ...item }
