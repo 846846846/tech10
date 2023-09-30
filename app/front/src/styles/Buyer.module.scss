@@ -1,0 +1,32 @@
+$temp-color: #8a8a8a;
+$temp-backcolor: #8a8a8a;
+$temp-border: 0.75px solid $temp-color;
+$phone-width: 360px;
+
+.globalNav {
+  border: $temp-border;
+  color: $temp-color;
+  width: $phone-width;
+}
+
+.row {
+  flex-direction: column;
+  align-items: center;
+}
+
+.table {
+  border: $temp-border;
+  color: $temp-color;
+  width: $phone-width;
+}
+
+.view {
+  border: $temp-border;
+  color: $temp-color;
+  width: $phone-width;
+}
+
+.image {
+  width: 80%;
+  height: 80%;
+}

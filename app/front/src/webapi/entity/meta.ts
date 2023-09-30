@@ -18,10 +18,10 @@ export class MetaAPI extends ClientLib {
     }
   }
 
-  public async generatePresignedUrl(params: any) {
+  public async generatePresignedUrl(params: any, upload: boolean) {
     try {
       const req: Request = {
-        url: '/generate-presigned-url',
+        url: upload ? '/presigned-url/upload' : '/presigned-url/download',
         params,
         headers: {
           Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。

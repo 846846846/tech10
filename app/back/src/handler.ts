@@ -30,9 +30,20 @@ router.get('/api/v1/health', async (_req, res, _next) => {
   }
 })
 
-router.get('/api/v1/generate-presigned-url', async (_req, res, _next) => {
+router.get('/api/v1/presigned-url/upload', async (_req, res, _next) => {
   try {
-    const result = await meta.generatePresignedUrl(_req)
+    const result = await meta.generatePresignedUrl(_req, true)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    _next(error)
+  }
+})
+
+router.get('/api/v1/presigned-url/download', async (_req, res, _next) => {
+  try {
+    const result = await meta.generatePresignedUrl(_req, false)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {

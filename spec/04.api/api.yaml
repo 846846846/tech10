@@ -33,11 +33,11 @@ paths:
                 type: string
                 example: Hello World!!
 
-  /generate-presigned-url:
+  /presigned-url/upload:
     get:
       tags:
         - meta
-      summary: 画像アップロード用の一時URLを取得する。
+      summary: S3 PresignedURL(アップロード用)を取得する。
       parameters:
         - name: Authorization
           in: header
@@ -48,20 +48,55 @@ paths:
         - name: name
           in: path
           required: true
-          description: 画像のファイル名称
+          description: アップロードするファイルの名称
           schema:
             type: string
         - name: type
           in: path
           required: true
-          description: 画像のコンテンツタイプ
+          description: アップロードするファイルのコンテンツタイプ
           schema:
             type: string
-      description: 画像アップロード用の一時URL(AWS S3 Presigned URL)を取得する。
-      operationId: generatePresignedUrl
+      description: S3 PresginedURL(アップロード用)を取得する。
+      operationId: presignedUrl
       responses:
         "200":
-          description: 画像アップロード用の一時URL(AWS S3 Presigned URL)の生成に成功。
+          description: S3 PresginedURL(アップロード用)の生成に成功。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  presignedUrl:
+                    type: string
+        "400":
+          description: Invalid input
+        "500":
+          description: Server error
+
+  /presigned-url/download:
+    get:
+      tags:
+        - meta
+      summary: S3 PresignedURL(ダウンロード用)を取得する。
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: true
+          description: ダウンロードするファイルの名称。
+          schema:
+            type: string
+      description: S3 PresginedURL(ダウンロード用)を取得する。
+      operationId: presignedUrl
+      responses:
+        "200":
+          description: S3 PresginedURL(ダウンロード用)の生成に成功。
           content:
             application/json:
               schema:
@@ -94,7 +129,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Goods"
+                  $ref: "#/components/schemas/GoodsList"
               examples:
                 goodsList:
                   $ref: "#/components/examples/GoodsList"
@@ -115,10 +150,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Goods"
+              $ref: "#/components/schemas/GoodsDetail"
             examples:
               goods:
-                $ref: "#/components/examples/Goods"
+                $ref: "#/components/examples/GoodsDetail"
       responses:
         "201":
           description: Created
@@ -147,10 +182,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Goods"
+                $ref: "#/components/schemas/GoodsDetail"
               examples:
                 goods:
-                  $ref: "#/components/examples/Goods"
+                  $ref: "#/components/examples/GoodsDetail"
     put:
       tags:
         - goods
@@ -173,10 +208,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Goods"
+              $ref: "#/components/schemas/GoodsDetail"
             examples:
               goods:
-                $ref: "#/components/examples/Goods"
+                $ref: "#/components/examples/GoodsDetail"
       responses:
         "200":
           description: Successful update
@@ -203,12 +238,15 @@ paths:
 
 components:
   schemas:
-    Goods:
+    GoodsDetail:
       type: object
       properties:
         id:
           type: integer
           description: 商品ID。各商品を一意に識別するための番号やコード。
+        owner:
+          type: string
+          description: 商品の販売者。
         name:
           type: string
           description: 商品名。ユーザーが商品を検索や認識するための名前。
@@ -220,7 +258,7 @@ components:
           description: 商品の販売価格。
         image:
           type: string
-          description: 商品の実際の見た目を示す画像(写真やイラスト)が格納されたS3のURL。
+          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
         category:
           type: string
           description: 商品の分類。例：「家電」「ファッション」「食品」など。
@@ -234,20 +272,61 @@ components:
         - id
         - name
         - price
-  examples:
     GoodsList:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 商品ID。各商品を一意に識別するための番号やコード。
+        owner:
+          type: string
+          description: 商品の販売者。
+        name:
+          type: string
+          description: 商品名。ユーザーが商品を検索や認識するための名前。
+        price:
+          type: integer
+          description: 商品の販売価格。
+        image:
+          type: string
+          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
+
+  examples:
+    GoodsDetail:
       value:
-        - id: 1
-          name: けろけろ
-        - id: 2
-          name: ドドドドドドドドド
-    Goods:
-      value:
-        id: 1
-        name: けろけろ
-        explanation: けろ？けろけろけろ・・・けろ！
-        price: 2980
-        image: s3://{}
-        category: カエル
+        id: apple_001
+        name: りんご
+        owner: さとう
+        explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。
+        price: 100
+        image: 20230928T073511479_Apple.jpeg
+        category: 食品
         createAt: 20230828T050442+0900
         updateAt: 20230828T050442+0900
+    GoodsList:
+      value:
+        - id: apple_001
+          name: りんご
+          price: 100
+          owner: さとう
+          image: 20230928T073511479_Apple.jpeg
+        - id: apple_002
+          name: りんご2
+          price: 200
+          owner: さとう
+          image: 20230928T073511479_Apple2.jpeg
+        - id: apple_003
+          name: りんご
+          price: 300
+          owner: さとう
+          image: 20230928T073511479_Apple3.jpeg
+        - id: orange_001
+          name: おれんじ
+          price: 100
+          owner: かとう
+          image: 20230928T073511479_Orange.jpeg
+        - id: orange_002
+          name: おれんじ
+          price: 200
+          owner: かとう
+          image: 20230928T073511479_Orange2.jpeg

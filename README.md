@@ -1,7 +1,10 @@
 # バックログ
   - https://846846846.atlassian.net/jira/software/projects/TEC/boards/2/backlog
 
-# 技術
+# サイト
+  - https://d3g1t7tx4q2vwo.cloudfront.net/
+
+# スキルセット
   |カテゴリ|名称|説明|備考|
   |--|--|--|--|
   |言語|HTML/CSS|コンテンツ構造と見た目を定義する||
@@ -14,14 +17,14 @@
   |ツール|Docker|コンテナを利用した仮想化ツール||
   |ツール|Serverless Framework|サーバレスアプリ特化のIaCツール||
 
-# 手順
-## soft
+# 起動手順
+## インストールが必要なソフトウェア
   - node.js
   - docker
   - aws cli
   - python
 
-## front
+## フロントエンド
   - install
     1. cd app/front/
     2. npm i
@@ -41,7 +44,7 @@
       2. npm run deploy
       3. aws s3 sync out/ s3://{S3のバケット名}
 
-## back
+## バックエンド
   - install
     1. cd app/back/
     2. npm i
@@ -63,12 +66,10 @@
     - 不要
 
 # 忘備録
-## 別チケット化候補
+## チケット化したいアイテム
   - 画像ファイル格納用S3バケットの定期的クリーニング
   - DynamoDBとS3バケットの永続化(デプロイ毎に削除しない)
   - 固定ドメインを得る。
-
-  - https://d3g1t7tx4q2vwo.cloudfront.net/
 
 ## 参考
   - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
@@ -84,8 +85,15 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-10:追加要件の実装(結果表示)"
+  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット)"
   - git push
+
+## Jira
+  - 子課題テンプレート
+    - デザイン
+    - 設計
+    - 実装
+    - デプロイ
 
 ## 一時メモ
   ap-northeast-1

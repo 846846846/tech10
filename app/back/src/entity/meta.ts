@@ -1,5 +1,5 @@
 import { Request, query } from 'express'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import moment from 'moment'
 
@@ -36,26 +36,26 @@ export const health = async (req: Request) => {
   return { message: 'Hello World!!' }
 }
 
-export const generatePresignedUrl = async (req: Request) => {
+export const generatePresignedUrl = async (req: Request, upload: boolean) => {
   const owner = req.headers.authorization // (TBD:チケットNoのECSITE-14で対応) 認証情報からオーナー名を逆引き。
   const name = req.query.name as string
-  const type = req.query.type as string
 
   const Bucket = process.env.IS_OFFLINE ? 'images' : process.env.IMAGE_S3_BUCKET
 
   const dir = owner + '/'
   const jstTime = moment().tz('Asia/Tokyo').format('YYYYMMDDTHHmmssSSS')
-  const Key = dir + jstTime + '_' + name
+  const Key = upload ? dir + jstTime + '_' + name : dir + name
 
-  const ContentType = type
-  const expiresIn = 29 // 有効期限(秒)。API Gatewayのタイムアウト上限とする.
+  const expiresIn = 30 // 有効期限(秒).
 
   try {
-    const command = new PutObjectCommand({
-      Bucket,
-      Key,
-      ContentType,
-    })
+    const command = upload
+      ? new PutObjectCommand({
+          Bucket,
+          Key,
+          ContentType: req.query.type as string,
+        })
+      : new GetObjectCommand({ Bucket, Key })
     const url = await getSignedUrl(s3Client, command, {
       expiresIn,
     })

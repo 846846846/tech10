@@ -12,13 +12,16 @@ export default class ClientLib {
         : process.env.NEXT_PUBLIC_API_HOST
   }
 
-  public async get(req: Request) {
+  public async get(req: Request, autoAddHost: boolean = true) {
     try {
       const { url, params, headers } = { ...req }
-      const res = await axios.get(this.host + url, {
-        params,
-        headers,
-      })
+      const res = await axios.get(
+        autoAddHost || url == undefined ? this.host + url : url,
+        {
+          params,
+          headers,
+        }
+      )
       return res
     } catch (err) {
       throw err

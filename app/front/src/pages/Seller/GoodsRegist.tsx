@@ -6,24 +6,15 @@ import { useForm } from 'react-hook-form'
 import { Button } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import Alert from 'react-bootstrap/Alert'
-import GlobalNav from '@/components/GlobalNav'
-import SideMenu from '@/components/SideMenu'
-import NoticeArea from '@/components/NoticeArea'
+import GlobalNav from '@/components/seller/GlobalNav'
+import SideMenu from '@/components/seller/SideMenu'
+import NoticeArea from '@/components/seller/NoticeArea'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
-import styles from '../../styles/GoodsRegist.module.scss'
+import styles from '../../styles/Seller.module.scss'
 import { AxiosError } from 'axios'
 
-// type definition
-type Goods = {
-  id: string
-  name: string
-  explanation: string
-  price: string
-  image: any
-  category: string
-}
-
+// local type definition
 type FormItem = {
   id: keyof Goods
   type: string
@@ -57,10 +48,13 @@ const GoodsRegist: NextPage = () => {
     try {
       // 1. image upload.
       const metaApi = new MetaAPI()
-      const resGenPresignedUrl = await metaApi.generatePresignedUrl({
-        name: data.image[0].name,
-        type: data.image[0].type,
-      })
+      const resGenPresignedUrl = await metaApi.generatePresignedUrl(
+        {
+          name: data.image[0].name,
+          type: data.image[0].type,
+        },
+        true
+      )
       await metaApi.uploadPresignedUrl(
         resGenPresignedUrl.data.url,
         data.image[0]

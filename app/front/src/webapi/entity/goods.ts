@@ -25,10 +25,26 @@ export class GoodsAPI extends ClientLib {
     }
   }
 
-  public async read() {
+  public async readList() {
     try {
       const req: Request = {
         url: ENDPOINT,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+        },
+      }
+      return super.get(req)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public async readDetail(Id: string) {
+    try {
+      console.log(Id)
+      const req: Request = {
+        url: ENDPOINT + Id,
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
