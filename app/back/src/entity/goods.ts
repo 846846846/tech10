@@ -27,7 +27,7 @@ export const create = async (req: Request) => {
     const valueList = [MY_ENYITY, ownerId, id, name, explanation, price, image, category, jstTime, jstTime]
     const items: any = typeList
       .map((type, index) =>
-        type === 'id' || type === 'name' || type === 'owner' || type === 'price'
+        type === 'id' || type === 'name' || type === 'owner' || type === 'price' || type === 'image'
           ? { uuid: uuid, type: type, value: valueList[index], ownerid: ownerId }
           : {
               uuid: uuid,

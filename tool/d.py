@@ -225,6 +225,21 @@ def req(arg1, arg2):
     headers = {'Authorization': authorization}
     response = requests.delete(domain + endpoint, headers=headers)
 
+  elif arg1 == "dummy":
+    for _ in range(int(arg2)):
+      endpoint = '/goods/'
+      payload = {
+        'id': generate_random_string(10), 
+        'name': generate_random_string(10),
+        'owner': generate_random_string(10),
+        'explanation': generate_random_string(100),
+        'price': str(generate_dummy_integer(10000)),
+        'image': 'dummy',
+        'category': generate_random_string(30),
+      }
+      headers = {'Content-Type': 'application/json'}
+      response = requests.post(domain + endpoint, headers=headers, json=payload)
+
   elif arg1 == "localstack":
     response = requests.get('http://localhost:4566/health')
 
@@ -237,6 +252,9 @@ def generate_random_string(length):
     letters_and_digits = string.ascii_letters + string.digits
     result_str = ''.join(random.choice(letters_and_digits) for _ in range(length))
     return result_str
+
+def generate_dummy_integer(max_value=100):
+    return random.randint(1, max_value)
 
 # run.
 def run():

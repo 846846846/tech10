@@ -1,13 +1,14 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Image from 'react-bootstrap/Image'
+import { Container, Row, Image } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import GlobalNav from '../../components/buyer/GlobalNav'
 import styles from '../../styles/Buyer.module.scss'
+
+// constant declaration.
+const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
 
 /**
  *
@@ -31,15 +32,20 @@ const GoodsView: NextPage = () => {
 
           // 2. 画像情報が格納されたS3のPresginedURLを取得する.
           const metaApi = new MetaAPI()
-          const res2 = await metaApi.generatePresignedUrl(
-            {
-              name: res.data.image,
-            },
-            false
-          )
+          const url =
+            res.data.image === 'dummy'
+              ? DUMMY_IMAGE
+              : await metaApi
+                  .generatePresignedUrl(
+                    {
+                      name: res.data.image,
+                    },
+                    false
+                  )
+                  .then((result) => result.data.url)
 
           // 3. stateにセットする.
-          res.data.image = res2.data.url
+          res.data.image = url
           setData(res.data)
         }
       } catch (err) {

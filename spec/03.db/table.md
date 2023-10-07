@@ -14,7 +14,7 @@
   ||{uuid-1}|name|{name}|{ownerid}|
   ||{uuid-1}|explanation|{explanation}||
   ||{uuid-1}|price|{price}|{ownerid}|
-  ||{uuid-1}|image|{S3-path}||
+  ||{uuid-1}|image|{filename}|{ownerid}|
   ||{uuid-1}|category|{category}||
   ||{uuid-1}|createAt|{ISO8601}||
   ||{uuid-1}|updateAt|{ISO8601}||
@@ -79,7 +79,6 @@
 
 ## image
   - 説明
-    - 商品の画像
     - S3バケットに格納した画像ファイルのキー名。
   - 型
     - string

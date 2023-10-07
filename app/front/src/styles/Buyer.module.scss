@@ -2,31 +2,48 @@ $temp-color: #8a8a8a;
 $temp-backcolor: #8a8a8a;
 $temp-border: 0.75px solid $temp-color;
 $phone-width: 360px;
+$globalNav-height: 30px;
 
+// common.
 .globalNav {
   border: $temp-border;
-  color: $temp-color;
+  color: white;
+  background-color: $temp-backcolor;
   width: $phone-width;
+  height: $globalNav-height;
+  position: fixed;
+  z-index: 1000;
+  top: 0px;
 }
 
+// GoodsView.
 .row {
   flex-direction: column;
   align-items: center;
-}
-
-.table {
-  border: $temp-border;
-  color: $temp-color;
-  width: $phone-width;
 }
 
 .view {
   border: $temp-border;
   color: $temp-color;
   width: $phone-width;
+  margin-top: $globalNav-height;
+}
+
+// GoodsList.
+.container {
+  width: $phone-width;
+  padding: 0px;
+}
+
+.goodsList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: $globalNav-height;
 }
 
 .image {
-  width: 80%;
-  height: 80%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
 }

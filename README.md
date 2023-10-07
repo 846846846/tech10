@@ -60,7 +60,9 @@
 ## db
   - localhost
     1. cd app/back/
-    2. npm run ddb:s
+    2. npm run ddb:ct
+    3. cd tool/
+    4. python d.py s3 pbc
 
   - deploy2AWS
     - 不要
@@ -85,7 +87,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット)"
+  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット)-2"
   - git push
 
 ## Jira
