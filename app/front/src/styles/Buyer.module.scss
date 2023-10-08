@@ -2,21 +2,12 @@ $temp-color: #8a8a8a;
 $temp-backcolor: #8a8a8a;
 $temp-border: 0.75px solid $temp-color;
 $phone-width: 360px;
+$image-heigt: 150px;
 $globalNav-height: 30px;
 
-// common.
-.globalNav {
-  border: $temp-border;
-  color: white;
-  background-color: $temp-backcolor;
-  width: $phone-width;
-  height: $globalNav-height;
-  position: fixed;
-  z-index: 1000;
-  top: 0px;
-}
+// pages >>>
 
-// GoodsView.
+// GoodsView.tsx
 .row {
   flex-direction: column;
   align-items: center;
@@ -29,7 +20,7 @@ $globalNav-height: 30px;
   margin-top: $globalNav-height;
 }
 
-// GoodsList.
+// GoodsList.tsx
 .container {
   width: $phone-width;
   padding: 0px;
@@ -42,8 +33,31 @@ $globalNav-height: 30px;
   margin-top: $globalNav-height;
 }
 
-.image {
-  width: 150px;
-  height: 150px;
+// components >>>
+
+// GlobalNav.tsx
+.globalNav {
+  border: $temp-border;
+  color: white;
+  background-color: $temp-backcolor;
+  width: $phone-width;
+  height: $globalNav-height;
+  position: fixed;
+  z-index: 1000;
+  top: 0px;
+}
+
+// CardList.tsx
+.card {
+  width: $phone-width / 2;
+}
+
+.cardBody {
+  width: $phone-width / 2;
+}
+
+.cardImage {
+  width: 100%;
+  height: $image-heigt;
   object-fit: cover;
 }

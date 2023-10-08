@@ -87,7 +87,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット)-2"
+  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット-3)"
   - git push
 
 ## Jira
