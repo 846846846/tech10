@@ -87,7 +87,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット-3)"
+  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット-4)"
   - git push
 
 ## Jira
@@ -125,3 +125,9 @@ arn:aws:s3:::tech10-back-dev-ap-northeast-1-image-1695033895143
 
 20230920T103452518_Healslime.jpeg
 20230920T103548171_Healslime.png
+
+http://s3.localhost.localstack.cloud:4566/images/dummy/20231010T185640259_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20231010%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231010T095640Z&X-Amz-Expires=30&X-Amz-Signature=830ac9556f4480d36d7ba8e289060228ad3b90f56a03bdb1e30fa11f7143ed10&X-Amz-SignedHeaders=host&x-id=PutObject
+
+"Key": "dummy/20231010T185640259_Healslime.png",
+
+"http://s3.localhost.localstack.cloud:4566/images/dummy/20231010T185640259_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20231010%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231010T095713Z&X-Amz-Expires=30&X-Amz-Signature=3e32680d8fae82223617901bf61ffc8fb53b201f8d04aa2e6f80f37039cdfc82&X-Amz-SignedHeaders=host&x-id=GetObject"

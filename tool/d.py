@@ -6,6 +6,7 @@ import requests
 import json
 import random
 import string
+import re
 
 # DynamoDB.
 def ddb(arg1, arg2):
@@ -226,19 +227,37 @@ def req(arg1, arg2):
     response = requests.delete(domain + endpoint, headers=headers)
 
   elif arg1 == "dummy":
+    dummyFileName = 'Healslime.png'
+    dummyFileType = 'image/png'
+
     for _ in range(int(arg2)):
-      endpoint = '/goods/'
-      payload = {
-        'id': generate_random_string(10), 
-        'name': generate_random_string(10),
-        'owner': generate_random_string(10),
-        'explanation': generate_random_string(100),
-        'price': str(generate_dummy_integer(10000)),
-        'image': 'dummy',
-        'category': generate_random_string(30),
-      }
-      headers = {'Content-Type': 'application/json'}
-      response = requests.post(domain + endpoint, headers=headers, json=payload)
+
+      with open(dummyFileName, 'rb') as file:
+        endpoint = '/presigned-url/upload'
+        headers = {'Authorization': authorization}
+        params = {
+          "name": dummyFileName,
+          "type": dummyFileType
+        }
+        preRes = requests.get(domain + endpoint, params=params, headers=headers)
+
+        endpoint = json.loads(preRes.text)["url"]
+        requests.put(endpoint, files={'file': file})
+
+        imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
+
+        endpoint = '/goods/'
+        payload = {
+          'id': generate_random_string(10), 
+          'name': generate_random_string(10),
+          'owner': generate_random_string(10),
+          'explanation': generate_random_string(100),
+          'price': str(generate_dummy_integer(10000)),
+          'image': imageName,
+          'category': generate_random_string(30),
+        }
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "localstack":
     response = requests.get('http://localhost:4566/health')

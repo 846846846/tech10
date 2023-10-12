@@ -10,6 +10,7 @@ type MyProps = { data: Array<ListItems> }
 
 // constant declaration.
 const ITEMS_PER_PAGE = 10
+const PANIGATION_MAX_DISP = 5
 
 const CardList = ({ data }: MyProps) => {
   // hooks.
@@ -25,9 +26,9 @@ const CardList = ({ data }: MyProps) => {
   let startPage: number, endPage: number
   if (currentPage <= 3) {
     startPage = 1
-    endPage = 5
+    endPage = Math.min(PANIGATION_MAX_DISP, totalPages)
   } else if (currentPage > totalPages - 2) {
-    startPage = totalPages - 4
+    startPage = Math.max(1, totalPages - 4)
     endPage = totalPages
   } else {
     startPage = currentPage - 2
@@ -60,11 +61,11 @@ const CardList = ({ data }: MyProps) => {
                       {currentItems[rowIndex * 2].name}
                     </Link>
                   </Card.Text>
-                  <Card.Text>{currentItems[rowIndex * 2].price}</Card.Text>
+                  <Card.Text>{currentItems[rowIndex * 2].price}円</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
-            {currentItems[rowIndex * 2 + 1] && (
+            {currentItems[rowIndex * 2 + 1] ? (
               <Col xs={6}>
                 <Card>
                   <Card.Img
@@ -83,11 +84,13 @@ const CardList = ({ data }: MyProps) => {
                       </Link>
                     </Card.Text>
                     <Card.Text>
-                      {currentItems[rowIndex * 2 + 1].price}
+                      {currentItems[rowIndex * 2 + 1].price}円
                     </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
+            ) : (
+              <div className={styles.cardBody}></div>
             )}
           </Row>
         )
