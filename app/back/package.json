@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "local": "sls offline start",
-    "deploy": "sls deploy",
+    "deploy": "rm -rf .esbuild/ && sls deploy",
     "remove": "sls remove",
     "type-check": "tsc --noEmit",
     "ddb:up": "docker compose up -d",

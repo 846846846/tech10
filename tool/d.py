@@ -11,10 +11,8 @@ import re
 # DynamoDB.
 def ddb(arg1, arg2):
 
-  # read table name
-  with open('./ddb-schema/table.json') as f:
-      params = json.load(f)
-      table_name = params['TableName']
+  # variable.
+  table_name = 'ecsite-dev'
 
   # cmd parts.
   BSE = "aws dynamodb "
@@ -38,12 +36,8 @@ def ddb(arg1, arg2):
   a2c = {
     # arg1.
     "lt": BSE + LTB,
-    "ct": BSE + CTB + CIJ + "table.json",
-    "ut": BSE + UTB + CIJ + "gsi1.json",
     "st": BSE + DSB + TNA + table_name,
     "dt": BSE + DTB + TNA + table_name,
-    "bwi": BSE + BWI + RIS + "items.json",
-    "qry": BSE + QRY + CIJ + "query.json",
 
     # arg2.
     "lo": EPU,
@@ -157,8 +151,8 @@ def cf(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  domain = "http://localhost:3001/dev/api/v1"
-  # domain = "https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  # domain = "http://localhost:3001/dev/api/v1"
+  domain = "https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
   authorization = 'dummy'
 
   response = ""

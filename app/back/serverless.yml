@@ -43,7 +43,8 @@ custom:
       - GSI-General
       - GSI-OwnerGoodsList
   s3:
-    bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-${sls:instanceId}'
+    # bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-${sls:instanceId}'
+    bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-846846846'
   serverless-offline:
     httpPort: 3001
 
@@ -77,6 +78,7 @@ provider:
         - Effect: Allow
           Action:
             - s3:PutObject
+            - s3:GetObject
           Resource: !Sub 'arn:aws:s3:::${self:custom.s3.bucketName}/*'
 
   environment:

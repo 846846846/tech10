@@ -25,53 +25,50 @@
   - python
 
 ## フロントエンド
-  - install
+  - インストール
     1. cd app/front/
     2. npm i
 
-  - localhost
+  - ローカルホスト起動
     1. cd app/front/
     2. npm run local
 
-  - deploy2AWS
-    - one time only
+  - AWSデプロイ
+    - 初回: CloudFormationを利用して、コンテンツ格納用S3やCloudFront(CDN)をセットアップする。
       1. cd tool/CloudFormation/
       2. aws cloudformation create-stack --stack-name {ProjectName} --template-body file://permanent.yaml
       3. AWS Console からスタックの状況を確認する。
 
-    - every time
+    - 毎回: ローカルで資材をビルドして、S3に格納する。
       1. cd app/front/
       2. npm run deploy
       3. aws s3 sync out/ s3://{S3のバケット名}
 
 ## バックエンド
-  - install
+  - インストール
     1. cd app/back/
     2. npm i
 
-  - localhost
-    1. cd app/back/
-    2. npm run local
+  - ローカルホスト
+    - データベース起動
+      1. cd app/back/
+      2. npm run ddb:ct
+      3. cd tool/
+      4. python d.py s3 pbc
 
-  - deploy2AWS
+    - アプリ起動
+      1. cd app/back/
+      2. npm run local
+
+  - AWSデプロイ(ServerlessFrameworkを利用)
     1. cd app/back/
     2. npm run dev
-
-## db
-  - localhost
-    1. cd app/back/
-    2. npm run ddb:ct
-    3. cd tool/
-    4. python d.py s3 pbc
-
-  - deploy2AWS
-    - 不要
 
 # 忘備録
 ## チケット化したいアイテム
   - 画像ファイル格納用S3バケットの定期的クリーニング
-  - DynamoDBとS3バケットの永続化(デプロイ毎に削除しない)
   - 固定ドメインを得る。
+  - セットアップをDockerで。
 
 ## 参考
   - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
@@ -87,7 +84,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(中間コミット-4)"
+  - git commit -m "ECSITE-3:顧客として、商品の詳細情報を見たい(完了)"
   - git push
 
 ## Jira
@@ -131,3 +128,5 @@ http://s3.localhost.localstack.cloud:4566/images/dummy/20231010T185640259_Healsl
 "Key": "dummy/20231010T185640259_Healslime.png",
 
 "http://s3.localhost.localstack.cloud:4566/images/dummy/20231010T185640259_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20231010%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231010T095713Z&X-Amz-Expires=30&X-Amz-Signature=3e32680d8fae82223617901bf61ffc8fb53b201f8d04aa2e6f80f37039cdfc82&X-Amz-SignedHeaders=host&x-id=GetObject"
+
+https://s3.ap-northeast-1.amazonaws.com/tech10-back-dev-ap-northeast-1-image-846846846/dummy/20231014T085347152_Healslime.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAR23PMMLRGTCTXEEA%2F20231013%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20231013T235353Z&X-Amz-Expires=600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECAaDmFwLW5vcnRoZWFzdC0xIkcwRQIhALsbZBDzNTyIHB5pLSYBVbBoWjsQmOnEBZiyRHALl5BlAiBEYEjscNqplngvI2BkHZBy0914IC2m%2B18a3%2Ffqot29pyr%2FAgg5EAAaDDEyNjM5ODI1OTkzOCIMvAdoDrKCGJj5WFu4KtwCAQ1tws%2FGIxPZdufnNjWB38DYJYTqJriSPcX%2BXAca2fS2FduRoMFtqzmwP0ELs6lhVrBPNUNSKtmXwda4PXpMaGZZ0picH17t3Uakmal4sPpdXVTKQX2g8%2FjjucuAW3k78mw7qzIehY%2B77MJHyENYDw4NW1RCctVdXgRAU%2FG1hTioRy1ApwozWCyruaw8e3s7dZW4Lf9YhLKdRux5NMwuaF%2Fp5zI5aameZZhJoTCa6GHFFDzv6RtimPS2WvB2JCOIgweQfwBs%2BGebT6Bn9IgaPnzMmptzC0O5drysyAZ5%2F7DpRdlPda%2BPBux0JjRkIjCofltBCwaXCGp%2F%2B4sfLeGTXyD5WsQVSeFwUPgPpC70gwOuAvcGjYZ0fR%2FfeLJr2%2FM8V8ZBTwtfR%2BbSWP%2BEmjDFxdvgzHZeL%2FFLpJMBFxtnQi0OzQr2VjOqosA066M0gIbIUXwt8ETJ8VuHQYPPMIqxp6kGOp4BmdQXq19%2BznGZg0bS8KhcEw9IP0ktBp2plN6EZq5hZh9rXlNIoVJVAM2LCLsUHnlN8ggKuK3AphfGTqp0dQigu1C1YO38L3JlEzfjmVWZ%2F5uZzGJJDa6voCFsy%2BkQ3dV2IAn3%2FX5Hkwo3qs29UXs9N0ZIxcHITpChB4bquj9q%2FdireAQaSWOl6QPO027BAil9wNAMTFtfoO5j4mLhEA0%3D&X-Amz-Signature=ab59be2fc4fcab3c616908a57525b3dd46df19f9fdd14e612dc443ec3d8203de&X-Amz-SignedHeaders=host&x-id=GetObject
