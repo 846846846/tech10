@@ -61,8 +61,6 @@ Resources:
         DefaultRootObject: index.html
         Origins:
           - Id: S3Origin
-            # リージョン間のS3バケット名の伝播まで最大24時間かかる.
-            # 直ぐ見たい場合は、Consoleにてリージョンを含んだ名称に変更すること.
             # https://repost.aws/ja/knowledge-center/s3-http-307-response
             DomainName: !GetAtt NextJS.DomainName
             S3OriginConfig:
@@ -76,23 +74,23 @@ Resources:
           CachedMethods:
             - GET
             - HEAD
-          Compress: 'true'
+          Compress: true
           ForwardedValues:
-            QueryString: 'false'
+            QueryString: false
             Cookies:
               Forward: none
         CustomErrorResponses:
           - ErrorCode: 403
             ResponsePagePath: '/index.html'
-            ResponseCode: '200'
+            ResponseCode: 200
             ErrorCachingMinTTL: 300
           - ErrorCode: 404
             ResponsePagePath: '/index.html'
-            ResponseCode: '200'
+            ResponseCode: 200
             ErrorCachingMinTTL: 300
         Logging:
           Bucket: !GetAtt [CloudFrontLogs, DomainName]
-          IncludeCookies: 'false'
+          IncludeCookies: false
           Prefix: 'my-log-prefix/'
 
 Outputs:

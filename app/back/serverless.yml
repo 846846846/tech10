@@ -102,6 +102,10 @@ functions:
           method: ANY
           path: api/v1/{any+}
           cors: true
+    environment:
+      COGNITO_USER_POOL_CLIENT_ID: !GetAtt
+        - CognitoUserPoolClient
+        - ClientId
 
 # AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
 resources:
@@ -162,3 +166,34 @@ resources:
                 - 'x-amz-request-id'
               Id: 'ImageS3BucketCORSRuleID'
               MaxAge: 3000
+    CognitoUserPool:
+      Type: 'AWS::Cognito::UserPool'
+      Properties:
+        UserPoolName: '${self:service}-${self:provider.stage}'
+        UsernameAttributes:
+          - 'email'
+        AutoVerifiedAttributes:
+          - 'email'
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireUppercase: true
+            RequireLowercase: true
+            RequireNumbers: true
+            RequireSymbols: false
+        Schema:
+          - AttributeDataType: 'String'
+            DeveloperOnlyAttribute: false
+            Mutable: true
+            Name: 'userRole'
+            StringAttributeConstraints:
+              MaxLength: '10'
+              MinLength: '0'
+            Required: false
+    CognitoUserPoolClient:
+      Type: 'AWS::Cognito::UserPoolClient'
+      Properties:
+        ClientName: '${self:service}-${self:provider.stage}'
+        GenerateSecret: false
+        UserPoolId:
+          Ref: 'CognitoUserPool'

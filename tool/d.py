@@ -112,7 +112,7 @@ def s3(arg1, arg2):
   subprocess.run(cmd)
 
 # cloudformation
-def cf(arg1, arg2):
+def cfn(arg1, arg2):
 
   # cmd parts.
   BSE = "aws cloudformation "
@@ -123,22 +123,31 @@ def cf(arg1, arg2):
   US = "update-stack --stack-name "
   DES = "describe-stacks --stack-name "
   DS = "delete-stack --stack-name "
+  DMY = ""
 
   ## variable.
-  SN = "tech10-front-dev "
-  YML = "--template-body file://../app/front/cf.yaml"
-
-
-  DMY = ""
+  sn = ""
+  yml = ""
+  if arg1 == "core":
+    sn = "tech10-front "
+    yml = "--template-body file://../app/infra/core.cfn.yaml"
+  elif arg1 == "front":
+    sn = "tech10-core "
+    yml = "--template-body file://../app/infra/front.cfn.yaml"
+  elif arg1 == "back":
+    sn = "tech10-back "
+    yml = "--template-body file://../app/infra/back.sls.yaml"
 
   # alias to cmd.
   a2c = {
-    # arg1.
-    "vt": BSE + VT + YML,
-    "cs": BSE + CS + SN + YML,
-    "us": BSE + US + SN + YML,
-    "des": BSE + DES + SN,
-    "ds": BSE + DS + SN,
+    # arg2.
+    "vt": BSE + VT + yml,
+    "cs": BSE + CS + sn + yml,
+    "us": BSE + US + sn + yml,
+    "des": BSE + DES + sn,
+    "ds": BSE + DS + sn,
+
+    # arg2.
 
     # n/a.
     "": DMY,
@@ -146,7 +155,7 @@ def cf(arg1, arg2):
   cmd = a2c[arg1] + a2c[arg2]
 
   print(cmd)
-  subprocess.run(cmd)
+  # subprocess.run(cmd)
 
 # http req.
 def req(arg1, arg2):
@@ -176,6 +185,36 @@ def req(arg1, arg2):
       "name": "xxx.jpeg",
     }
     response = requests.get(domain + endpoint, params=params, headers=headers)
+
+  elif arg1 == "signup":
+    endpoint = '/users/signup'
+    payload = {
+      'email': 'ayas88888@gmail.com', 
+      'password': 'a1faS112', 
+    }
+    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
+    print(domain + endpoint)
+    response = requests.post(domain + endpoint, headers=headers, json=payload)
+
+  elif arg1 == "confirmSignUp":
+    endpoint = '/users/confirmSignUp'
+    payload = {
+      'email': 'ayas88888@gmail.com', 
+      'confirmationCode': '911208', 
+    }
+    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
+    print(domain + endpoint)
+    response = requests.post(domain + endpoint, headers=headers, json=payload)
+
+  elif arg1 == "signin":
+    endpoint = '/users/signin'
+    payload = {
+      'email': 'ayas88888@gmail.com', 
+      'password': 'a1faS112', 
+    }
+    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
+    print(domain + endpoint)
+    response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "goodsList":
     endpoint = '/goods/' + arg2
@@ -277,7 +316,7 @@ def run():
       "ddb": ddb,
       "req": req,
       "s3": s3,
-      "cf": cf,
+      "cfn": cfn,
     }
 
     # take out args.

@@ -3,8 +3,9 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
-import * as goods from './entity/goods'
 import * as meta from './entity/meta'
+import * as users from './entity/users'
+import * as goods from './entity/goods'
 
 sourceMapSupport.install()
 
@@ -44,6 +45,40 @@ router.get('/api/v1/presigned-url/upload', async (_req, res, _next) => {
 router.get('/api/v1/presigned-url/download', async (_req, res, _next) => {
   try {
     const result = await meta.generatePresignedUrl(_req, false)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    _next(error)
+  }
+})
+
+// users.
+router.post('/api/v1/users/signup', async (_req, res, _next) => {
+  try {
+    const result = await users.signup(_req)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    _next(error)
+  }
+})
+
+router.post('/api/v1/users/confirmSignUp', async (_req, res, _next) => {
+  try {
+    const result = await users.confirmSignUp(_req)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    _next(error)
+  }
+})
+
+router.post('/api/v1/users/signin', async (_req, res, _next) => {
+  try {
+    const result = await users.signin(_req)
     res.set('content-type', 'applicaion/json')
     res.send(result)
   } catch (err) {

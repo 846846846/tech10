@@ -14,6 +14,8 @@ servers:
 tags:
   - name: meta
     description: メタ情報を扱うAPI。
+  - name: users
+    description: ユーザー情報を扱うAPI。
   - name: goods
     description: 商品情報を扱うAPI。
 
@@ -108,6 +110,150 @@ paths:
           description: Invalid input
         "500":
           description: Server error
+
+  /users/signup:
+    post:
+      summary: ユーザーを新規登録する。
+      description: Cognitoのユーザープールに新規ユーザアカウントを登録する。
+      tags:
+        - users
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: 新規登録に成功した。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /users/confirmSignup:
+    post:
+      summary: ユーザーを有効化する。
+      description: ユーザーが入力したチャレンジレスポンスを送信し、Cognitoが管理するユーザーを有効化する。
+      tags:
+        - users
+      operationId: activate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                confirmationCode:
+                  type: string
+              required:
+                - email
+                - confirmationCode
+            example:
+              email: samlple@example.com
+              confirmationCode: 752763
+      responses:
+        "200":
+          description: 有効化に成功した。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /users/signin:
+    post:
+      summary: ユーザーのログインを行う。
+      description: 要求されたユーザー情報とCognitoのユーザープールに登録された情報を検証する。
+      tags:
+        - users
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: サインインに成功した。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  idToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: 認証に失敗した。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 
   /goods:
     get:
