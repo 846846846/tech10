@@ -14,13 +14,16 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 const REGION: string = process.env.REGION!
-const CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
+const CLIENTID: string = process.env.IS_OFFLINE ? 'm8pey4tjguxgfbnygik4s3mm02' : process.env.COGNITO_USER_POOL_CLIENT_ID!
 const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
+
+const client = process.env.IS_OFFLINE
+  ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
+  : new CognitoIdentityProviderClient({ region: REGION })
 
 export const signup = async (req: Request) => {
   try {
     const { email, password, ...rest } = req.body
-    const client = new CognitoIdentityProviderClient({ region: REGION })
 
     const params: SignUpCommandInput = {
       ClientId: CLIENTID,
@@ -46,7 +49,6 @@ export const signup = async (req: Request) => {
 export const confirmSignUp = async (req: Request) => {
   try {
     const { email, confirmationCode, ...rest } = req.body
-    const client = new CognitoIdentityProviderClient({ region: REGION })
 
     const params: ConfirmSignUpCommandInput = {
       ClientId: CLIENTID,
@@ -72,7 +74,6 @@ export const confirmSignUp = async (req: Request) => {
 export const signin = async (req: Request) => {
   try {
     const { email, password, ...rest } = req.body
-    const client = new CognitoIdentityProviderClient({ region: REGION })
 
     const params: InitiateAuthCommandInput = {
       ClientId: CLIENTID,

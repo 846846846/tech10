@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  moto:
+    image: motoserver/moto:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - MOTO_ACCOUNT_ID=123456789012

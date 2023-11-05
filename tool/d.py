@@ -7,6 +7,8 @@ import json
 import random
 import string
 import re
+import boto3
+from moto import mock_cognitoidp
 
 # DynamoDB.
 def ddb(arg1, arg2):
@@ -157,11 +159,128 @@ def cfn(arg1, arg2):
   print(cmd)
   # subprocess.run(cmd)
 
+# cognito(localhosot).
+def cog(arg1, arg2):
+  moto_server_url = "http://localhost:5000"
+
+  if arg1 == "cup":
+    @mock_cognitoidp
+    def create_user_pool():
+
+      # Cognito Identity Provider サービスクライアントの作成
+      client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=moto_server_url)
+      
+      # ユーザープールの作成
+      user_pool = client.create_user_pool(
+          PoolName='MyUserPool',
+          MfaConfiguration='OFF',
+          Policies={
+              'PasswordPolicy': {
+                  'MinimumLength': 8,
+                  'RequireUppercase': True,
+                  'RequireLowercase': True,
+                  'RequireNumbers': True,
+                  'RequireSymbols': False
+              }
+          },
+          Schema=[
+              {
+                  'Name': 'userRole',
+                  'AttributeDataType': 'String',
+                  'Mutable': True,
+                  'Required': False,
+                  'StringAttributeConstraints': {
+                      'MinLength': '0',
+                      'MaxLength': '10'
+                  }
+              },
+          ],
+          AliasAttributes=['email'],
+          VerificationMessageTemplate={
+              'DefaultEmailOption': 'CONFIRM_WITH_CODE'
+          }
+      )
+      user_pool_id = user_pool['UserPool']['Id']
+      print(user_pool_id)
+      
+      # ユーザープールクライアントの作成
+      user_pool_client = client.create_user_pool_client(
+          UserPoolId=user_pool_id,
+          ClientName='MyTestClient',
+          GenerateSecret=True
+      )
+      client_id = user_pool_client['UserPoolClient']['ClientId']
+      print(client_id)
+
+    create_user_pool()
+
+  elif arg1 == "sup":
+    @mock_cognitoidp
+    def show_user_pool():
+      # Cognito Identity Provider サービスクライアントの作成
+      client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=moto_server_url)
+
+      # ユーザープールの一覧を取得
+      pools_response  = client.list_user_pools(MaxResults=10)
+      print(pools_response)
+
+      # ユーザープールごとにクライアントのリストを取得します。
+      for pool in pools_response['UserPools']:
+          user_pool_id = pool['Id']
+          print(f"User Pool ID: {user_pool_id}")
+          
+          # ユーザープールクライアントの一覧を取得します。
+          clients_response = client.list_user_pool_clients(UserPoolId=user_pool_id, MaxResults=60)
+          print(f"User Pool Clients for {user_pool_id}:")
+          for client_data in clients_response['UserPoolClients']:
+              print(client_data)
+
+    show_user_pool()
+
+  elif arg1 == "dup":
+    @mock_cognitoidp
+    def delete_user_pool():
+      # Cognito Identity Provider サービスクライアントの作成
+      client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=moto_server_url)
+
+      # ユーザープールの一覧を取得
+      pools_response  = client.list_user_pools(MaxResults=10)
+      for pool in pools_response['UserPools']:
+          user_pool_id = pool['Id']
+          print(f"User Pool ID: {user_pool_id}")
+          
+          # ユーザープールを削除
+          client.delete_user_pool(UserPoolId=user_pool_id)
+
+    delete_user_pool()
+
+  elif arg1 == "lu":
+    @mock_cognitoidp
+    def list_users():
+      # Cognito Identity Provider サービスクライアントの作成
+      client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=moto_server_url)
+
+      # ユーザープールの一覧を取得
+      pools_response  = client.list_user_pools(MaxResults=10)
+      for pool in pools_response['UserPools']:
+          user_pool_id = pool['Id']
+          print(f"User Pool ID: {user_pool_id}")
+          
+          # ユーザー一覧を取得
+          lu_response = client.list_users(UserPoolId=user_pool_id)
+
+          # ユーザー一覧を表示
+          for user in lu_response['Users']:
+              print(f"Username: {user['Username']} - User Status: {user['UserStatus']}")
+
+    list_users()
+
+
 # http req.
 def req(arg1, arg2):
 
-  # domain = "http://localhost:3001/dev/api/v1"
-  domain = "https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  domain = "http://localhost:3001/dev/api/v1"
+  # domain = "https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
   authorization = 'dummy'
 
   response = ""
@@ -317,6 +436,7 @@ def run():
       "req": req,
       "s3": s3,
       "cfn": cfn,
+      "cog": cog,
     }
 
     # take out args.

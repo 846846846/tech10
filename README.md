@@ -84,8 +84,19 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット1)"
+  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット2)"
   - git push
+
+## localhost
+  - APIGateway + Lambda
+    - sls local
+  - DynamoDB
+    - DynamoDB Local
+  - S3
+    - localstack
+  - Cognito
+    - 
+    - localstackのCognitoはPro(有償版)しか利用できない。
 
 ## node.js
   - npm list -g
@@ -96,7 +107,6 @@
 ## CloudFormation
   - テンプレートの構造分析
     - https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-anatomy.html
-
 
 ## Jira
   - 子課題テンプレート
@@ -177,3 +187,6 @@ aws cloudformation delete-stack --stack-name test
 /api/v1/users/signup
 
 https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1/users/
+
+
+docker exec -it cc47a4857f03 env
