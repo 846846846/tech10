@@ -67,10 +67,11 @@ const GoodsRegist: NextPage = () => {
       reset()
     } catch (err) {
       if (err instanceof AxiosError) {
-        console.log(err?.response)
+        console.error(err?.response)
         setUpload(err?.response?.status as number)
+      } else {
+        console.error(err)
       }
-      console.error(err)
     }
   }
 

@@ -14,7 +14,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 const REGION: string = process.env.REGION!
-const CLIENTID: string = process.env.IS_OFFLINE ? 'm8pey4tjguxgfbnygik4s3mm02' : process.env.COGNITO_USER_POOL_CLIENT_ID!
+const CLIENTID: string = process.env.IS_OFFLINE ? '536w7cg4r4xv0r77siqfxzizub' : process.env.COGNITO_USER_POOL_CLIENT_ID!
 const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
 const client = process.env.IS_OFFLINE
@@ -23,12 +23,22 @@ const client = process.env.IS_OFFLINE
 
 export const signup = async (req: Request) => {
   try {
-    const { email, password, ...rest } = req.body
+    const { name, email, password, role, ...rest } = req.body
 
     const params: SignUpCommandInput = {
       ClientId: CLIENTID,
-      Username: email,
+      Username: name,
       Password: password,
+      UserAttributes: [
+        {
+          Name: 'email',
+          Value: email,
+        },
+        {
+          Name: 'custom:role',
+          Value: convertToCommaSeparatedString(role),
+        },
+      ],
     }
     console.log(params)
     const result: SignUpCommandOutput = await client.send(new SignUpCommand(params))
@@ -48,11 +58,11 @@ export const signup = async (req: Request) => {
 
 export const confirmSignUp = async (req: Request) => {
   try {
-    const { email, confirmationCode, ...rest } = req.body
+    const { name, confirmationCode, ...rest } = req.body
 
     const params: ConfirmSignUpCommandInput = {
       ClientId: CLIENTID,
-      Username: email,
+      Username: name,
       ConfirmationCode: confirmationCode,
     }
     console.log(params)
@@ -73,13 +83,13 @@ export const confirmSignUp = async (req: Request) => {
 
 export const signin = async (req: Request) => {
   try {
-    const { email, password, ...rest } = req.body
+    const { name, password, ...rest } = req.body
 
     const params: InitiateAuthCommandInput = {
       ClientId: CLIENTID,
       AuthFlow: AUTHFLOW,
       AuthParameters: {
-        USERNAME: email,
+        USERNAME: name,
         PASSWORD: password,
       },
     }
@@ -97,4 +107,13 @@ export const signin = async (req: Request) => {
       body: JSON.stringify(err.message),
     }
   }
+}
+
+/*
+ * ユーティリティ関数群.
+ */
+// オブジェクトをカンマ区切りの文字列に変換する
+function convertToCommaSeparatedString(obj: { [key: string]: boolean }): string {
+  const trueKeys = Object.keys(obj).filter((key) => obj[key])
+  return trueKeys.join(', ')
 }

@@ -13,6 +13,12 @@ const Top = () => {
         <br />
         <Link href="buyer/GoodsList">購入者/商品一覧</Link>
         <br />
+        <Link href="users/Signup">管理者/サインアップ</Link>
+        <br />
+        <Link href="users/confirmSignUp">管理者/サインアップ(確認)</Link>
+        <br />
+        <Link href="users/Signin">管理者/サインイン</Link>
+        <br />
       </main>
     </>
   )

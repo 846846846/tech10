@@ -175,27 +175,33 @@ def cog(arg1, arg2):
           PoolName='MyUserPool',
           MfaConfiguration='OFF',
           Policies={
-              'PasswordPolicy': {
-                  'MinimumLength': 8,
-                  'RequireUppercase': True,
-                  'RequireLowercase': True,
-                  'RequireNumbers': True,
-                  'RequireSymbols': False
-              }
+            'PasswordPolicy': {
+              'MinimumLength': 8,
+              'RequireUppercase': True,
+              'RequireLowercase': True,
+              'RequireNumbers': True,
+              'RequireSymbols': False
+            }
           },
           Schema=[
               {
-                  'Name': 'userRole',
-                  'AttributeDataType': 'String',
+                  'Name': 'email',
+                  'Required': True,
                   'Mutable': True,
+                  'AttributeDataType': 'String',
+              },
+              {
+                  'Name': 'role',
+                  'Mutable': False,
                   'Required': False,
+                  'AttributeDataType': 'String',
                   'StringAttributeConstraints': {
-                      'MinLength': '0',
-                      'MaxLength': '10'
+                      'MaxLength': '30',
+                      'MinLength': '0'
                   }
               },
           ],
-          AliasAttributes=['email'],
+          # AliasAttributes=['email'],
           VerificationMessageTemplate={
               'DefaultEmailOption': 'CONFIRM_WITH_CODE'
           }
@@ -280,7 +286,7 @@ def cog(arg1, arg2):
 def req(arg1, arg2):
 
   domain = "http://localhost:3001/dev/api/v1"
-  # domain = "https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  # domain = "https://zh2x6llrh3.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
   authorization = 'dummy'
 
   response = ""
@@ -308,30 +314,32 @@ def req(arg1, arg2):
   elif arg1 == "signup":
     endpoint = '/users/signup'
     payload = {
+      'name': 'yashiro', 
       'email': 'ayas88888@gmail.com', 
-      'password': 'a1faS112', 
+      'password': 'a1faS112',
+      'role': {'seller': True, 'buyer': False},
     }
-    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
+    headers = {'Content-Type': 'application/json'}
     print(domain + endpoint)
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "confirmSignUp":
     endpoint = '/users/confirmSignUp'
     payload = {
-      'email': 'ayas88888@gmail.com', 
-      'confirmationCode': '911208', 
+      'name': 'yashiro', 
+      'confirmationCode': '251155', 
     }
-    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
+    headers = {'Content-Type': 'application/json'}
     print(domain + endpoint)
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "signin":
     endpoint = '/users/signin'
     payload = {
-      'email': 'ayas88888@gmail.com', 
+      'name': 'yashiro',
       'password': 'a1faS112', 
     }
-    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
+    headers = {'Content-Type': 'application/json'}
     print(domain + endpoint)
     response = requests.post(domain + endpoint, headers=headers, json=payload)
 

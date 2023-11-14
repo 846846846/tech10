@@ -2,8 +2,6 @@ import ClientLib, { Request } from '../libs/axios'
 
 const ENDPOINT = '/goods/'
 
-export type APIType = 'create' | 'read' | 'update' | 'delete'
-
 export class GoodsAPI extends ClientLib {
   constructor() {
     super()

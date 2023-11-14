@@ -1,7 +1,5 @@
 import ClientLib, { Request } from '../libs/axios'
 
-export type APIType = 'create' | 'read' | 'update' | 'delete'
-
 export class MetaAPI extends ClientLib {
   constructor() {
     super()

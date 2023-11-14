@@ -1,0 +1,33 @@
+$temp-color: #8a8a8a;
+$temp-backcolor: #8a8a8a;
+$temp-border: 0.75px solid $temp-color;
+$phone-width: 360px;
+
+// pages >>>
+
+// Signup.tsx
+.container {
+  width: $phone-width;
+  padding: 10px 5px;
+  border: 0.5px solid $temp-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.roleCheckBox {
+  display: flex;
+  gap: 20px;
+}
+
+.buttonContainer {
+  width: 200px;
+  margin-left: auto;
+  display: flex;
+  .buttonItem {
+    flex: 1;
+    margin-left: 20px;
+    // font-weight: bold;
+  }
+}

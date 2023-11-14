@@ -170,8 +170,6 @@ resources:
       Type: 'AWS::Cognito::UserPool'
       Properties:
         UserPoolName: '${self:service}-${self:provider.stage}'
-        UsernameAttributes:
-          - 'email'
         AutoVerifiedAttributes:
           - 'email'
         Policies:
@@ -182,14 +180,17 @@ resources:
             RequireNumbers: true
             RequireSymbols: false
         Schema:
-          - AttributeDataType: 'String'
-            DeveloperOnlyAttribute: false
+          - Name: 'email'
+            Required: true
             Mutable: true
-            Name: 'userRole'
-            StringAttributeConstraints:
-              MaxLength: '10'
-              MinLength: '0'
+            AttributeDataType: 'String'
+          - Name: 'role'
             Required: false
+            Mutable: false
+            AttributeDataType: 'String'
+            StringAttributeConstraints:
+              MaxLength: '30'
+              MinLength: '0'
     CognitoUserPoolClient:
       Type: 'AWS::Cognito::UserPoolClient'
       Properties:
@@ -197,3 +198,6 @@ resources:
         GenerateSecret: false
         UserPoolId:
           Ref: 'CognitoUserPool'
+        ExplicitAuthFlows:
+          - 'ALLOW_USER_PASSWORD_AUTH'
+          - 'ALLOW_REFRESH_TOKEN_AUTH'
