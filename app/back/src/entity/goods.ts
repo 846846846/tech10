@@ -1,5 +1,6 @@
 import { Request } from 'express'
 import * as ddb from '../libs/ddb'
+import UserInfoLib from '../libs/userInfo'
 import moment from 'moment'
 import 'moment-timezone'
 import crypto from 'crypto'
@@ -11,7 +12,7 @@ const MY_ENYITY = 'goods'
 
 export const create = async (req: Request) => {
   try {
-    const { id, name, explanation, price, image, category, ...rest } = req.body
+    const { id, name, owner, explanation, price, image, category, ...rest } = req.body
 
     // 1. 登録済みのidはエラーとする
     const registedUuid = await ddb.getUuidByType('id', id, TABLE_NAME, GSI_GENERAL, false)
@@ -20,15 +21,14 @@ export const create = async (req: Request) => {
 
     // 2. DBに合う形にデータを整形.
     const uuid: string = crypto.randomUUID()
-    const ownerId = 'dummy' // [TODO] チケットECSITE-14で対応予定.
     const jstTime = moment().tz('Asia/Tokyo').format('YYYY-MM-DDTHH:mm:ssZ')
 
     const typeList = ['entity', 'owner', 'id', 'name', 'explanation', 'price', 'image', 'category', 'createAt', 'updateAt']
-    const valueList = [MY_ENYITY, ownerId, id, name, explanation, price, image, category, jstTime, jstTime]
+    const valueList = [MY_ENYITY, owner, id, name, explanation, price, image, category, jstTime, jstTime]
     const items: any = typeList
       .map((type, index) =>
         type === 'id' || type === 'name' || type === 'owner' || type === 'price' || type === 'image'
-          ? { uuid: uuid, type: type, value: valueList[index], ownerid: ownerId }
+          ? { uuid: uuid, type: type, value: valueList[index], owner: owner }
           : {
               uuid: uuid,
               type: type,
@@ -48,18 +48,19 @@ export const create = async (req: Request) => {
 
 export const readAll = async (req: Request) => {
   try {
-    const ownerId = req.headers['authorization'] // [TODO] チケットECSITE-14で対応予定.
-    if (ownerId === undefined) throw new Error('404:specified data not found.')
+    const userInfoLib = new UserInfoLib()
+    const owner = userInfoLib.getOwner(req.headers['authorization'])
+    if (owner === undefined) throw new Error('404:specified data not found.')
 
     // 1. オーナーが所有するリストを取得.
     const data = await ddb.query(
       TABLE_NAME,
-      '#ownerid = :v1',
+      '#owner = :v1',
       {
-        ':v1': ownerId,
+        ':v1': owner,
       },
       {
-        '#ownerid': 'ownerid',
+        '#owner': 'owner',
       },
       GSI_OWNERGOODSLIST
     )
@@ -150,11 +151,11 @@ export const deleteCus = async (req: Request, id: string) => {
           '#uuid': 'uuid',
         }
       )
-      // valueとownerIdキーは取り除く.
+      // valueとownerキーは取り除く.
       .then(function (result) {
         return result.Items?.map((item) => {
           delete item.value
-          delete item.ownerid
+          delete item.owner
           return item
         })
       })

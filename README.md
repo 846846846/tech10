@@ -84,7 +84,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット3)"
+  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット4)"
   - git push
 
 ## localhost
@@ -156,7 +156,11 @@ https://s3.ap-northeast-1.amazonaws.com/tech10-back-dev-ap-northeast-1-image-846
 
 npm install --save-dev typescript @types/react @types/node
 
+npm install --save-dev @types/jsonwebtoken @types/jwks-rsa
+
 npm install @aws-amplify/ui-react
+
+npm uninstall jwks-rsa
 
 
 aws cloudformation create-stack --stack-name cognitoTest --template-body file://cf.yaml
@@ -190,3 +194,8 @@ https://xxr3q09l5d.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1/users/
 
 
 docker exec -it cc47a4857f03 env
+
+エンティティ毎にAPIGatewayとLamdbaを分ける。
+
+public
+private

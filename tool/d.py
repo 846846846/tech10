@@ -285,34 +285,48 @@ def cog(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  domain = "http://localhost:3001/dev/api/v1"
-  # domain = "https://zh2x6llrh3.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
-  authorization = 'dummy'
+  # domain = "http://localhost:3001/dev/api/v1"
+  domain = "https://teltctf35i.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+
+  def getBearer():
+    url = domain + '/public' + '/users/signin'
+    payload = {
+      'name': 'yashiro',
+      'password': 'a1faS112', 
+    }
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, headers=headers, json=payload)
+    resBody = json.loads(response.text)["body"]
+    bearer = json.loads(resBody)["IdToken"]
+    return bearer
 
   response = ""
   if arg1 == "":
-    endpoint = '/health'
-    response = requests.get(domain + endpoint)
+    url = domain + '/public' + '/health'
+    print(url)
+    response = requests.get(url)
 
   elif arg1 == "upload":
-    endpoint = '/presigned-url/upload'
-    headers = {'Authorization': authorization}
+    url = domain + '/private' + '/presigned-url/upload'
+    headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
       "name": "xxx.jpeg",
       "type": "image/jpeg"
     }
-    response = requests.get(domain + endpoint, params=params, headers=headers)
+    print(url)
+    response = requests.get(url, params=params, headers=headers)
 
   elif arg1 == "download":
-    endpoint = '/presigned-url/download'
-    headers = {'Authorization': authorization}
+    url = domain + '/private' + '/presigned-url/download'
+    headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
       "name": "xxx.jpeg",
     }
-    response = requests.get(domain + endpoint, params=params, headers=headers)
+    print(url)
+    response = requests.get(url, params=params, headers=headers)
 
   elif arg1 == "signup":
-    endpoint = '/users/signup'
+    url = domain + '/public' + '/users/signup'
     payload = {
       'name': 'yashiro', 
       'email': 'ayas88888@gmail.com', 
@@ -320,55 +334,73 @@ def req(arg1, arg2):
       'role': {'seller': True, 'buyer': False},
     }
     headers = {'Content-Type': 'application/json'}
-    print(domain + endpoint)
-    response = requests.post(domain + endpoint, headers=headers, json=payload)
+    print(url)
+    response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "confirmSignUp":
-    endpoint = '/users/confirmSignUp'
+    url = domain + '/public' + '/users/confirmSignUp'
     payload = {
       'name': 'yashiro', 
-      'confirmationCode': '251155', 
+      'confirmationCode': '809654', 
     }
     headers = {'Content-Type': 'application/json'}
-    print(domain + endpoint)
-    response = requests.post(domain + endpoint, headers=headers, json=payload)
+    print(url)
+    response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "signin":
-    endpoint = '/users/signin'
+    url = domain + '/public' + '/users/signin'
     payload = {
       'name': 'yashiro',
       'password': 'a1faS112', 
     }
     headers = {'Content-Type': 'application/json'}
-    print(domain + endpoint)
-    response = requests.post(domain + endpoint, headers=headers, json=payload)
+    print(url)
+    response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "goodsList":
-    endpoint = '/goods/' + arg2
-    headers = {'Authorization': authorization}
-    response = requests.get(domain + endpoint, headers=headers)
+    url = domain + '/private' + '/goods'
+    headers = {'Authorization': 'Bearer ' + getBearer()}
+    print(url)
+    response = requests.get(url, headers=headers)
 
   elif arg1 == "goodsDetail":
-    endpoint = '/goods/' + arg2
-    headers = {'Authorization': authorization}
-    response = requests.get(domain + endpoint, headers=headers)
+    url = domain + '/private' + '/goods/' + arg2
+    headers = {'Authorization': 'Bearer ' + getBearer()}
+    print(url)
+    response = requests.get(url, headers=headers)
 
   elif arg1 == "post":
-    endpoint = '/goods/'
+    url = domain + '/private' + '/goods'
     payload = {
       'id': 'apple_001', 
       'name': 'りんご', 
-      'owner': 'さとう',
+      'owner': 'yashiro',
       'explanation': 'りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。', 
       'price': '100', 
       'image': '20230928T073511479_Apple.jpeg', 
       'category': 'food', 
     }
-    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
-    response = requests.post(domain + endpoint, headers=headers, json=payload)
+    headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
+    print(url)
+    response = requests.post(url, headers=headers, json=payload)
+
+  elif arg1 == "post2":
+    url = domain + '/private' + '/goods'
+    payload = {
+      'id': 'orange_001', 
+      'name': 'みかん', 
+      'owner': 'satou',
+      'explanation': 'みかんうまい', 
+      'price': '300', 
+      'image': '20230928T073511479_OOrange.jpeg', 
+      'category': 'food', 
+    }
+    headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
+    print(url)
+    response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "put":
-    endpoint = '/goods/' + arg2
+    url = domain + '/private' + '/goods/' + arg2
     payload = {
       'id': 'apple_002', 
       'name': 'りんご', 
@@ -378,13 +410,14 @@ def req(arg1, arg2):
       'image': '20230928T073511479_Apple.jpeg', 
       'category': 'food', 
     }
-    headers = {'Authorization': authorization, 'Content-Type': 'application/json'}
-    response = requests.put(domain + endpoint, headers=headers, json=payload)
+    headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
+    print(url)
+    response = requests.put(url, headers=headers, json=payload)
 
   elif arg1 == "delete":
-    endpoint = '/goods/' + arg2
-    headers = {'Authorization': authorization}
-    response = requests.delete(domain + endpoint, headers=headers)
+    url = domain + '/private' + '/goods/' + arg2
+    headers = {'Authorization': 'Bearer ' + getBearer()}
+    response = requests.delete(url, headers=headers)
 
   elif arg1 == "dummy":
     dummyFileName = 'Healslime.png'
@@ -393,8 +426,8 @@ def req(arg1, arg2):
     for _ in range(int(arg2)):
 
       with open(dummyFileName, 'rb') as file:
-        endpoint = '/presigned-url/upload'
-        headers = {'Authorization': authorization}
+        endpoint = '/private/presigned-url/upload'
+        headers = {'Authorization': 'Bearer ' + getBearer()}
         params = {
           "name": dummyFileName,
           "type": dummyFileType
@@ -406,7 +439,7 @@ def req(arg1, arg2):
 
         imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
 
-        endpoint = '/goods/'
+        endpoint = '/private/goods/'
         payload = {
           'id': generate_random_string(10), 
           'name': generate_random_string(10),

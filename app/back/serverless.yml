@@ -91,18 +91,43 @@ provider:
 # このセクションには、サービスで定義するすべての関数が含まれます。
 # 各関数は、実行するハンドラと、関数をトリガするイベント（HTTPリクエスト、S3バケットの変更など）を指定します。
 functions:
-  app:
-    handler: src/handler.handler
+  appWithAuthorizer:
+    handler: src/handler/withAuthorizer.handler
     events:
       - http:
           method: ANY
-          path: api/v1
+          path: api/v1/private
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+      - http:
+          method: ANY
+          path: api/v1/private/{any+}
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
+    environment:
+      COGNITO_USER_POOL_ID: !Ref CognitoUserPool
+      COGNITO_USER_POOL_CLIENT_ID: !GetAtt
+        - CognitoUserPoolClient
+        - ClientId
+  appWithoutAuthorizer:
+    handler: src/handler/withoutAuthorizer.handler
+    events:
+      - http:
+          method: ANY
+          path: api/v1/public
           cors: true
       - http:
           method: ANY
-          path: api/v1/{any+}
+          path: api/v1/public/{any+}
           cors: true
     environment:
+      COGNITO_USER_POOL_ID: !Ref CognitoUserPool
       COGNITO_USER_POOL_CLIENT_ID: !GetAtt
         - CognitoUserPoolClient
         - ClientId
@@ -121,7 +146,7 @@ resources:
             AttributeType: S
           - AttributeName: value
             AttributeType: S
-          - AttributeName: ownerid
+          - AttributeName: owner
             AttributeType: S
         KeySchema:
           - AttributeName: uuid
@@ -140,7 +165,7 @@ resources:
               ProjectionType: KEYS_ONLY
           - IndexName: ${self:custom.dynamodb.gsi.1}
             KeySchema:
-              - AttributeName: ownerid
+              - AttributeName: owner
                 KeyType: HASH
             Projection:
               ProjectionType: INCLUDE
@@ -201,3 +226,13 @@ resources:
         ExplicitAuthFlows:
           - 'ALLOW_USER_PASSWORD_AUTH'
           - 'ALLOW_REFRESH_TOKEN_AUTH'
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: '${self:service}-${self:provider.stage}'
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [CognitoUserPool, Arn]

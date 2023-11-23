@@ -4,17 +4,17 @@
 # テーブル構造
   |Index|Attributes||||
   |--|--|--|--|--|
-  ||uuid: S|key: S|value: S|ownerid: S|
+  ||uuid: S|key: S|value: S|owner: S|
   |PrimaryKey|PK|SK||
   |GSI-General|(projection)|PK|SK|
   |GSI-OwnerGoodsList||(projection)|(projection)|PK|
   ||{uuid-1}|entity|goods||
-  ||{uuid-1}|owner|{ownerid}|{ownerid}|
-  ||{uuid-1}|id|{id}|{ownerid}||
-  ||{uuid-1}|name|{name}|{ownerid}|
+  ||{uuid-1}|owner|{owner}|{owner}|
+  ||{uuid-1}|id|{id}|{owner}||
+  ||{uuid-1}|name|{name}|{owner}|
   ||{uuid-1}|explanation|{explanation}||
-  ||{uuid-1}|price|{price}|{ownerid}|
-  ||{uuid-1}|image|{filename}|{ownerid}|
+  ||{uuid-1}|price|{price}|{owner}|
+  ||{uuid-1}|image|{filename}|{owner}|
   ||{uuid-1}|category|{category}||
   ||{uuid-1}|createAt|{ISO8601}||
   ||{uuid-1}|updateAt|{ISO8601}||
