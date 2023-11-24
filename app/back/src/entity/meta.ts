@@ -2,6 +2,7 @@ import { Request, query } from 'express'
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import moment from 'moment'
+import UserInfoLib from '../libs/userInfo'
 
 // const s3Client = new S3Client({
 //   region: 'ap-northeast-1',
@@ -37,7 +38,8 @@ export const health = async (req: Request) => {
 }
 
 export const generatePresignedUrl = async (req: Request, upload: boolean) => {
-  const owner = req.headers.authorization // (TBD:チケットNoのECSITE-14で対応) 認証情報からオーナー名を逆引き。
+  const userInfoLib = new UserInfoLib()
+  const owner = userInfoLib.getOwner(req.headers['authorization'])
   const name = req.query.name as string
 
   const Bucket = process.env.IS_OFFLINE ? 'images' : process.env.IMAGE_S3_BUCKET

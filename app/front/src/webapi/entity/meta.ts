@@ -8,7 +8,7 @@ export class MetaAPI extends ClientLib {
   public async health() {
     try {
       const req: Request = {
-        url: '/health',
+        url: '/public/health',
       }
       return super.get(req)
     } catch (err) {
@@ -19,10 +19,12 @@ export class MetaAPI extends ClientLib {
   public async generatePresignedUrl(params: any, upload: boolean) {
     try {
       const req: Request = {
-        url: upload ? '/presigned-url/upload' : '/presigned-url/download',
+        url: upload
+          ? '/private/presigned-url/upload'
+          : '/private/presigned-url/download',
         params,
         headers: {
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          Authorization: this.getAuthorization(),
         },
       }
       return super.get(req)
@@ -38,7 +40,7 @@ export class MetaAPI extends ClientLib {
         params,
         headers: {
           'Content-Type': params.type,
-          // Authorization: 'dummy', // PreSignedURLを利用する場合は付加してはいけない.
+          // Authorization: this.getAuthorization(),  // PreSignedURLを利用する場合は付加してはいけない.
         },
       }
       return super.put(req, false)

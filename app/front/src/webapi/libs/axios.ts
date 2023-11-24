@@ -12,6 +12,15 @@ export default class ClientLib {
         : process.env.NEXT_PUBLIC_API_HOST
   }
 
+  protected getAuthorization() {
+    let rtn = 'Bearer '
+    const jwtToken = localStorage.getItem('jwtToken')
+    if (jwtToken !== null) {
+      rtn += JSON.parse(jwtToken).IdToken
+    }
+    return rtn
+  }
+
   public async get(req: Request, autoAddHost: boolean = true) {
     try {
       const { url, params, headers } = { ...req }

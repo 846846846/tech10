@@ -1,6 +1,6 @@
 import ClientLib, { Request } from '../libs/axios'
 
-const ENDPOINT = '/users/'
+const ENDPOINT = '/public/users/'
 
 export class UsersAPI extends ClientLib {
   constructor() {

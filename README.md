@@ -84,7 +84,7 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット4)"
+  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット5)"
   - git push
 
 ## localhost

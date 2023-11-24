@@ -1,6 +1,6 @@
 import ClientLib, { Request } from '../libs/axios'
 
-const ENDPOINT = '/goods/'
+const ENDPOINT = '/private/goods/'
 
 export class GoodsAPI extends ClientLib {
   constructor() {
@@ -14,7 +14,7 @@ export class GoodsAPI extends ClientLib {
         params: params,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          Authorization: this.getAuthorization(),
         },
       }
       return super.post(req)
@@ -29,7 +29,7 @@ export class GoodsAPI extends ClientLib {
         url: ENDPOINT,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          Authorization: this.getAuthorization(),
         },
       }
       return super.get(req)
@@ -45,7 +45,7 @@ export class GoodsAPI extends ClientLib {
         url: ENDPOINT + Id,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          Authorization: this.getAuthorization(),
         },
       }
       return super.get(req)
@@ -61,7 +61,7 @@ export class GoodsAPI extends ClientLib {
         params: params,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          Authorization: this.getAuthorization(),
         },
       }
       return super.put(req)
@@ -76,7 +76,7 @@ export class GoodsAPI extends ClientLib {
         url: ENDPOINT + params.id,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'dummy', // (TBD:チケットNoのECSITE-14で対応) 認証情報。
+          Authorization: this.getAuthorization(),
         },
       }
       return super.delete(req)

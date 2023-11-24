@@ -55,10 +55,11 @@ const Signin: NextPage = () => {
   // handler.
   const onSubmit = async (data: Users) => {
     try {
-      console.log(data)
       const usersApi = new UsersAPI()
       const res = await usersApi.signin(data)
-      console.log(res)
+      // setUserInfo(JSON.parse(res.data.body))
+      localStorage.setItem('jwtToken', res.data.body)
+
       router.push('/buyer/GoodsList')
     } catch (err) {
       if (err instanceof AxiosError) {

@@ -12,7 +12,7 @@ const MY_ENYITY = 'goods'
 
 export const create = async (req: Request) => {
   try {
-    const { id, name, owner, explanation, price, image, category, ...rest } = req.body
+    const { id, name, explanation, price, image, category, ...rest } = req.body
 
     // 1. 登録済みのidはエラーとする
     const registedUuid = await ddb.getUuidByType('id', id, TABLE_NAME, GSI_GENERAL, false)
@@ -22,6 +22,9 @@ export const create = async (req: Request) => {
     // 2. DBに合う形にデータを整形.
     const uuid: string = crypto.randomUUID()
     const jstTime = moment().tz('Asia/Tokyo').format('YYYY-MM-DDTHH:mm:ssZ')
+
+    const userInfoLib = new UserInfoLib()
+    const owner = userInfoLib.getOwner(req.headers['authorization'])
 
     const typeList = ['entity', 'owner', 'id', 'name', 'explanation', 'price', 'image', 'category', 'createAt', 'updateAt']
     const valueList = [MY_ENYITY, owner, id, name, explanation, price, image, category, jstTime, jstTime]
