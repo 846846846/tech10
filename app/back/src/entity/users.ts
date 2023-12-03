@@ -36,7 +36,8 @@ export const signup = async (req: Request) => {
         },
         {
           Name: 'custom:role',
-          Value: convertToCommaSeparatedString(role),
+          Value: role,
+          // Value: convertToCommaSeparatedString(role),
         },
       ],
     }

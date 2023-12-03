@@ -58,7 +58,7 @@ const GoodsRegist: NextPage = () => {
         data.image[0]
       )
       const urlObj = new URL(resGenPresignedUrl.data.url)
-      data.image = urlObj.pathname.split('/').pop() // update image name with s3 key name.
+      data.image = urlObj.pathname.split('/').slice(-2).join('/') // update image name with s3 key name.
 
       // 2. post input info.
       const goodsApi = new GoodsAPI()

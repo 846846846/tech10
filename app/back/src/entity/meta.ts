@@ -46,7 +46,7 @@ export const generatePresignedUrl = async (req: Request, upload: boolean) => {
 
   const dir = owner + '/'
   const jstTime = moment().tz('Asia/Tokyo').format('YYYYMMDDTHHmmssSSS')
-  const Key = upload ? dir + jstTime + '_' + name : dir + name
+  const Key = upload ? dir + jstTime + '_' + name : name
 
   const expiresIn = 600 // 有効期限(秒).
 

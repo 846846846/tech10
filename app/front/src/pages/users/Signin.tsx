@@ -2,6 +2,7 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import {
   Container,
@@ -15,6 +16,7 @@ import { useForm } from 'react-hook-form'
 import { UsersAPI } from '../../webapi/entity/users'
 import styles from '../../styles/Users.module.scss'
 import { AxiosError } from 'axios'
+import UserInfoLib from '../../webapi/libs/userInfo'
 
 // local type definition
 type FormItem = {
@@ -57,10 +59,18 @@ const Signin: NextPage = () => {
     try {
       const usersApi = new UsersAPI()
       const res = await usersApi.signin(data)
-      // setUserInfo(JSON.parse(res.data.body))
+      console.log(JSON.parse(res.data.body).IdToken)
       localStorage.setItem('jwtToken', res.data.body)
 
-      router.push('/buyer/GoodsList')
+      const userInfoLib = new UserInfoLib()
+      const role = userInfoLib.getRole(JSON.parse(res.data.body).IdToken)
+      if (role === 'buyer') {
+        router.push('/buyer/GoodsList')
+      } else if (role === 'seller') {
+        router.push('/seller/GoodsRegist')
+      } else {
+        console.error('unknown role')
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         console.error(err?.response)
@@ -206,6 +216,9 @@ const Signin: NextPage = () => {
                 >
                   OK
                 </Button>
+              </div>
+              <div>
+                <Link href="/users/Signup">アカウントを作成</Link>
               </div>
             </Form>
           </Row>

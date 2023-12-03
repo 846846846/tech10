@@ -41,7 +41,7 @@ custom:
       - 'ecsite-${sls:stage}'
     gsi:
       - GSI-General
-      - GSI-OwnerGoodsList
+      - GSI-List
   s3:
     # bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-${sls:instanceId}'
     bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-846846846'
@@ -85,7 +85,7 @@ provider:
     REGION: ${self:provider.region}
     TABLE_NAME: ${self:custom.dynamodb.table.0}
     GSI_GENERAL: ${self:custom.dynamodb.gsi.0}
-    GSI_OWNERGOODSLIST: ${self:custom.dynamodb.gsi.1}
+    GSI_LIST: ${self:custom.dynamodb.gsi.1}
     IMAGE_S3_BUCKET: ${self:custom.s3.bucketName}
 
 # このセクションには、サービスで定義するすべての関数が含まれます。
@@ -146,7 +146,7 @@ resources:
             AttributeType: S
           - AttributeName: value
             AttributeType: S
-          - AttributeName: owner
+          - AttributeName: list
             AttributeType: S
         KeySchema:
           - AttributeName: uuid
@@ -165,7 +165,7 @@ resources:
               ProjectionType: KEYS_ONLY
           - IndexName: ${self:custom.dynamodb.gsi.1}
             KeySchema:
-              - AttributeName: owner
+              - AttributeName: list
                 KeyType: HASH
             Projection:
               ProjectionType: INCLUDE

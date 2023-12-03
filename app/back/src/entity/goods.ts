@@ -7,7 +7,7 @@ import crypto from 'crypto'
 
 const TABLE_NAME = process.env.TABLE_NAME!
 const GSI_GENERAL = process.env.GSI_GENERAL!
-const GSI_OWNERGOODSLIST = process.env.GSI_OWNERGOODSLIST!
+const GSI_LIST = process.env.GSI_LIST!
 const MY_ENYITY = 'goods'
 
 export const create = async (req: Request) => {
@@ -24,14 +24,14 @@ export const create = async (req: Request) => {
     const jstTime = moment().tz('Asia/Tokyo').format('YYYY-MM-DDTHH:mm:ssZ')
 
     const userInfoLib = new UserInfoLib()
-    const owner = userInfoLib.getOwner(req.headers['authorization'])
+    const owner = userInfoLib.getRole(req.headers['authorization']) + '#' + userInfoLib.getOwner(req.headers['authorization'])
 
     const typeList = ['entity', 'owner', 'id', 'name', 'explanation', 'price', 'image', 'category', 'createAt', 'updateAt']
     const valueList = [MY_ENYITY, owner, id, name, explanation, price, image, category, jstTime, jstTime]
     const items: any = typeList
       .map((type, index) =>
         type === 'id' || type === 'name' || type === 'owner' || type === 'price' || type === 'image'
-          ? { uuid: uuid, type: type, value: valueList[index], owner: owner }
+          ? { uuid: uuid, type: type, value: valueList[index], list: 'goods' }
           : {
               uuid: uuid,
               type: type,
@@ -55,17 +55,17 @@ export const readAll = async (req: Request) => {
     const owner = userInfoLib.getOwner(req.headers['authorization'])
     if (owner === undefined) throw new Error('404:specified data not found.')
 
-    // 1. オーナーが所有するリストを取得.
+    // 1. 商品のリストを取得.
     const data = await ddb.query(
       TABLE_NAME,
-      '#owner = :v1',
+      '#list = :v1',
       {
-        ':v1': owner,
+        ':v1': 'goods',
       },
       {
-        '#owner': 'owner',
+        '#list': 'list',
       },
-      GSI_OWNERGOODSLIST
+      GSI_LIST
     )
     if (!data.Count || data.Items === undefined) throw new Error('404:specified data not found.')
 

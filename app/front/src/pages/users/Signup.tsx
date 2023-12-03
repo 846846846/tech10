@@ -26,7 +26,7 @@ type FormItem = {
 }
 
 type FormCheck = {
-  id: any
+  value: string
   type: FormCheckProps['type']
   note: string
 }
@@ -52,6 +52,8 @@ const Signup: NextPage = () => {
 
   const router = useRouter()
 
+  console.log(watch())
+
   // handler.
   const onSubmit = async (data: Users) => {
     try {
@@ -70,7 +72,7 @@ const Signup: NextPage = () => {
   }
 
   const onClose = () => {
-    console.log('call onClose')
+    router.push('/users/Signin')
     reset()
   }
 
@@ -91,11 +93,11 @@ const Signup: NextPage = () => {
     },
     {
       id: 'role',
-      type: 'checkbox',
+      type: 'check',
       note: 'ロール',
       children: [
-        { id: 'role.seller', type: 'checkbox', note: '販売者' },
-        { id: 'role.buyer', type: 'checkbox', note: '購入者' },
+        { value: 'seller', type: 'radio', note: '販売者' },
+        { value: 'buyer', type: 'radio', note: '購入者' },
       ],
     },
     {
@@ -168,22 +170,23 @@ const Signup: NextPage = () => {
                               {...register(id, options)}
                             />
                           )
-                        case 'checkbox':
+                        case 'check':
                           return (
                             <Form.Group
-                              controlId="checkboxGroup"
+                              controlId="checkGroup"
                               className={styles.roleCheckBox}
                             >
                               {children?.map((item2, index2) => {
-                                const { id, type, note } = {
+                                const { value, type, note } = {
                                   ...item2,
                                 }
                                 return (
                                   <Form.Check
                                     key={index2}
+                                    value={value}
                                     type={type}
                                     label={note}
-                                    {...register(id, options)}
+                                    {...register('role', options)}
                                   />
                                 )
                               })}

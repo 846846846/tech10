@@ -69,6 +69,7 @@
   - 画像ファイル格納用S3バケットの定期的クリーニング
   - 固定ドメインを得る。
   - セットアップをDockerで。
+  - サインインなどの異常ケースが判定できていない。
 
 ## 参考
   - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
@@ -84,8 +85,10 @@
   - git branch -vv
 
   - git add .
-  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(中間コミット5)"
+  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(FIX)"
   - git push
+
+  git checkout -b kaza/post origin/kaza/post
 
 ## localhost
   - APIGateway + Lambda
@@ -161,6 +164,19 @@ npm install --save-dev @types/jsonwebtoken @types/jwks-rsa
 npm install @aws-amplify/ui-react
 
 npm uninstall jwks-rsa
+
+
+npm install jsonwebtoken
+npm install --save-dev @types/jsonwebtoken
+
+buyer1
+ayas88888+buyer1@gmail.com
+Bf12Asf123
+
+buyer2
+ayas88888+buyer2@gmail.com
+Bf12Asf123
+
 
 
 aws cloudformation create-stack --stack-name cognitoTest --template-body file://cf.yaml

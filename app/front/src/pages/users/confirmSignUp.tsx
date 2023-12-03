@@ -1,6 +1,7 @@
 'use strict'
 import { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useState, useEffect, useRef } from 'react'
 import {
   Container,
@@ -48,6 +49,8 @@ const Signup: NextPage = () => {
     reset()
   }, [reset])
 
+  const router = useRouter()
+
   // handler.
   const onSubmit = async (data: Users) => {
     try {
@@ -55,6 +58,7 @@ const Signup: NextPage = () => {
       const usersApi = new UsersAPI()
       const res = await usersApi.confirmSignup(data)
       console.log(res)
+      router.push('/users/Signin')
     } catch (err) {
       if (err instanceof AxiosError) {
         console.error(err?.response)
@@ -65,7 +69,7 @@ const Signup: NextPage = () => {
   }
 
   const onClose = () => {
-    console.log('call onClose')
+    router.push('/users/Signup')
     reset()
   }
 

@@ -286,13 +286,13 @@ def cog(arg1, arg2):
 def req(arg1, arg2):
 
   # domain = "http://localhost:3001/dev/api/v1"
-  domain = "https://teltctf35i.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   def getBearer():
     url = domain + '/public' + '/users/signin'
     payload = {
-      'name': 'yashiro',
-      'password': 'a1faS112', 
+      'name': 'satou',
+      'password': 'Satou12345', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
@@ -305,6 +305,20 @@ def req(arg1, arg2):
     url = domain + '/public' + '/health'
     print(url)
     response = requests.get(url)
+
+  elif arg1 == "sample1":
+    url = "http://localhost:8088/sample"
+    print(url)
+    response = requests.get(url)
+
+  elif arg1 == "sample2":
+    url = "http://localhost:8088/sample"
+    payload = {
+      'name': 'satou', 
+    }
+    headers = {'Content-Type': 'application/json'}
+    print(url)
+    response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "upload":
     url = domain + '/private' + '/presigned-url/upload'
@@ -328,9 +342,9 @@ def req(arg1, arg2):
   elif arg1 == "signup":
     url = domain + '/public' + '/users/signup'
     payload = {
-      'name': 'yashiro', 
-      'email': 'ayas88888@gmail.com', 
-      'password': 'a1faS112',
+      'name': 'satou', 
+      'email': 'ayas88888+seller1@gmail.com', 
+      'password': 'Satou12345',
       'role': {'seller': True, 'buyer': False},
     }
     headers = {'Content-Type': 'application/json'}
@@ -340,7 +354,7 @@ def req(arg1, arg2):
   elif arg1 == "confirmSignUp":
     url = domain + '/public' + '/users/confirmSignUp'
     payload = {
-      'name': 'yashiro', 
+      'name': 'satou', 
       'confirmationCode': '809654', 
     }
     headers = {'Content-Type': 'application/json'}
@@ -350,8 +364,8 @@ def req(arg1, arg2):
   elif arg1 == "signin":
     url = domain + '/public' + '/users/signin'
     payload = {
-      'name': 'yashiro',
-      'password': 'a1faS112', 
+      'name': 'satou',
+      'password': 'Satou12345', 
     }
     headers = {'Content-Type': 'application/json'}
     print(url)
@@ -374,7 +388,6 @@ def req(arg1, arg2):
     payload = {
       'id': 'apple_001', 
       'name': 'りんご', 
-      'owner': 'yashiro',
       'explanation': 'りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。', 
       'price': '100', 
       'image': '20230928T073511479_Apple.jpeg', 
@@ -389,7 +402,6 @@ def req(arg1, arg2):
     payload = {
       'id': 'orange_001', 
       'name': 'みかん', 
-      'owner': 'satou',
       'explanation': 'みかんうまい', 
       'price': '300', 
       'image': '20230928T073511479_OOrange.jpeg', 
@@ -404,7 +416,6 @@ def req(arg1, arg2):
     payload = {
       'id': 'apple_002', 
       'name': 'りんご', 
-      'owner': 'さとう',
       'explanation': 'りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。', 
       'price': '100', 
       'image': '20230928T073511479_Apple.jpeg', 
