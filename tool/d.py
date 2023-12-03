@@ -285,8 +285,8 @@ def cog(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  # domain = "http://localhost:3001/dev/api/v1"
-  domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  domain = "http://localhost:3001/dev/api/v1"
+  # domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   def getBearer():
     url = domain + '/public' + '/users/signin'
@@ -305,20 +305,6 @@ def req(arg1, arg2):
     url = domain + '/public' + '/health'
     print(url)
     response = requests.get(url)
-
-  elif arg1 == "sample1":
-    url = "http://localhost:8088/sample"
-    print(url)
-    response = requests.get(url)
-
-  elif arg1 == "sample2":
-    url = "http://localhost:8088/sample"
-    payload = {
-      'name': 'satou', 
-    }
-    headers = {'Content-Type': 'application/json'}
-    print(url)
-    response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "upload":
     url = domain + '/private' + '/presigned-url/upload'

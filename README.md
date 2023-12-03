@@ -84,11 +84,12 @@
   - git branch -u origin/develop
   - git branch -vv
 
-  - git add .
-  - git commit -m "ECSITE-14:管理者として、ユーザーアカウントを管理したい(FIX)"
-  - git push
+  - git switch -c ECSITE-31
 
-  git checkout -b kaza/post origin/kaza/post
+  - git add .
+  - git commit -m "ECSITE-31:開発者として、開発効率を高めるために、リファクタリングをしたい(中間コミット1)"
+  - git push origin  ECSITE-31
+
 
 ## localhost
   - APIGateway + Lambda

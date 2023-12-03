@@ -1,4 +1,7 @@
-# テーブル名
+# 種類
+  - AWS DynamoDB(NoSQL)
+
+# テーブル名称
   - ecsite-{stg}
 
 # テーブル構造
@@ -23,19 +26,19 @@
   - ※2: Sort Key
   - ※3: projection target(射影対象)
 
-# 詳細説明
-## Index
+## 詳細説明
+### Index
   - PrimaryKey
   - GSI-General
   - GSI-List
 
-## Attributes
+### Attributes
   - uuid
   - key
   - value
   - list
 
-## key
+### key
   |Key名|説明|正規表現|補足|
   |--|--|--|--|
   |entity|データの実体|^(goods\|users)$||
@@ -49,7 +52,7 @@
   |createAt|データの作成時刻|^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}$|バックエンドで自動付加|
   |updateAt|データの更新時刻|^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}$|バックエンドで自動付加|
 
-### 補足
+- 補足
   - (※1)
     - ownerは、'#'を区切り文字とした複合ソートキーで表現する。
     - '#’の前半はオーナーの種別を示し、以下である。
