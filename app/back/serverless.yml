@@ -47,6 +47,14 @@ custom:
     bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-846846846'
   serverless-offline:
     httpPort: 3001
+  authorizers:
+    local:
+      name: localAuthFunction
+      identitySource: method.request.header.Authorization
+    dev:
+      type: COGNITO_USER_POOLS
+      authorizerId:
+        Ref: ApiGatewayAuthorizer
 
 # サービスプロバイダーの詳細（AWS、Azure、Google Cloudなど）。
 # ランタイム、リージョン、認証プロファイル、環境変数などもここで設定します。
@@ -91,6 +99,8 @@ provider:
 # このセクションには、サービスで定義するすべての関数が含まれます。
 # 各関数は、実行するハンドラと、関数をトリガするイベント（HTTPリクエスト、S3バケットの変更など）を指定します。
 functions:
+  localAuthFunction:
+    handler: src/handler/localAuth.handler
   appWithAuthorizer:
     handler: src/handler/withAuthorizer.handler
     events:
@@ -98,18 +108,12 @@ functions:
           method: ANY
           path: api/v1/private
           cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
+          authorizer: ${self:custom.authorizers.${self:provider.stage}, self:custom.authorizers.dev}
       - http:
           method: ANY
           path: api/v1/private/{any+}
           cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
+          authorizer: ${self:custom.authorizers.${self:provider.stage}, self:custom.authorizers.dev}
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
       COGNITO_USER_POOL_CLIENT_ID: !GetAtt

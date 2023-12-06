@@ -8,7 +8,7 @@ export default class ClientLib {
   constructor() {
     this.host =
       process.env.NEXT_PUBLIC_API_HOST === undefined
-        ? 'http://localhost:3001/dev/api/v1'
+        ? 'http://localhost:3001/local/api/v1'
         : process.env.NEXT_PUBLIC_API_HOST
   }
 
@@ -19,6 +19,12 @@ export default class ClientLib {
       rtn += JSON.parse(jwtToken).IdToken
     }
     return rtn
+  }
+
+  public getReqDest() {
+    return process.env.NEXT_PUBLIC_API_HOST?.includes('localhost')
+      ? 'localhost'
+      : 'remote'
   }
 
   public async get(req: Request, autoAddHost: boolean = true) {

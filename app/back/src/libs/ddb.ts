@@ -57,7 +57,7 @@ export const query = async (
             ExpressionAttributeNames: expAttrNames,
           }
 
-    // console.dir(params, { depth: null })
+    console.dir(params, { depth: null })
     return await ddbDocClient.send(new QueryCommand(params))
   } catch (err) {
     throw err

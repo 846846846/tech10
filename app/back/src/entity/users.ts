@@ -14,7 +14,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 const REGION: string = process.env.REGION!
-const CLIENTID: string = process.env.IS_OFFLINE ? '536w7cg4r4xv0r77siqfxzizub' : process.env.COGNITO_USER_POOL_CLIENT_ID!
+const CLIENTID: string = process.env.IS_OFFLINE ? 'xgpydvf2w357s2u35udaxjages' : process.env.COGNITO_USER_POOL_CLIENT_ID!
 const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
 const client = process.env.IS_OFFLINE

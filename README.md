@@ -87,8 +87,8 @@
   - git switch -c ECSITE-31
 
   - git add .
-  - git commit -m "ECSITE-31:開発者として、開発効率を高めるために、リファクタリングをしたい(中間コミット1)"
-  - git push origin  ECSITE-31
+  - git commit -m "ECSITE-31:開発者として、開発効率を高めるために、リファクタリングをしたい(中間コミット2)"
+  - git push origin ECSITE-31
 
 
 ## localhost

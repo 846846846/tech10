@@ -59,17 +59,27 @@ const Signin: NextPage = () => {
     try {
       const usersApi = new UsersAPI()
       const res = await usersApi.signin(data)
+      console.log(res)
       console.log(JSON.parse(res.data.body).IdToken)
       localStorage.setItem('jwtToken', res.data.body)
 
       const userInfoLib = new UserInfoLib()
       const role = userInfoLib.getRole(JSON.parse(res.data.body).IdToken)
+      console.log(role)
       if (role === 'buyer') {
         router.push('/buyer/GoodsList')
       } else if (role === 'seller') {
         router.push('/seller/GoodsRegist')
       } else {
         console.error('unknown role')
+        // バックエンドのMockサーバーであるmotoには.
+        // レスポンスのJWTにカスタム属性情報を含ませる処理がないためロールが判断できない.
+        // リクエスト先がローカルホストの場合、遷移先は固定とする.
+        // 必要に応じて書き換えること.
+        if (usersApi.getReqDest() === 'localhost') {
+          router.push('/buyer/GoodsList')
+          // router.push('/seller/GoodsRegist')
+        }
       }
     } catch (err) {
       if (err instanceof AxiosError) {

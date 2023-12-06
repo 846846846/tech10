@@ -13,8 +13,6 @@ export default class UserInfoLib {
 
       // トークンのデコード
       const token = jwt.decode(idToken) as jwt.JwtPayload
-      console.log(token)
-
       return token
     } catch (err) {
       throw err

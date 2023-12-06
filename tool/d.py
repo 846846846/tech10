@@ -185,25 +185,25 @@ def cog(arg1, arg2):
           },
           Schema=[
               {
-                  'Name': 'email',
-                  'Required': True,
-                  'Mutable': True,
-                  'AttributeDataType': 'String',
+                'Name': 'email',
+                'Required': True,
+                'Mutable': True,
+                'AttributeDataType': 'String',
               },
               {
-                  'Name': 'role',
-                  'Mutable': False,
-                  'Required': False,
-                  'AttributeDataType': 'String',
-                  'StringAttributeConstraints': {
-                      'MaxLength': '30',
-                      'MinLength': '0'
-                  }
+                'Name': 'role',
+                'Mutable': False,
+                'Required': False,
+                'AttributeDataType': 'String',
+                'StringAttributeConstraints': {
+                    'MaxLength': '30',
+                    'MinLength': '0'
+                }
               },
           ],
           # AliasAttributes=['email'],
-          VerificationMessageTemplate={
-              'DefaultEmailOption': 'CONFIRM_WITH_CODE'
+          VerificationMessageTemplate = {
+            'DefaultEmailOption': 'CONFIRM_WITH_CODE'
           }
       )
       user_pool_id = user_pool['UserPool']['Id']
@@ -276,16 +276,15 @@ def cog(arg1, arg2):
           lu_response = client.list_users(UserPoolId=user_pool_id)
 
           # ユーザー一覧を表示
-          for user in lu_response['Users']:
-              print(f"Username: {user['Username']} - User Status: {user['UserStatus']}")
+          print(lu_response)
+          # for user in lu_response['Users']:
+          #     print(f"Username: {user['Username']} - User Status: {user['UserStatus']}")
 
     list_users()
-
-
 # http req.
 def req(arg1, arg2):
 
-  domain = "http://localhost:3001/dev/api/v1"
+  domain = "http://localhost:3001/local/api/v1"
   # domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   def getBearer():
