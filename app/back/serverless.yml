@@ -55,6 +55,11 @@ custom:
       type: COGNITO_USER_POOLS
       authorizerId:
         Ref: ApiGatewayAuthorizer
+  clientId:
+    local: ${file(./env/local/clientId)}
+    dev: !GetAtt
+      - CognitoUserPoolClient
+      - ClientId
 
 # サービスプロバイダーの詳細（AWS、Azure、Google Cloudなど）。
 # ランタイム、リージョン、認証プロファイル、環境変数などもここで設定します。
@@ -116,9 +121,10 @@ functions:
           authorizer: ${self:custom.authorizers.${self:provider.stage}, self:custom.authorizers.dev}
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
-      COGNITO_USER_POOL_CLIENT_ID: !GetAtt
-        - CognitoUserPoolClient
-        - ClientId
+      # COGNITO_USER_POOL_CLIENT_ID: !GetAtt
+      #   - CognitoUserPoolClient
+      #   - ClientId
+      COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
   appWithoutAuthorizer:
     handler: src/handler/withoutAuthorizer.handler
     events:
@@ -132,9 +138,10 @@ functions:
           cors: true
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
-      COGNITO_USER_POOL_CLIENT_ID: !GetAtt
-        - CognitoUserPoolClient
-        - ClientId
+      # COGNITO_USER_POOL_CLIENT_ID: !GetAtt
+      #   - CognitoUserPoolClient
+      #   - ClientId
+      COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
 
 # AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
 resources:

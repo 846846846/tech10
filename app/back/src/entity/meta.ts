@@ -9,7 +9,6 @@ const s3Client = process.env.IS_OFFLINE
       region: 'ap-northeast-1',
       forcePathStyle: true,
       endpoint: 'http://s3.localhost.localstack.cloud:4566',
-      // endpoint: 'http://localhost:5000',
       credentials: {
         accessKeyId: 'dummy',
         secretAccessKey: 'dummy',

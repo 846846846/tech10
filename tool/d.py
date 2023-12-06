@@ -58,7 +58,6 @@ def s3(arg1, arg2):
 
   # cmd parts.
   BSE = "aws s3api "
-  BSE2 = "aws s3 "
  
   ## bucket.
   CB = "create-bucket "
@@ -79,7 +78,7 @@ def s3(arg1, arg2):
   BUKET = "--bucket images "
   KEY = "--key temp/90e1a7ae-c98f-4945-85d5-cca89b32ab27.jpeg "
 
-  COCON = "--cors-configuration file://s3cors.json "
+  COCON = "--cors-configuration file://seed/s3/cors.json "
 
   ENDP = "--endpoint-url=http://localhost:4566 "
   PROF = "--profile localstack "
@@ -159,8 +158,8 @@ def cfn(arg1, arg2):
   print(cmd)
   # subprocess.run(cmd)
 
-# cognito(localhosot).
-def cog(arg1, arg2):
+# moto server.
+def moto(arg1, arg2):
   moto_server_url = "http://localhost:5000"
 
   if arg1 == "cup":
@@ -217,6 +216,10 @@ def cog(arg1, arg2):
       )
       client_id = user_pool_client['UserPoolClient']['ClientId']
       print(client_id)
+
+      # クライアントIDを書き込む.
+      with open("../app/back/env/local/clientId", 'w') as file:
+        file.write(client_id)
 
     create_user_pool()
 
@@ -281,11 +284,20 @@ def cog(arg1, arg2):
           #     print(f"Username: {user['Username']} - User Status: {user['UserStatus']}")
 
     list_users()
+
 # http req.
 def req(arg1, arg2):
 
   domain = "http://localhost:3001/local/api/v1"
   # domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+
+  def generate_dummy_integer(max_value=100):
+    return random.randint(1, max_value)
+
+  def generate_random_string(length):
+    letters_and_digits = string.ascii_letters + string.digits
+    result_str = ''.join(random.choice(letters_and_digits) for _ in range(length))
+    return result_str
 
   def getBearer():
     url = domain + '/public' + '/users/signin'
@@ -455,14 +467,12 @@ def req(arg1, arg2):
   print(response.status_code)
   print(response.text)
 
-# utility.
-def generate_random_string(length):
-    letters_and_digits = string.ascii_letters + string.digits
-    result_str = ''.join(random.choice(letters_and_digits) for _ in range(length))
-    return result_str
-
-def generate_dummy_integer(max_value=100):
-    return random.randint(1, max_value)
+# seed.
+def seed(arg1, arg2):
+  subprocess.run("aws dynamodb create-table --cli-input-yaml file://seed/dynamodb/table.yml --endpoint-url http://localhost:8000")
+  s3("cb", "")
+  s3("pbc", "")
+  moto("cup", "")
 
 # run.
 def run():
@@ -473,7 +483,8 @@ def run():
       "req": req,
       "s3": s3,
       "cfn": cfn,
-      "cog": cog,
+      "moto": moto,
+      "seed": seed,
     }
 
     # take out args.

@@ -6,8 +6,7 @@
     "local": "sls offline start --stage local",
     "deploy": "rm -rf .esbuild/ && sls deploy",
     "remove": "sls remove",
-    "type-check": "tsc --noEmit",
-    "lo:seed": "aws dynamodb create-table --cli-input-yaml file://env/local/dynamodb/table.yml --endpoint-url http://localhost:8000"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@vendia/serverless-express": "^4.10.1",
