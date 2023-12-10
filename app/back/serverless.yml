@@ -47,6 +47,7 @@ custom:
     bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-846846846'
   serverless-offline:
     httpPort: 3001
+    host: '0.0.0.0'
   authorizers:
     local:
       name: localAuthFunction
@@ -106,6 +107,7 @@ provider:
 functions:
   localAuthFunction:
     handler: src/handler/localAuth.handler
+    timeout: 10
   appWithAuthorizer:
     handler: src/handler/withAuthorizer.handler
     events:
@@ -121,10 +123,8 @@ functions:
           authorizer: ${self:custom.authorizers.${self:provider.stage}, self:custom.authorizers.dev}
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
-      # COGNITO_USER_POOL_CLIENT_ID: !GetAtt
-      #   - CognitoUserPoolClient
-      #   - ClientId
       COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
+    timeout: 10
   appWithoutAuthorizer:
     handler: src/handler/withoutAuthorizer.handler
     events:
@@ -138,10 +138,8 @@ functions:
           cors: true
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
-      # COGNITO_USER_POOL_CLIENT_ID: !GetAtt
-      #   - CognitoUserPoolClient
-      #   - ClientId
       COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
+    timeout: 10
 
 # AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
 resources:

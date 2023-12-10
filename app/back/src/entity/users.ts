@@ -19,7 +19,8 @@ const CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
 const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
 const client = process.env.IS_OFFLINE
-  ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
+  ? // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
+    new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })
   : new CognitoIdentityProviderClient({ region: REGION })
 
 export const signup = async (req: Request) => {

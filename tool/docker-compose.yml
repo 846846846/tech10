@@ -24,8 +24,8 @@ services:
       - ../spec/sub/webapi.yaml:/webapi.yaml
 
   dynamodb-local:
-    container_name: test_dynamodb-local
     image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
     user: root
     command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
     volumes:
@@ -33,10 +33,12 @@ services:
     ports:
       - 8000:8000
     networks:
-      - dynamodb-local-network
+      - tech10_network
+    # networks:
+    #   - dynamodb-local-network
   dynamodb-admin:
-    container_name: test_dynamodb-admin
     image: aaronshaf/dynamodb-admin:latest
+    container_name: dynamodb-admin
     environment:
       - DYNAMO_ENDPOINT=dynamodb-local:8000
     ports:
@@ -44,11 +46,14 @@ services:
     depends_on:
       - dynamodb-local
     networks:
-      - dynamodb-local-network
+      - tech10_network
+    # networks:
+    #   - dynamodb-local-network
 
   localstack:
-    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    # container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
     image: localstack/localstack
+    container_name: localstack
     ports:
       - "127.0.0.1:4566:4566" # LocalStack Gateway
       - "127.0.0.1:4510-4559:4510-4559" # external services port range
@@ -58,17 +63,24 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - tech10_network
 
   moto:
     image: motoserver/moto:latest
+    container_name: moto
     ports:
       - "5000:5000"
     environment:
       - MOTO_ACCOUNT_ID=123456789012
+    networks:
+      - tech10_network
 
 volumes:
   dynamodb-local-data:
-
+# networks:
+#   dynamodb-local-network:
+#     driver: bridge
 networks:
-  dynamodb-local-network:
-    driver: bridge
+  tech10_network:
+    external: true
