@@ -36,8 +36,9 @@ router.get(domain + '/health', async (_req, res, _next) => {
 router.post(domain + '/users/signup', async (_req, res, _next) => {
   try {
     const result = await users.signup(_req)
+    const { statusCode, body } = { ...result }
     res.set('content-type', 'applicaion/json')
-    res.send(result)
+    res.status(statusCode).send(body)
   } catch (err) {
     const error = new Error(err.message)
     _next(error)
@@ -47,8 +48,9 @@ router.post(domain + '/users/signup', async (_req, res, _next) => {
 router.post(domain + '/users/confirmSignUp', async (_req, res, _next) => {
   try {
     const result = await users.confirmSignUp(_req)
+    const { statusCode, body } = { ...result }
     res.set('content-type', 'applicaion/json')
-    res.send(result)
+    res.status(statusCode).send(body)
   } catch (err) {
     const error = new Error(err.message)
     _next(error)
@@ -58,8 +60,9 @@ router.post(domain + '/users/confirmSignUp', async (_req, res, _next) => {
 router.post(domain + '/users/signin', async (_req, res, _next) => {
   try {
     const result = await users.signin(_req)
+    const { statusCode, body } = { ...result }
     res.set('content-type', 'applicaion/json')
-    res.send(result)
+    res.status(statusCode).send(body)
   } catch (err) {
     const error = new Error(err.message)
     _next(error)

@@ -34,3 +34,15 @@
 
   - プロモーションや割引の設定
     - 管理者として、プロモーションや割引を設定したい。なぜなら、売上を促進し、忠実な顧客に報いたいから。
+
+# UI
+  - [こちら](https://www.figma.com/file/xdUkM9IFrJP74RStwJQC4u/tech10?type=design&node-id=0%3A1&mode=design&t=WbtE1TfzUkLiFEmS-1)
+
+# データベース
+  - [こちら](./sub/db.md)
+
+# WebAPI
+  - [こちら](./sub/webapi.yaml)
+
+# AWS構成
+  - [こちら](./sub/aws.drawio)

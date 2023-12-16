@@ -14,11 +14,13 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 const REGION: string = process.env.REGION!
-const CLIENTID: string = process.env.IS_OFFLINE ? '536w7cg4r4xv0r77siqfxzizub' : process.env.COGNITO_USER_POOL_CLIENT_ID!
+// const CLIENTID: string = process.env.IS_OFFLINE ? '294osptp1j9edqgytq5wb1wk95' : process.env.COGNITO_USER_POOL_CLIENT_ID!
+const CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
 const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
 const client = process.env.IS_OFFLINE
-  ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
+  ? // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
+    new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })
   : new CognitoIdentityProviderClient({ region: REGION })
 
 export const signup = async (req: Request) => {
@@ -98,13 +100,13 @@ export const signin = async (req: Request) => {
     const result: InitiateAuthCommandOutput = await client.send(new InitiateAuthCommand(params))
     console.log(result)
     return {
-      statusCode: 200,
+      statusCode: result.$metadata.httpStatusCode,
       body: JSON.stringify(result.AuthenticationResult),
     }
   } catch (err) {
     console.error(err)
     return {
-      statusCode: 400,
+      statusCode: err.$metadata.httpStatusCode,
       body: JSON.stringify(err.message),
     }
   }

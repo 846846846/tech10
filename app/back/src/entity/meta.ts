@@ -1,18 +1,8 @@
-import { Request, query } from 'express'
+import { Request } from 'express'
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import moment from 'moment'
 import UserInfoLib from '../libs/userInfo'
-
-// const s3Client = new S3Client({
-//   region: 'ap-northeast-1',
-//   forcePathStyle: true,
-//   endpoint: 'http://s3.localhost.localstack.cloud:4566',
-//   credentials: {
-//     accessKeyId: 'dummy',
-//     secretAccessKey: 'dummy',
-//   },
-// })
 
 const s3Client = process.env.IS_OFFLINE
   ? new S3Client({

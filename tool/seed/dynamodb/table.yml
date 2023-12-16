@@ -1,4 +1,4 @@
-TableName: ecsite-dev
+TableName: ecsite-local
 AttributeDefinitions:
   - AttributeName: uuid
     AttributeType: S
@@ -6,7 +6,7 @@ AttributeDefinitions:
     AttributeType: S
   - AttributeName: value
     AttributeType: S
-  - AttributeName: ownerid
+  - AttributeName: list
     AttributeType: S
 KeySchema:
   - AttributeName: uuid
@@ -23,9 +23,9 @@ GlobalSecondaryIndexes:
         KeyType: RANGE
     Projection:
       ProjectionType: KEYS_ONLY
-  - IndexName: GSI-OwnerGoodsList
+  - IndexName: GSI-List
     KeySchema:
-      - AttributeName: ownerid
+      - AttributeName: list
         KeyType: HASH
     Projection:
       ProjectionType: INCLUDE

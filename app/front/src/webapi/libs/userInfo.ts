@@ -6,10 +6,11 @@ export default class UserInfoLib {
   private decodToken = (authorization: string | undefined) => {
     try {
       if (authorization === undefined)
-        throw new Error('500:authorization is undefined.')
+        throw new Error('authorization header is undefined.')
 
       // トークンのデコード
       const token = jwt.decode(authorization) as jwt.JwtPayload
+      console.log(token)
       return token
     } catch (err) {
       throw err

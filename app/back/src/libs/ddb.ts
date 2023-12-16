@@ -8,7 +8,8 @@ const REGION: string = process.env.REGION!
 const dynamoDBClient = process.env.IS_OFFLINE
   ? new DynamoDBClient({
       region: REGION,
-      endpoint: 'http://localhost:8000',
+      // endpoint: 'http://localhost:8000',
+      endpoint: 'http://dynamodb-local:8000',
     })
   : new DynamoDBClient({
       region: REGION,
@@ -57,7 +58,7 @@ export const query = async (
             ExpressionAttributeNames: expAttrNames,
           }
 
-    // console.dir(params, { depth: null })
+    console.dir(params, { depth: null })
     return await ddbDocClient.send(new QueryCommand(params))
   } catch (err) {
     throw err
