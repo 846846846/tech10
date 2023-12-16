@@ -100,13 +100,13 @@ export const signin = async (req: Request) => {
     const result: InitiateAuthCommandOutput = await client.send(new InitiateAuthCommand(params))
     console.log(result)
     return {
-      statusCode: 200,
+      statusCode: result.$metadata.httpStatusCode,
       body: JSON.stringify(result.AuthenticationResult),
     }
   } catch (err) {
     console.error(err)
     return {
-      statusCode: 400,
+      statusCode: err.$metadata.httpStatusCode,
       body: JSON.stringify(err.message),
     }
   }
