@@ -31,8 +31,7 @@
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.2",
-    "sass": "^1.64.2",
-    "styled-components": "^5.3.10"
+    "sass": "^1.64.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",

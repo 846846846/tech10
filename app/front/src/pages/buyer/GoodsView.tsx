@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Container, Row, Image } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
-import GlobalNav from '../../components/buyer/GlobalNav'
+import NavBar from '@/components/NavBar'
 import styles from '../../styles/Buyer.module.scss'
 
 // constant declaration.
@@ -61,7 +61,7 @@ const GoodsView: NextPage = () => {
   return (
     <Container>
       <Row className={styles.row}>
-        <GlobalNav />
+        <NavBar styles={styles.navBar} />
         <div className={styles.view}>
           <div>{data?.id}</div>
           <div>{data?.name}</div>

@@ -1,11 +1,11 @@
 'use strict'
 import { NextPage } from 'next'
+import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { Container } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
-import GlobalNav from '../../components/buyer/GlobalNav'
-import CardList from '../../components/buyer/CardList'
+import NavBar from '@/components/NavBar'
+import CardList from '@/components/CardList'
 import styles from '../../styles/Buyer.module.scss'
 
 // local type definition.
@@ -68,12 +68,21 @@ const GoodsList: NextPage = () => {
     fetchData()
   }, [])
 
+  // display.
+  const title = '商品一覧'
+
   // tsx.
   return (
-    <Container className={styles.container}>
-      <GlobalNav />
-      <CardList data={data} />
-    </Container>
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <main className={styles.main}>
+        <NavBar styles={styles.navBar} />
+        <CardList data={data} />
+      </main>
+    </>
   )
 }
 

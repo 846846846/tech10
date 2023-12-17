@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Row, Col, Card, Pagination } from 'react-bootstrap'
-import styles from '../../styles/Buyer.module.scss'
+import styles from '../styles/Buyer.module.scss'
 
 // local type definition.
 type ListItems = Pick<Goods, 'id' | 'name' | 'price' | 'owner' | 'image'>

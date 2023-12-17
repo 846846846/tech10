@@ -3,23 +3,14 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { Button, Form, Alert } from 'react-bootstrap'
-import GlobalNav from '@/components/seller/GlobalNav'
-import SideMenu from '@/components/seller/SideMenu'
-import NoticeArea from '@/components/seller/NoticeArea'
+import { Alert } from 'react-bootstrap'
+import { AxiosError } from 'axios'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import styles from '../../styles/Seller.module.scss'
-import { AxiosError } from 'axios'
-
-// local type definition
-type FormItem = {
-  id: keyof Goods
-  type: string
-  label: string
-  text: string
-  options?: any
-}
+import MyForm, { FormItem } from '@/components/Form'
+import NavBar from '@/components/NavBar'
+import SubmitButtons from '@/components/SubmitButtons'
 
 /**
  *
@@ -43,6 +34,7 @@ const GoodsRegist: NextPage = () => {
 
   // handler.
   const onSubmit = async (data: Goods) => {
+    console.log(data)
     try {
       // 1. image upload.
       const metaApi = new MetaAPI()
@@ -86,8 +78,8 @@ const GoodsRegist: NextPage = () => {
     {
       id: 'id',
       type: 'text',
-      label: '商品ID',
-      text: '一意の識別子。各商品を一意に識別するための番号やコード。',
+      title: '商品ID',
+      explanation: '一意の識別子。各商品を一意に識別するための番号やコード。',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -99,8 +91,9 @@ const GoodsRegist: NextPage = () => {
     {
       id: 'name',
       type: 'text',
-      label: '商品名',
-      text: '商品の名称。顧客（購入者）が商品を検索や認識するための名前。',
+      title: '商品名',
+      explanation:
+        '商品の名称。顧客（購入者）が商品を検索や認識するための名前。',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -112,8 +105,8 @@ const GoodsRegist: NextPage = () => {
     {
       id: 'explanation',
       type: 'textarea',
-      label: '商品説明',
-      text: '商品の詳細な情報や特徴を説明するテキスト。',
+      title: '商品説明',
+      explanation: '商品の詳細な情報や特徴を説明するテキスト。',
       options: {
         pattern: {
           value: /^.{0,1000}$/,
@@ -124,8 +117,8 @@ const GoodsRegist: NextPage = () => {
     {
       id: 'price',
       type: 'number',
-      label: '商品価格',
-      text: '商品の販売価格。',
+      title: '商品価格',
+      explanation: '商品の販売価格。',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -137,8 +130,8 @@ const GoodsRegist: NextPage = () => {
     {
       id: 'image',
       type: 'file',
-      label: '商品画像',
-      text: '商品の実際の見た目を示す写真やイラスト。',
+      title: '商品画像',
+      explanation: '商品の実際の見た目を示す写真やイラスト。',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
       },
@@ -146,10 +139,20 @@ const GoodsRegist: NextPage = () => {
     {
       id: 'category',
       type: 'text',
-      label: 'カテゴリ',
-      text: '商品の分類。例：「家電」「ファッション」「食品」など。',
+      title: 'カテゴリ',
+      explanation: '商品の分類。例：「家電」「ファッション」「食品」など。',
     },
   ]
+
+  // extraComponent.
+  const extraComponent = (
+    <SubmitButtons
+      styles={styles}
+      handleSubmit={handleSubmit}
+      onSubmit={onSubmit}
+      onClose={onClose}
+    />
+  )
 
   // tsx.
   return (
@@ -158,81 +161,36 @@ const GoodsRegist: NextPage = () => {
         <title>{title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <main>
-        <GlobalNav />
-        <div className={styles.container}>
-          <SideMenu />
-          <div className={styles.main}>
-            <Alert
-              variant={upload === 200 ? 'success' : 'danger'}
-              className={styles.alert}
-              onClose={() => setUpload(0)}
-              show={upload !== 0}
-              dismissible
-            >
-              {upload === 200 ? (
-                <span>
-                  商品情報の登録が完了しました。プレビューはこちらから。
-                  <Alert.Link href="#">goods preview(TBD)</Alert.Link>
-                </span>
-              ) : (
-                <span>
-                  商品情報の登録に失敗しました。
-                  {upload === 409 ? '商品IDが重複しています。' : ''}
-                </span>
-              )}
-            </Alert>
-            <Form ref={formRef} className={styles.form}>
-              {formItems.map((item, index) => {
-                const { label, text, type, id, options } = { ...item }
-                return (
-                  <Form.Group className="mb-3" key={index}>
-                    <Form.Label className={styles.label}>{label}</Form.Label>
-                    <Form.Text className={styles.text} muted>
-                      {text}
-                    </Form.Text>
-                    {type === 'textarea' ? (
-                      <Form.Control
-                        as={type}
-                        rows={3}
-                        isInvalid={errors[id] !== undefined}
-                        {...register(id, options)}
-                      />
-                    ) : (
-                      <Form.Control
-                        type={type}
-                        isInvalid={errors[id] !== undefined}
-                        {...register(id, options)}
-                      />
-                    )}
-                    {errors[id] && (
-                      <Form.Text className={styles.error}>
-                        {errors[id]?.message as string}
-                      </Form.Text>
-                    )}
-                  </Form.Group>
-                )
-              })}
-              <div className={styles.buttonContainer}>
-                <Button
-                  className={styles.buttonItem}
-                  variant="secondary"
-                  onClick={onClose}
-                >
-                  キャンセル
-                </Button>
-                <Button
-                  className={styles.buttonItem}
-                  variant="primary"
-                  type="submit"
-                  onClick={handleSubmit(onSubmit)}
-                >
-                  保存
-                </Button>
-              </div>
-            </Form>
-          </div>
-          <NoticeArea />
+      <main className={styles.main}>
+        <NavBar styles={styles.navBar} />
+        <div className={styles.goodsRegist}>
+          <Alert
+            variant={upload === 200 ? 'success' : 'danger'}
+            className={styles.alert}
+            onClose={() => setUpload(0)}
+            show={upload !== 0}
+            dismissible
+          >
+            {upload === 200 ? (
+              <span>
+                商品情報の登録が完了しました。プレビューはこちらから。
+                <Alert.Link href="#">goods preview(TBD)</Alert.Link>
+              </span>
+            ) : (
+              <span>
+                商品情報の登録に失敗しました。
+                {upload === 409 ? '商品IDが重複しています。' : ''}
+              </span>
+            )}
+          </Alert>
+          <MyForm
+            formItems={formItems}
+            formRef={formRef}
+            errors={errors}
+            register={register}
+            styles={styles}
+            extraComponent={extraComponent}
+          />
         </div>
       </main>
     </>
