@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
-import CardList from '@/components/CardList'
+import MyCard from '@/components/Card'
+import MyPagination from '@/components/Pagination'
+import { Row, Col } from 'react-bootstrap'
 import styles from '../../styles/Buyer.module.scss'
 
 // local type definition.
@@ -13,6 +15,9 @@ type ListItems = Pick<Goods, 'id' | 'name' | 'price' | 'owner' | 'image'>
 
 // constant declaration.
 const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
+const ITEMS_PER_PAGE = 10
+const PANIGATION_MAX_DISP = 5
+const ITEMS_PER_ROW = 3
 
 /**
  *
@@ -21,6 +26,7 @@ const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
 const GoodsList: NextPage = () => {
   // hooks.
   const [data, setData] = useState<Array<ListItems>>([])
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +76,10 @@ const GoodsList: NextPage = () => {
 
   // display.
   const title = '商品一覧'
+  const currentItems = data.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  )
 
   // tsx.
   return (
@@ -80,7 +90,39 @@ const GoodsList: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <NavBar styles={styles.navBar} />
-        <CardList data={data} />
+        <div className={styles.goodsList}>
+          {Array.from({ length: Math.ceil(currentItems.length / 2) }).map(
+            (_, i) => (
+              <Row className={`mb-4 ${styles.row}`} key={i}>
+                {Array.from({ length: ITEMS_PER_ROW }).map((_, j) => {
+                  const { id, name, price, owner, image } = {
+                    ...currentItems[i * 2 + j],
+                  }
+                  return (
+                    <Col key={j}>
+                      {id ? (
+                        <MyCard
+                          src={image}
+                          styles={styles.goodsList}
+                          title={id}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </Col>
+                  )
+                })}
+              </Row>
+            )
+          )}
+          <MyPagination
+            items={data}
+            itemsPerPage={ITEMS_PER_PAGE}
+            paginationMaxDisp={PANIGATION_MAX_DISP}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
       </main>
     </>
   )

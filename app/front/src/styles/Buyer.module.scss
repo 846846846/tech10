@@ -14,32 +14,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
-// GoodsView.tsx
 .row {
-  flex-direction: column;
-  align-items: center;
+  width: 300px;
 }
+
+// .card {
+//   width: 50%;
+//   height: 150px;
+//   // .image {
+//   //   width: 100%;
+//   //   height: 150px;
+//   //   object-fit: cover;
+//   // }
+// }
+
+// GoodsView.tsx
+// .row {
+//   flex-direction: column;
+//   align-items: center;
+// }
 
 .view {
   border: 0.75px solid #8a8a8a;
   color: #8a8a8a;
   width: 100%;
-}
-
-// CardList.tsx
-.card {
-  width: 50%;
-}
-
-.cardBody {
-  width: 50%;
-}
-
-.cardImage {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
 }

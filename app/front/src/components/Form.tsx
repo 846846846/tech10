@@ -18,7 +18,7 @@ type FormCheck = {
   type: FormCheckProps['type']
   label?: string
 }
-type propsType = {
+type PropsType = {
   formItems: Array<FormItem>
   formRef: RefObject<HTMLFormElement>
   errors: FieldErrors<any>
@@ -34,7 +34,7 @@ const MyForm = ({
   register,
   styles,
   extraComponent,
-}: propsType) => {
+}: PropsType) => {
   return (
     <Form ref={formRef} className={styles.form}>
       {formItems.map((item, index) => {

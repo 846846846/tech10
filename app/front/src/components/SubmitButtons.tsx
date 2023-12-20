@@ -2,7 +2,7 @@
 import { Button } from 'react-bootstrap'
 
 // local type definition.
-type propsType = {
+type PropsType = {
   styles: any
   handleSubmit?: any
   onSubmit?: any
@@ -14,7 +14,7 @@ const SubmitButtons = ({
   handleSubmit,
   onSubmit,
   onClose,
-}: propsType) => {
+}: PropsType) => {
   return (
     <div className={styles.buttonContainer}>
       <Button

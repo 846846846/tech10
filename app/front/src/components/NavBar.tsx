@@ -1,11 +1,11 @@
 'use strict'
 
 // local type definition.
-type propsType = {
+type PropsType = {
   styles: any
 }
 
-const NavBar = ({ styles }: propsType) => {
+const NavBar = ({ styles }: PropsType) => {
   return <div className={styles}>NavBar</div>
 }
 
