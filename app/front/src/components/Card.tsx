@@ -22,7 +22,7 @@ const MyCard = ({
 }: PropsType) => {
   // tsx.
   return (
-    <Card>
+    <Card className={styles.card}>
       <Card.Img src={src} alt={alt} />
       <Card.ImgOverlay>
         {title !== undefined && <Card.Title>{title}</Card.Title>}

@@ -1,6 +1,7 @@
 .main {
   width: 100%;
   height: 100%;
+  background-color: whitesmoke;
 }
 
 .navBar {
@@ -10,32 +11,30 @@
   color: #ffffff;
 }
 
-.goodsList {
+.pagination {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
 }
 
 .row {
-  width: 300px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-// .card {
-//   width: 50%;
-//   height: 150px;
-//   // .image {
-//   //   width: 100%;
-//   //   height: 150px;
-//   //   object-fit: cover;
-//   // }
-// }
+.card {
+  width: 100%;
+}
 
-// GoodsView.tsx
-// .row {
-//   flex-direction: column;
-//   align-items: center;
-// }
+.carousel {
+  background-color: black;
+}
+
+.carouselItem {
+  display: flex;
+  justify-content: center;
+}
 
 .view {
   border: 0.75px solid #8a8a8a;
