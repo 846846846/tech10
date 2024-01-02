@@ -89,6 +89,9 @@ const GoodsList: NextPage = () => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
+  console.log(totalItems)
+  console.log(totalPages)
+  console.log(currentItems)
 
   // tsx.
   return (
@@ -104,7 +107,7 @@ const GoodsList: NextPage = () => {
           indicators={false}
           className={`${styles['carousel']}`}
         >
-          {Array.from({ length: totalPages }).map((_, i) => (
+          {Array.from({ length: currentItems.length }).map((_, i) => (
             <Carousel.Item key={i}>
               <Row className={`${styles.row}`}>
                 {Array.from({ length: ITEMS_PER_ROW }).map((_, j) => {
@@ -114,7 +117,13 @@ const GoodsList: NextPage = () => {
                   return (
                     <Col key={j}>
                       {id ? (
-                        <MyCard src={image} styles={styles} title={id} />
+                        <MyCard
+                          src={image}
+                          styles={styles}
+                          id={id}
+                          title={name}
+                          explanation={price + '円'}
+                        />
                       ) : (
                         <></>
                       )}

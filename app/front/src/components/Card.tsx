@@ -7,6 +7,7 @@ type PropsType = {
   src: any
   styles: any
   alt?: string
+  id?: string
   title?: string
   explanation?: string
   history?: string
@@ -16,6 +17,7 @@ const MyCard = ({
   src,
   styles,
   alt,
+  id,
   title,
   explanation,
   history,
@@ -24,11 +26,12 @@ const MyCard = ({
   return (
     <Card className={styles.card}>
       <Card.Img src={src} alt={alt} />
-      <Card.ImgOverlay>
+      <Card.Body>
+        <Link href={'/buyer/GoodsView?id=' + id}>テスト</Link>
         {title !== undefined && <Card.Title>{title}</Card.Title>}
         {explanation !== undefined && <Card.Text>{explanation}</Card.Text>}
         {history !== undefined && <Card.Text>{history}</Card.Text>}
-      </Card.ImgOverlay>
+      </Card.Body>
     </Card>
   )
 }

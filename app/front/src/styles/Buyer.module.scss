@@ -17,6 +17,7 @@
   align-items: center;
 }
 
+// GoodsList
 .row {
   width: 50%;
   margin-left: auto;
@@ -36,8 +37,21 @@
   justify-content: center;
 }
 
-.view {
-  border: 0.75px solid #8a8a8a;
-  color: #8a8a8a;
-  width: 100%;
+// GoodsView
+.rowView {
+  justify-content: center;
+}
+
+.image {
+  // border: 1px solid gray;
+  width: 50%;
+}
+
+.detail {
+  word-wrap: break-word;
+  margin-bottom: 10px;
+  box-shadow: 1px 1.5px 2px 0 rgba(0, 0, 0, 0.13);
+}
+
+.explanation {
 }
