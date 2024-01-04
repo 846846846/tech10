@@ -6,6 +6,7 @@ import { Container, Row, Col, Image } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
+import MyBreadcrumb from '@/components/Breadcrumb'
 import styles from '../../styles/Buyer.module.scss'
 
 // constant declaration.
@@ -67,6 +68,7 @@ const GoodsView: NextPage = () => {
       </Head>
       <main>
         <NavBar styles={styles.navBar} />
+        <MyBreadcrumb styles={styles.breadcrumb} />
         <Container>
           <Row className={styles.rowView}>
             <Image

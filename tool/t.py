@@ -301,6 +301,7 @@ def req(arg1, arg2):
 
   def getBearer():
     url = domain + '/public' + '/users/signin'
+    print('S: signin => ' + url)
     payload = {
       'name': 'satou',
       'password': 'Satou12345', 
@@ -308,6 +309,7 @@ def req(arg1, arg2):
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
     bearer = json.loads(response.content)["IdToken"]
+    print('E: signin')
     return bearer
 
   response = ""
@@ -318,25 +320,26 @@ def req(arg1, arg2):
 
   elif arg1 == "upload":
     url = domain + '/private' + '/presigned-url/upload'
+    print(url)
     headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
       "name": "xxx.jpeg",
       "type": "image/jpeg"
     }
-    print(url)
     response = requests.get(url, params=params, headers=headers)
 
   elif arg1 == "download":
     url = domain + '/private' + '/presigned-url/download'
+    print(url)
     headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
-      "name": "xxx.jpeg",
+      "name": "satou/20240104T140548199_Healslime.png",
     }
-    print(url)
     response = requests.get(url, params=params, headers=headers)
 
   elif arg1 == "signup":
     url = domain + '/public' + '/users/signup'
+    print(url)
     payload = {
       'name': 'satou', 
       'email': 'ayas88888+seller1@gmail.com', 
@@ -344,44 +347,42 @@ def req(arg1, arg2):
       'role': {'seller': True, 'buyer': False},
     }
     headers = {'Content-Type': 'application/json'}
-    print(url)
     response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "confirmSignUp":
     url = domain + '/public' + '/users/confirmSignUp'
+    print(url)
     payload = {
       'name': 'satou', 
       'confirmationCode': '809654', 
     }
     headers = {'Content-Type': 'application/json'}
-    print(url)
     response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "signin":
     url = domain + '/public' + '/users/signin'
+    print(url)
     payload = {
       'name': 'satou',
       'password': 'Satou12345', 
     }
     headers = {'Content-Type': 'application/json'}
-    print(url)
     response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "gets":
     url = domain + '/private' + '/goods'
-    headers = {'Authorization': 'Bearer ' + getBearer()}
     print(url)
+    headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.get(url, headers=headers)
 
   elif arg1 == "get":
     url = domain + '/private' + '/goods/' + arg2
-    headers = {'Authorization': 'Bearer ' + getBearer()}
     print(url)
+    headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.get(url, headers=headers)
 
   elif arg1 == "post":
     dummyFileName = 'Healslime.png'
-    dummyFileType = 'image/png'
 
     for _ in range(int(arg2)):
 
@@ -390,12 +391,17 @@ def req(arg1, arg2):
         headers = {'Authorization': 'Bearer ' + getBearer()}
         params = {
           "name": dummyFileName,
-          "type": dummyFileType
         }
+        print('S: get presignedUrl => ' + domain + endpoint)
         preRes = requests.get(domain + endpoint, params=params, headers=headers)
+        print('E: get presignedUrl')
 
         endpoint = json.loads(preRes.text)["url"]
-        requests.put(endpoint, files={'file': file})
+        res = requests.put(endpoint, data=file, headers={'Content-Type': 'image/png'})
+        # print("URL:", res.request.url)
+        # print("Method:", res.request.method)
+        # print("Headers:", res.request.headers)
+        # print("Body:", res.request.body)
         imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
 
         endpoint = '/private/goods/'
@@ -409,7 +415,9 @@ def req(arg1, arg2):
           'category': generate_random_string(30),
         }
         headers['Content-Type'] = 'application/json'
+        print('S: post goods data => ' + domain + endpoint)
         response = requests.post(domain + endpoint, headers=headers, json=payload)
+        print('E: post goods data')
 
   elif arg1 == "put":
     url = domain + '/private' + '/goods/' + arg2

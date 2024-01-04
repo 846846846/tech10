@@ -1,6 +1,6 @@
 .main {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  min-height: 100vh;
   background-color: whitesmoke;
 }
 
@@ -28,10 +28,6 @@
   width: 100%;
 }
 
-.carousel {
-  background-color: black;
-}
-
 .carouselItem {
   display: flex;
   justify-content: center;
@@ -44,14 +40,11 @@
 
 .image {
   // border: 1px solid gray;
-  width: 50%;
+  width: 25%;
 }
 
 .detail {
   word-wrap: break-word;
   margin-bottom: 10px;
   box-shadow: 1px 1.5px 2px 0 rgba(0, 0, 0, 0.13);
-}
-
-.explanation {
 }

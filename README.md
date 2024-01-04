@@ -74,9 +74,11 @@
   - クライアントからS3に署名付きURLでアップロードする
     - https://r-tech14.com/pre-signed-url-upload/
 
+  - Dockerを使っていたらPC容量が枯渇したので対処した（ext4.vhdxの最適化）
+    - https://qiita.com/msymacromill/items/282a2212b93380511437
+
   - BootStrapのサンプル
     - https://getbootstrap.jp/docs/5.3/examples/
-
       - https://getbootstrap.jp/docs/5.3/examples/sign-in/
       - https://getbootstrap.jp/docs/5.3/examples/navbars/
       - https://getbootstrap.jp/docs/5.3/examples/features/
@@ -93,7 +95,7 @@
 
   - コミット＆リモートブランチへのプッシュ
     - git add .
-    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。(中間コミット4)"
+    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。(中間コミット5)"
     - git push origin ECSITE-32
 
 ## localhost

@@ -4,7 +4,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { UsersAPI } from '../../webapi/entity/users'
 import styles from '../../styles/Users.module.scss'
@@ -129,7 +129,7 @@ const UserAuth: NextPage = () => {
   const title = () => {
     switch (authFlow) {
       case AuthFlow.signin:
-        return 'ログイン'
+        return 'サインイン'
       case AuthFlow.signup:
         return 'アカウントを作成'
       case AuthFlow.confirm:
@@ -241,7 +241,7 @@ const UserAuth: NextPage = () => {
         styles={styles}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
-        onClose={onClose}
+        onClose={authFlow === AuthFlow.signin ? undefined : onClose}
       />
       {authFlow === AuthFlow.signin ? (
         <div>
@@ -269,7 +269,7 @@ const UserAuth: NextPage = () => {
         <title>{title()}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <main>
+      <main className={styles.main}>
         <Container className={styles.container}>
           <Row>
             <Col>{title()}</Col>

@@ -17,16 +17,18 @@ const SubmitButtons = ({
 }: PropsType) => {
   return (
     <div className={styles.buttonContainer}>
+      {onClose !== undefined && (
+        <Button
+          className={styles.buttonCancel}
+          variant="secondary"
+          size="sm"
+          onClick={onClose}
+        >
+          キャンセル
+        </Button>
+      )}
       <Button
-        className={styles.buttonItem}
-        variant="secondary"
-        size="sm"
-        onClick={onClose}
-      >
-        キャンセル
-      </Button>
-      <Button
-        className={styles.buttonItem}
+        className={styles.buttonOk}
         variant="primary"
         size="sm"
         type="submit"

@@ -7,8 +7,8 @@ import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
 import MyCard from '@/components/Card'
 import MyPagination from '@/components/Pagination'
+import MyBreadcrumb from '@/components/Breadcrumb'
 import { Row, Col, Carousel } from 'react-bootstrap'
-import Image from 'next/image'
 import styles from '../../styles/Buyer.module.scss'
 
 // local type definition.
@@ -84,14 +84,11 @@ const GoodsList: NextPage = () => {
   // display.
   const title = '商品一覧'
   const totalItems = data.length
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_ROW)
   const currentItems = data.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   )
-  console.log(totalItems)
-  console.log(totalPages)
-  console.log(currentItems)
 
   // tsx.
   return (
@@ -102,12 +99,9 @@ const GoodsList: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <NavBar styles={styles.navBar} />
-        <Carousel
-          interval={null}
-          indicators={false}
-          className={`${styles['carousel']}`}
-        >
-          {Array.from({ length: currentItems.length }).map((_, i) => (
+        <MyBreadcrumb styles={styles.breadcrumb} />
+        <Carousel interval={null} indicators={false} variant="dark">
+          {Array.from({ length: totalPages }).map((_, i) => (
             <Carousel.Item key={i}>
               <Row className={`${styles.row}`}>
                 {Array.from({ length: ITEMS_PER_ROW }).map((_, j) => {
