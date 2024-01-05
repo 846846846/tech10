@@ -2,7 +2,7 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Container, Row, Col, Image } from 'react-bootstrap'
+import { Container, Row, Col, Image, Carousel } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
@@ -78,12 +78,20 @@ const GoodsView: NextPage = () => {
         <Breadcrumbs items={breadcrumbItems} />
         <Container>
           <Row className={styles.rowView}>
-            <Image
-              src={data?.image}
-              alt={data?.name}
-              className={styles.image}
-              rounded
-            />
+            <Carousel interval={null} indicators={false} variant="dark">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <Carousel.Item key={i}>
+                  <div className={styles.carouselItem2}>
+                    <Image
+                      src={data?.image}
+                      alt={data?.name}
+                      className={styles.image}
+                      rounded
+                    />
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel>
             <hr />
           </Row>
           <Row>
