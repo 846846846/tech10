@@ -95,7 +95,7 @@
 
   - コミット＆リモートブランチへのプッシュ
     - git add .
-    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。(中間コミット5)"
+    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。(中間コミット6)"
     - git push origin ECSITE-32
 
 ## localhost

@@ -6,7 +6,7 @@ import { Container, Row, Col, Image } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
-import MyBreadcrumb from '@/components/Breadcrumb'
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import styles from '../../styles/Buyer.module.scss'
 
 // constant declaration.
@@ -59,6 +59,13 @@ const GoodsView: NextPage = () => {
 
   console.log(data)
 
+  // display.
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { text: 'トップ', href: '/' },
+    { text: '商品一覧', href: '/buyer/GoodsList' },
+    { text: '商品詳細' },
+  ]
+
   // tsx.
   return (
     <>
@@ -68,7 +75,7 @@ const GoodsView: NextPage = () => {
       </Head>
       <main>
         <NavBar styles={styles.navBar} />
-        <MyBreadcrumb styles={styles.breadcrumb} />
+        <Breadcrumbs items={breadcrumbItems} />
         <Container>
           <Row className={styles.rowView}>
             <Image

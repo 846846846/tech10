@@ -1,21 +1,31 @@
+// Breadcrumbs.tsx
+import React from 'react'
 import Link from 'next/link'
-import Breadcrumb from 'react-bootstrap/Breadcrumb'
 
-// local type definition.
-type PropsType = {
-  styles: any
+export interface BreadcrumbItem {
+  text: string
+  href?: string
 }
 
-const MyBreadcrumb = ({ styles }: PropsType) => {
+type PropsType = {
+  items: BreadcrumbItem[]
+}
+
+const Breadcrumbs = ({ items }: PropsType) => {
   return (
-    <Breadcrumb>
-      <Breadcrumb.Item href="#">ホーム</Breadcrumb.Item>
-      <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
-        Library
-      </Breadcrumb.Item>
-      <Breadcrumb.Item active>Data</Breadcrumb.Item>
-    </Breadcrumb>
+    <nav aria-label="breadcrumb">
+      {items.map((item, index) => (
+        <span key={index}>
+          {item.href ? (
+            <Link href={item.href}>{item.text}</Link>
+          ) : (
+            <span>{item.text}</span>
+          )}
+          /
+        </span>
+      ))}
+    </nav>
   )
 }
 
-export default MyBreadcrumb
+export default Breadcrumbs

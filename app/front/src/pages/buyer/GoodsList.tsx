@@ -7,7 +7,7 @@ import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
 import MyCard from '@/components/Card'
 import MyPagination from '@/components/Pagination'
-import MyBreadcrumb from '@/components/Breadcrumb'
+import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import { Row, Col, Carousel } from 'react-bootstrap'
 import styles from '../../styles/Buyer.module.scss'
 
@@ -90,6 +90,11 @@ const GoodsList: NextPage = () => {
     currentPage * ITEMS_PER_PAGE
   )
 
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { text: 'トップ', href: '/' },
+    { text: '商品一覧' },
+  ]
+
   // tsx.
   return (
     <>
@@ -99,7 +104,7 @@ const GoodsList: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <NavBar styles={styles.navBar} />
-        <MyBreadcrumb styles={styles.breadcrumb} />
+        <Breadcrumbs items={breadcrumbItems} />
         <Carousel interval={null} indicators={false} variant="dark">
           {Array.from({ length: totalPages }).map((_, i) => (
             <Carousel.Item key={i}>
