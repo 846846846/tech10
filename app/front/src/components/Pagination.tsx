@@ -10,6 +10,7 @@ type PropsType = {
   paginationMaxDisp: number
   currentPage: number
   setCurrentPage: Dispatch<SetStateAction<number>>
+  styles: any
 }
 
 const MyPagination = ({
@@ -18,6 +19,7 @@ const MyPagination = ({
   paginationMaxDisp,
   currentPage,
   setCurrentPage,
+  styles,
 }: PropsType) => {
   const totalItems = items.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
@@ -38,35 +40,39 @@ const MyPagination = ({
 
   // tsx.
   return (
-    <Pagination>
-      <Pagination.First
-        onClick={() => setCurrentPage(1)}
-        disabled={currentPage === 1}
-      />
-      <Pagination.Prev
-        onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-        disabled={currentPage === 1}
-      />
+    <div className={styles.pagination}>
+      <Pagination>
+        <Pagination.First
+          onClick={() => setCurrentPage(1)}
+          disabled={currentPage === 1}
+        />
+        <Pagination.Prev
+          onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+          disabled={currentPage === 1}
+        />
 
-      {pages.map((page) => (
-        <Pagination.Item
-          key={page}
-          active={page === currentPage}
-          onClick={() => setCurrentPage(page)}
-        >
-          {page}
-        </Pagination.Item>
-      ))}
+        {pages.map((page) => (
+          <Pagination.Item
+            key={page}
+            active={page === currentPage}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </Pagination.Item>
+        ))}
 
-      <Pagination.Next
-        onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-        disabled={currentPage === totalPages}
-      />
-      <Pagination.Last
-        onClick={() => setCurrentPage(totalPages)}
-        disabled={currentPage === totalPages}
-      />
-    </Pagination>
+        <Pagination.Next
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+          }
+          disabled={currentPage === totalPages}
+        />
+        <Pagination.Last
+          onClick={() => setCurrentPage(totalPages)}
+          disabled={currentPage === totalPages}
+        />
+      </Pagination>
+    </div>
   )
 }
 

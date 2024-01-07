@@ -110,15 +110,14 @@ const GoodsList: NextPage = () => {
           itemsPerRow={ITEMS_PER_ROW}
           styles={styles}
         />
-        <div className={styles.pagination}>
-          <MyPagination
-            items={data}
-            itemsPerPage={ITEMS_PER_PAGE}
-            paginationMaxDisp={PANIGATION_MAX_DISP}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-        </div>
+        <MyPagination
+          items={data}
+          itemsPerPage={ITEMS_PER_PAGE}
+          paginationMaxDisp={PANIGATION_MAX_DISP}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          styles={styles}
+        />
       </main>
     </>
   )

@@ -79,6 +79,7 @@ const GoodsView: NextPage = () => {
         <Container>
           <Row className={styles.rowView}>
             <Carousel interval={null} indicators={false} variant="dark">
+              {/* [TODO] サブ画像対応 */}
               {Array.from({ length: 2 }).map((_, i) => (
                 <Carousel.Item key={i}>
                   <div className={styles.carouselItem2}>
