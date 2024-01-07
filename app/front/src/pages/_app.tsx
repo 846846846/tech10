@@ -2,7 +2,7 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { GenericInfoProvider } from '../components/context/GenericContext'
+import { GenericInfoProvider } from '../components/GenericContext'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function App({ Component, pageProps }: AppProps) {

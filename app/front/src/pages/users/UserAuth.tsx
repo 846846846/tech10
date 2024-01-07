@@ -4,13 +4,14 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { UsersAPI } from '../../webapi/entity/users'
 import styles from '../../styles/Users.module.scss'
 import { AxiosError } from 'axios'
 import UserInfoLib from '../../webapi/libs/userInfo'
-import MyForm, { FormItem } from '../../components/general/Form'
+import MyForm, { FormItem } from '@/components/Form'
+import SubmitButtons from '@/components/SubmitButtons'
 
 // local type definition.
 enum AuthFlow {
@@ -54,7 +55,7 @@ const UserAuth: NextPage = () => {
             const usersApi = new UsersAPI()
             const res = await usersApi.signin(data)
             console.log(res)
-            localStorage.setItem('jwtToken', res.data.body)
+            localStorage.setItem('jwtToken', JSON.stringify(res.data))
 
             const userInfoLib = new UserInfoLib()
             const role = userInfoLib.getRole(res.data.IdToken)
@@ -128,7 +129,7 @@ const UserAuth: NextPage = () => {
   const title = () => {
     switch (authFlow) {
       case AuthFlow.signin:
-        return 'ログイン'
+        return 'サインイン'
       case AuthFlow.signup:
         return 'アカウントを作成'
       case AuthFlow.confirm:
@@ -144,7 +145,7 @@ const UserAuth: NextPage = () => {
     {
       id: 'name',
       type: 'text',
-      note: 'ユーザー名',
+      placeholder: 'ユーザー名',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -156,16 +157,16 @@ const UserAuth: NextPage = () => {
     {
       id: 'role',
       type: 'check',
-      note: 'ロール',
+      placeholder: 'ロール',
       children: [
-        { value: 'seller', type: 'radio', note: '販売者' },
-        { value: 'buyer', type: 'radio', note: '購入者' },
+        { value: 'seller', type: 'radio', label: '販売者' },
+        { value: 'buyer', type: 'radio', label: '購入者' },
       ],
     },
     {
       id: 'password',
       type: 'password',
-      note: 'パスワード',
+      placeholder: 'パスワード',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -177,7 +178,7 @@ const UserAuth: NextPage = () => {
     {
       id: 'passwordConfirm',
       type: 'password',
-      note: 'パスワード(再入力)',
+      placeholder: 'パスワード(再入力)',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -191,7 +192,7 @@ const UserAuth: NextPage = () => {
     {
       id: 'email',
       type: 'text',
-      note: 'メールアドレス',
+      placeholder: 'メールアドレス',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
         pattern: {
@@ -203,7 +204,7 @@ const UserAuth: NextPage = () => {
     {
       id: 'confirmationCode',
       type: 'text',
-      note: '有効化コード',
+      placeholder: '有効化コード',
       options: {
         required: { value: true, message: '入力必須のパラメータです。' },
       },
@@ -236,25 +237,12 @@ const UserAuth: NextPage = () => {
   // extraComponent.
   const extraComponent = (
     <>
-      <div className={styles.buttonContainer}>
-        <Button
-          className={styles.buttonItem}
-          variant="secondary"
-          size="sm"
-          onClick={onClose}
-        >
-          キャンセル
-        </Button>
-        <Button
-          className={styles.buttonItem}
-          variant="primary"
-          size="sm"
-          type="submit"
-          onClick={handleSubmit(onSubmit)}
-        >
-          OK
-        </Button>
-      </div>
+      <SubmitButtons
+        styles={styles}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        onClose={authFlow === AuthFlow.signin ? undefined : onClose}
+      />
       {authFlow === AuthFlow.signin ? (
         <div>
           <Link
@@ -281,7 +269,7 @@ const UserAuth: NextPage = () => {
         <title>{title()}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <main>
+      <main className={styles.main}>
         <Container className={styles.container}>
           <Row>
             <Col>{title()}</Col>

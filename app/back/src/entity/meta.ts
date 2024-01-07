@@ -31,6 +31,7 @@ export const generatePresignedUrl = async (req: Request, upload: boolean) => {
   const userInfoLib = new UserInfoLib()
   const owner = userInfoLib.getOwner(req.headers['authorization'])
   const name = req.query.name as string
+  const type = req.query.type as string
 
   const Bucket = process.env.IS_OFFLINE ? 'images' : process.env.IMAGE_S3_BUCKET
 
@@ -38,19 +39,20 @@ export const generatePresignedUrl = async (req: Request, upload: boolean) => {
   const jstTime = moment().tz('Asia/Tokyo').format('YYYYMMDDTHHmmssSSS')
   const Key = upload ? dir + jstTime + '_' + name : name
 
-  const expiresIn = 600 // 有効期限(秒).
+  const expiresIn = 60 // 有効期限(秒).
 
   try {
     const command = upload
       ? new PutObjectCommand({
           Bucket,
           Key,
-          ContentType: req.query.type as string,
+          ContentType: type,
         })
       : new GetObjectCommand({ Bucket, Key })
     const url = await getSignedUrl(s3Client, command, {
       expiresIn,
     })
+    console.log(url)
     const result = JSON.stringify({ url })
     return result
   } catch (err) {

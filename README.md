@@ -67,32 +67,49 @@
     1. cd app/back/
     2. npm run dev
 
-# 忘備録
-## チケット化したいアイテム
-  - 画像ファイル格納用S3バケットの定期的クリーニング
-  - 固定ドメインを得る。
-  - セットアップをDockerで。
-  - サインインなどの異常ケースが判定できていない。
-
-## 参考
+# 参考
   - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
     - https://repost.aws/ja/knowledge-center/s3-http-307-response
 
   - クライアントからS3に署名付きURLでアップロードする
     - https://r-tech14.com/pre-signed-url-upload/
 
+  - Dockerを使っていたらPC容量が枯渇したので対処した（ext4.vhdxの最適化）
+    - https://qiita.com/msymacromill/items/282a2212b93380511437
+
+  - BootStrapのサンプル
+    - https://getbootstrap.jp/docs/5.3/examples/
+      - https://getbootstrap.jp/docs/5.3/examples/sign-in/
+      - https://getbootstrap.jp/docs/5.3/examples/navbars/
+      - https://getbootstrap.jp/docs/5.3/examples/features/
+
+# 忘備録
+## チケット化したいアイテム
+  - 画像ファイル格納用S3バケットの定期的クリーニング
+  - 固定ドメインを得る。
+
 ## git
-  - git switch -c develop
-  - git push -u origin develop
-  - git branch -u origin/develop
-  - git branch -vv
+  - リモートブランチの新規作成
+    - git switch -c ECSITE-32
+    - git push -u origin ECSITE-32
 
-  - git switch -c ECSITE-31
+  - コミット＆リモートブランチへのプッシュ
+    - git add .
+    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。"
+    - git push origin ECSITE-32
 
-  - git add .
-  - git commit -m "ECSITE-31:開発者として、開発効率を高めるために、リファクタリングをしたい(完了)"
-  - git push origin ECSITE-31
+## docker
+  - WSLのシャットダウン
+    - wsl --shutdown
+    - ※再起動はDokcerDesktopからstartで。
 
+  - 最適化
+    - diskpart
+    - select vdisk file="C:\Users\ss7wp\AppData\Local\Docker\wsl\data\ext4.vhdx"
+    - attach vdisk readonly
+    - compact vdisk
+    - detach vdisk
+    - exit
 
 ## localhost
   - APIGateway + Lambda
@@ -102,7 +119,6 @@
   - S3
     - localstack
   - Cognito
-    - 
     - localstackのCognitoはPro(有償版)しか利用できない。
 
 ## Next.js
@@ -131,35 +147,23 @@
   - テンプレートの構造分析
     - https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-anatomy.html
 
-## Jira
-  - 子課題テンプレート
-    - デザイン
-    - 設計
-    - 実装
-    - デプロイ
-
 ## 一時メモ
-  npm install --save-dev @aws-sdk/client-cognito-identity-provider
+  - buyer1
+  - ayas88888+buyer1@gmail.com
+  - Bf12Asf123
 
-  ap-northeast-1
-
-  aws --endpoint-url=http://localhost:4566 s3api put-bucket-cors --bucket goods --cors-configuration file://cors-config.xml
-  aws s3 cp s3://goods/temp/ ./down.jpeg  --endpoint-url=http://localhost:4566 
-
-
-
+  - buyer2
+  - ayas88888+buyer2@gmail.com
+  - Bf12Asf123
 
 
-npm uninstall jwks-rsa
+http://localhost:5000/images/satou/20240106T090501483_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20240106%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240106T001025Z&X-Amz-Expires=600&X-Amz-Signature=139d10a5aa3fef255340c3eab053e5b89266ef2775007ac3f4dd7720b0965676&X-Amz-SignedHeaders=host&x-id=GetObject
+satou/20240106T085311445_Healslime.png
 
+http://localhost:5000/images/satou/20240106T085311445_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20240106%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240106T001025Z&X-Amz-Expires=600&X-Amz-Signature=139d10a5aa3fef255340c3eab053e5b89266ef2775007ac3f4dd7720b0965676&X-Amz-SignedHeaders=host&x-id=GetObject
 
-npm install jsonwebtoken
-npm install --save-dev @types/jsonwebtoken
+aws --endpoint-url=http://localhost:4566 s3api get-bucket-policy --bucket images --profile localstack 
 
-buyer1
-ayas88888+buyer1@gmail.com
-Bf12Asf123
+aws s3api list-buckets --endpoint-url=http://localhost:4566 --profile localstack 
 
-buyer2
-ayas88888+buyer2@gmail.com
-Bf12Asf123
+aws s3api get-bucket-policy --bucket images --endpoint-url=http://localhost:4566 --profile localstack 

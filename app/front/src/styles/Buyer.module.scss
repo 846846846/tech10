@@ -1,63 +1,60 @@
-$temp-color: #8a8a8a;
-$temp-backcolor: #8a8a8a;
-$temp-border: 0.75px solid $temp-color;
-$phone-width: 360px;
-$image-heigt: 150px;
-$globalNav-height: 30px;
-
-// pages >>>
-
-// GoodsView.tsx
-.row {
-  flex-direction: column;
-  align-items: center;
+.main {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: whitesmoke;
 }
 
-.view {
-  border: $temp-border;
-  color: $temp-color;
-  width: $phone-width;
-  margin-top: $globalNav-height;
+.navBar {
+  width: 100%;
+  height: 50px;
+  background-color: #212529;
+  color: #ffffff;
 }
 
-// GoodsList.tsx
-.container {
-  width: $phone-width;
-  padding: 0px;
-}
-
-.goodsList {
+.pagination {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: $globalNav-height;
 }
 
-// components >>>
-
-// GlobalNav.tsx
-.globalNav {
-  border: $temp-border;
-  color: white;
-  background-color: $temp-backcolor;
-  width: $phone-width;
-  height: $globalNav-height;
-  position: fixed;
-  z-index: 1000;
-  top: 0px;
+// GoodsList
+.row {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-// CardList.tsx
+.cardCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .card {
-  width: $phone-width / 2;
+  // width: 25%;
 }
 
-.cardBody {
-  width: $phone-width / 2;
+.carouselItem {
+  display: flex;
+  justify-content: center;
 }
 
-.cardImage {
-  width: 100%;
-  height: $image-heigt;
-  object-fit: cover;
+// GoodsView
+.rowView {
+  justify-content: center;
+}
+
+.carouselItem2 {
+  display: flex;
+  justify-content: center;
+}
+
+.image {
+  width: 25%;
+}
+
+.detail {
+  word-wrap: break-word;
+  margin-bottom: 10px;
+  box-shadow: 1px 1.5px 2px 0 rgba(0, 0, 0, 0.13);
 }

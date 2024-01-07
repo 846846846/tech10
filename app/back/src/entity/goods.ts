@@ -79,7 +79,9 @@ export const readAll = async (req: Request) => {
 export const readByID = async (req: Request, id: string) => {
   try {
     // 1. idからuuidを特定
+    console.log(id)
     const uuid = await ddb.getUuidByType('id', id, TABLE_NAME, GSI_GENERAL)
+    console.log(uuid)
 
     // 2. uuidを元に情報を取得
     const data = await ddb.query(TABLE_NAME, '#uuid = :v1', { ':v1': uuid }, { '#uuid': 'uuid' })

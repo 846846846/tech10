@@ -301,14 +301,15 @@ def req(arg1, arg2):
 
   def getBearer():
     url = domain + '/public' + '/users/signin'
+    print('S: signin => ' + url)
     payload = {
       'name': 'satou',
       'password': 'Satou12345', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
-    resBody = json.loads(response.text)["body"]
-    bearer = json.loads(resBody)["IdToken"]
+    bearer = json.loads(response.content)["IdToken"]
+    print('E: signin => ' + str(response.status_code))
     return bearer
 
   response = ""
@@ -319,25 +320,26 @@ def req(arg1, arg2):
 
   elif arg1 == "upload":
     url = domain + '/private' + '/presigned-url/upload'
+    print(url)
     headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
       "name": "xxx.jpeg",
       "type": "image/jpeg"
     }
-    print(url)
     response = requests.get(url, params=params, headers=headers)
 
   elif arg1 == "download":
     url = domain + '/private' + '/presigned-url/download'
+    print(url)
     headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
-      "name": "xxx.jpeg",
+      "name": "satou/20240106T091825519_Healslime.png",
     }
-    print(url)
     response = requests.get(url, params=params, headers=headers)
 
   elif arg1 == "signup":
     url = domain + '/public' + '/users/signup'
+    print(url)
     payload = {
       'name': 'satou', 
       'email': 'ayas88888+seller1@gmail.com', 
@@ -345,78 +347,94 @@ def req(arg1, arg2):
       'role': {'seller': True, 'buyer': False},
     }
     headers = {'Content-Type': 'application/json'}
-    print(url)
     response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "confirmSignUp":
     url = domain + '/public' + '/users/confirmSignUp'
+    print(url)
     payload = {
       'name': 'satou', 
       'confirmationCode': '809654', 
     }
     headers = {'Content-Type': 'application/json'}
-    print(url)
     response = requests.post(url, headers=headers, json=payload)
 
   elif arg1 == "signin":
     url = domain + '/public' + '/users/signin'
+    print(url)
     payload = {
       'name': 'satou',
       'password': 'Satou12345', 
     }
     headers = {'Content-Type': 'application/json'}
-    print(url)
     response = requests.post(url, headers=headers, json=payload)
 
-  elif arg1 == "goodsList":
+  elif arg1 == "gets":
     url = domain + '/private' + '/goods'
-    headers = {'Authorization': 'Bearer ' + getBearer()}
     print(url)
+    headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.get(url, headers=headers)
 
-  elif arg1 == "goodsDetail":
+  elif arg1 == "get":
     url = domain + '/private' + '/goods/' + arg2
-    headers = {'Authorization': 'Bearer ' + getBearer()}
     print(url)
+    headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.get(url, headers=headers)
 
   elif arg1 == "post":
-    url = domain + '/private' + '/goods'
-    payload = {
-      'id': 'apple_001', 
-      'name': 'りんご', 
-      'explanation': 'りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。', 
-      'price': '100', 
-      'image': '20230928T073511479_Apple.jpeg', 
-      'category': 'food', 
-    }
-    headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
-    print(url)
-    response = requests.post(url, headers=headers, json=payload)
+    dummyFileName = 'Healslime.png'
+    dummyFileType = 'image/png'
 
-  elif arg1 == "post2":
-    url = domain + '/private' + '/goods'
-    payload = {
-      'id': 'orange_001', 
-      'name': 'みかん', 
-      'explanation': 'みかんうまい', 
-      'price': '300', 
-      'image': '20230928T073511479_OOrange.jpeg', 
-      'category': 'food', 
-    }
-    headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
-    print(url)
-    response = requests.post(url, headers=headers, json=payload)
+    for _ in range(int(arg2)):
+
+      with open(dummyFileName, 'rb') as file:
+        # 1. PresignedURLを取得.
+        endpoint = '/private/presigned-url/upload'
+        headers = {'Authorization': 'Bearer ' + getBearer()}
+        params = {
+          "name": dummyFileName,
+          'type': dummyFileType
+        }
+        print('S: get presignedUrl => ' + domain + endpoint)
+        preRes = requests.get(domain + endpoint, params=params, headers=headers)
+        print('E: get presignedUrl => ' + str(preRes.status_code))
+
+        # 2. PresignedURLに画像データをアップロード.
+        endpoint = json.loads(preRes.text)["url"]
+        print('S: put image => ' + endpoint)
+        res = requests.put(endpoint, data=file, headers={'Content-Type': 'image/png'})
+        print('E: put image => ' + str(res.status_code))
+        # print("URL:", res.request.url)
+        # print("Method:", res.request.method)
+        # print("Headers:", res.request.headers)
+        # print("Body:", res.request.body)
+        imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
+
+        # 3. アップロードした画像ファイル名を含めて商品情報をPOST.
+        endpoint = '/private/goods/'
+        payload = {
+          'id': generate_random_string(10), 
+          'name': generate_random_string(10),
+          'owner': generate_random_string(10),
+          'explanation': generate_random_string(100),
+          'price': str(generate_dummy_integer(10000)),
+          'image':  'satou/' + imageName,
+          'category': generate_random_string(30),
+        }
+        headers['Content-Type'] = 'application/json'
+        print('S: post goods data => ' + domain + endpoint)
+        response = requests.post(domain + endpoint, headers=headers, json=payload)
+        print('E: post goods data => ' + str(response.status_code))
 
   elif arg1 == "put":
     url = domain + '/private' + '/goods/' + arg2
     payload = {
-      'id': 'apple_002', 
-      'name': 'りんご', 
-      'explanation': 'りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。', 
-      'price': '100', 
-      'image': '20230928T073511479_Apple.jpeg', 
-      'category': 'food', 
+      'id': '', 
+      'name': '', 
+      'explanation': '', 
+      'price': '', 
+      'image': '', 
+      'category': '', 
     }
     headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
     print(url)
@@ -426,39 +444,6 @@ def req(arg1, arg2):
     url = domain + '/private' + '/goods/' + arg2
     headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.delete(url, headers=headers)
-
-  elif arg1 == "dummy":
-    dummyFileName = 'Healslime.png'
-    dummyFileType = 'image/png'
-
-    for _ in range(int(arg2)):
-
-      with open(dummyFileName, 'rb') as file:
-        endpoint = '/private/presigned-url/upload'
-        headers = {'Authorization': 'Bearer ' + getBearer()}
-        params = {
-          "name": dummyFileName,
-          "type": dummyFileType
-        }
-        preRes = requests.get(domain + endpoint, params=params, headers=headers)
-
-        endpoint = json.loads(preRes.text)["url"]
-        requests.put(endpoint, files={'file': file})
-
-        imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
-
-        endpoint = '/private/goods/'
-        payload = {
-          'id': generate_random_string(10), 
-          'name': generate_random_string(10),
-          'owner': generate_random_string(10),
-          'explanation': generate_random_string(100),
-          'price': str(generate_dummy_integer(10000)),
-          'image': imageName,
-          'category': generate_random_string(30),
-        }
-        headers = {'Content-Type': 'application/json'}
-        response = requests.post(domain + endpoint, headers=headers, json=payload)
 
   elif arg1 == "localstack":
     response = requests.get('http://localhost:4566/health')
