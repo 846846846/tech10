@@ -95,8 +95,21 @@
 
   - コミット＆リモートブランチへのプッシュ
     - git add .
-    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。(中間コミット7)"
+    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。(中間コミット8)"
     - git push origin ECSITE-32
+
+## docker
+  - WSLのシャットダウン
+    - wsl --shutdown
+    - ※再起動はDokcerDesktopからstartで。
+
+  - 最適化
+    - diskpart
+    - select vdisk file="C:\Users\ss7wp\AppData\Local\Docker\wsl\data\ext4.vhdx"
+    - attach vdisk readonly
+    - compact vdisk
+    - detach vdisk
+    - exit
 
 ## localhost
   - APIGateway + Lambda
@@ -142,3 +155,15 @@
   - buyer2
   - ayas88888+buyer2@gmail.com
   - Bf12Asf123
+
+
+http://localhost:5000/images/satou/20240106T090501483_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20240106%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240106T001025Z&X-Amz-Expires=600&X-Amz-Signature=139d10a5aa3fef255340c3eab053e5b89266ef2775007ac3f4dd7720b0965676&X-Amz-SignedHeaders=host&x-id=GetObject
+satou/20240106T085311445_Healslime.png
+
+http://localhost:5000/images/satou/20240106T085311445_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20240106%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240106T001025Z&X-Amz-Expires=600&X-Amz-Signature=139d10a5aa3fef255340c3eab053e5b89266ef2775007ac3f4dd7720b0965676&X-Amz-SignedHeaders=host&x-id=GetObject
+
+aws --endpoint-url=http://localhost:4566 s3api get-bucket-policy --bucket images --profile localstack 
+
+aws s3api list-buckets --endpoint-url=http://localhost:4566 --profile localstack 
+
+aws s3api get-bucket-policy --bucket images --endpoint-url=http://localhost:4566 --profile localstack 

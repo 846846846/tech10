@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
   console.log('call localAuth !!')
-  console.log(event)
+  // console.log(event)
   return {
     principalId: 'user',
     policyDocument: {

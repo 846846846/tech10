@@ -14,14 +14,13 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 const REGION: string = process.env.REGION!
-// const CLIENTID: string = process.env.IS_OFFLINE ? '294osptp1j9edqgytq5wb1wk95' : process.env.COGNITO_USER_POOL_CLIENT_ID!
 const CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
 const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
 const client = process.env.IS_OFFLINE
-  ? // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
-    new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })
-  : new CognitoIdentityProviderClient({ region: REGION })
+  ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
+  : // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })  // docker用.
+    new CognitoIdentityProviderClient({ region: REGION })
 
 export const signup = async (req: Request) => {
   try {
@@ -43,7 +42,7 @@ export const signup = async (req: Request) => {
         },
       ],
     }
-    console.log(params)
+    // console.log(params)
     const result: SignUpCommandOutput = await client.send(new SignUpCommand(params))
     console.log(result)
     return {

@@ -8,8 +8,8 @@ const REGION: string = process.env.REGION!
 const dynamoDBClient = process.env.IS_OFFLINE
   ? new DynamoDBClient({
       region: REGION,
-      // endpoint: 'http://localhost:8000',
-      endpoint: 'http://dynamodb-local:8000',
+      endpoint: 'http://localhost:8000',
+      // endpoint: 'http://dynamodb-local:8000',  // docker用.
     })
   : new DynamoDBClient({
       region: REGION,

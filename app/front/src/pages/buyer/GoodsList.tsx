@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import NavBar from '@/components/NavBar'
-import MyCard from '@/components/Card'
+import CardList, { CardItemType } from '@/components/CardList'
 import MyPagination from '@/components/Pagination'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
-import { Row, Col, Carousel } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import styles from '../../styles/Buyer.module.scss'
 
 // local type definition.
@@ -16,9 +16,9 @@ type ListItems = Pick<Goods, 'id' | 'name' | 'price' | 'owner' | 'image'>
 
 // constant declaration.
 const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
+const ITEMS_PER_ROW = 2
 const ITEMS_PER_PAGE = 10
 const PANIGATION_MAX_DISP = 5
-const ITEMS_PER_ROW = 3
 
 /**
  *
@@ -28,7 +28,6 @@ const GoodsList: NextPage = () => {
   // hooks.
   const [data, setData] = useState<Array<ListItems>>([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [index, setIndex] = useState(0)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +67,7 @@ const GoodsList: NextPage = () => {
           }
         })
 
+        // 4.取得したデータでStateを更新しレンダリングする.
         setData(res3)
       } catch (err) {
         console.error(err)
@@ -76,15 +76,8 @@ const GoodsList: NextPage = () => {
     fetchData()
   }, [])
 
-  // handler.
-  const handleSelect = (selectedIndex: number) => {
-    setIndex(selectedIndex)
-  }
-
   // display.
   const title = '商品一覧'
-  const totalItems = data.length
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_ROW)
   const currentItems = data.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
@@ -94,6 +87,13 @@ const GoodsList: NextPage = () => {
     { text: 'トップ', href: '/' },
     { text: '商品一覧' },
   ]
+
+  const cardList: CardItemType[] = currentItems.map((item, i) => ({
+    id: item.id,
+    image: item.image,
+    title: item.name,
+    text: [item.price + '円', item.owner],
+  }))
 
   // tsx.
   return (
@@ -105,34 +105,11 @@ const GoodsList: NextPage = () => {
       <main className={styles.main}>
         <NavBar styles={styles.navBar} />
         <Breadcrumbs items={breadcrumbItems} />
-        <Carousel interval={null} indicators={false} variant="dark">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <Carousel.Item key={i}>
-              <Row className={`${styles.row}`}>
-                {Array.from({ length: ITEMS_PER_ROW }).map((_, j) => {
-                  const { id, name, price, owner, image } = {
-                    ...currentItems[i * ITEMS_PER_ROW + j],
-                  }
-                  return (
-                    <Col key={j}>
-                      {id ? (
-                        <MyCard
-                          src={image}
-                          styles={styles}
-                          id={id}
-                          title={name}
-                          explanation={price + '円'}
-                        />
-                      ) : (
-                        <></>
-                      )}
-                    </Col>
-                  )
-                })}
-              </Row>
-            </Carousel.Item>
-          ))}
-        </Carousel>
+        <CardList
+          items={cardList}
+          itemsPerRow={ITEMS_PER_ROW}
+          styles={styles}
+        />
         <div className={styles.pagination}>
           <MyPagination
             items={data}

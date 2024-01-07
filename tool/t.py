@@ -309,7 +309,7 @@ def req(arg1, arg2):
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
     bearer = json.loads(response.content)["IdToken"]
-    print('E: signin')
+    print('E: signin => ' + str(response.status_code))
     return bearer
 
   response = ""
@@ -333,7 +333,7 @@ def req(arg1, arg2):
     print(url)
     headers = {'Authorization': 'Bearer ' + getBearer()}
     params = {
-      "name": "satou/20240104T140548199_Healslime.png",
+      "name": "satou/20240106T091825519_Healslime.png",
     }
     response = requests.get(url, params=params, headers=headers)
 
@@ -383,27 +383,34 @@ def req(arg1, arg2):
 
   elif arg1 == "post":
     dummyFileName = 'Healslime.png'
+    dummyFileType = 'image/png'
 
     for _ in range(int(arg2)):
 
       with open(dummyFileName, 'rb') as file:
+        # 1. PresignedURLを取得.
         endpoint = '/private/presigned-url/upload'
         headers = {'Authorization': 'Bearer ' + getBearer()}
         params = {
           "name": dummyFileName,
+          'type': dummyFileType
         }
         print('S: get presignedUrl => ' + domain + endpoint)
         preRes = requests.get(domain + endpoint, params=params, headers=headers)
-        print('E: get presignedUrl')
+        print('E: get presignedUrl => ' + str(preRes.status_code))
 
+        # 2. PresignedURLに画像データをアップロード.
         endpoint = json.loads(preRes.text)["url"]
+        print('S: put image => ' + endpoint)
         res = requests.put(endpoint, data=file, headers={'Content-Type': 'image/png'})
+        print('E: put image => ' + str(res.status_code))
         # print("URL:", res.request.url)
         # print("Method:", res.request.method)
         # print("Headers:", res.request.headers)
         # print("Body:", res.request.body)
         imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
 
+        # 3. アップロードした画像ファイル名を含めて商品情報をPOST.
         endpoint = '/private/goods/'
         payload = {
           'id': generate_random_string(10), 
@@ -417,7 +424,7 @@ def req(arg1, arg2):
         headers['Content-Type'] = 'application/json'
         print('S: post goods data => ' + domain + endpoint)
         response = requests.post(domain + endpoint, headers=headers, json=payload)
-        print('E: post goods data')
+        print('E: post goods data => ' + str(response.status_code))
 
   elif arg1 == "put":
     url = domain + '/private' + '/goods/' + arg2

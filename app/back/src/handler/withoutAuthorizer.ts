@@ -34,7 +34,6 @@ router.get(domain + '/health', async (_req, res, _next) => {
 
 // users.
 router.post(domain + '/users/signup', async (_req, res, _next) => {
-  console.log(1)
   try {
     const result = await users.signup(_req)
     const { statusCode, body } = { ...result }
