@@ -90,13 +90,13 @@
 
 ## git
   - リモートブランチの新規作成
-    - git switch -c ECSITE-32
-    - git push -u origin ECSITE-32
+    - git switch -c ECSITE-36
+    - git push -u origin ECSITE-36
 
   - コミット＆リモートブランチへのプッシュ
     - git add .
-    - git commit -m "ECSITE-32:開発者として、サイト全体のデザイン方針を決定したい。"
-    - git push origin ECSITE-32
+    - git commit -m "ECSITE-36: 顧客または販売者として、ナビゲーションバーで情報を確認できるようにしたい。(中間コミット2)"
+    - git push origin ECSITE-36
 
 ## docker
   - WSLのシャットダウン

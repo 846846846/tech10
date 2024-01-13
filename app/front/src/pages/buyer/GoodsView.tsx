@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Container, Row, Col, Image, Carousel } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
-import NavBar from '@/components/NavBar'
+import MyNavVar from '@/components/NavVar'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import styles from '../../styles/Buyer.module.scss'
 
@@ -74,8 +74,8 @@ const GoodsView: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main>
-        <NavBar styles={styles.navBar} />
-        <Breadcrumbs items={breadcrumbItems} />
+        <MyNavVar styles={styles.navBar} />
+        <Breadcrumbs items={breadcrumbItems} styles={styles} />
         <Container>
           <Row className={styles.rowView}>
             <Carousel interval={null} indicators={false} variant="dark">

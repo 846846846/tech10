@@ -9,11 +9,12 @@ export interface BreadcrumbItem {
 
 type PropsType = {
   items: BreadcrumbItem[]
+  styles: any
 }
 
-const Breadcrumbs = ({ items }: PropsType) => {
+const Breadcrumbs = ({ items, styles }: PropsType) => {
   return (
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" className={styles.breadcrumbs}>
       {items.map((item, index) => (
         <span key={index}>
           {item.href ? (

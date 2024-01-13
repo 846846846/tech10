@@ -9,7 +9,7 @@ import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import styles from '../../styles/Seller.module.scss'
 import MyForm, { FormItem } from '@/components/Form'
-import NavBar from '@/components/NavBar'
+import NavBar from '@/components/NavVar'
 import SubmitButtons from '@/components/SubmitButtons'
 
 /**
