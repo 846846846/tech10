@@ -2,13 +2,19 @@
   width: 100vw;
   min-height: 100vh;
   background-color: whitesmoke;
+  overflow: auto;
 }
 
 .navBar {
-  width: 100%;
-  height: 50px;
-  background-color: #212529;
   color: #ffffff;
+}
+
+.breadcrumbs {
+  position: fixed;
+  width: 100%;
+  top: 60px;
+  background-color: whitesmoke;
+  z-index: 3;
 }
 
 .pagination {
@@ -18,10 +24,21 @@
 }
 
 // GoodsList
+.container {
+  position: relative;
+  top: 90px;
+  background-color: whitesmoke;
+}
+
 .row {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.cardRow {
+  // position: relative;
+  // overflow: hidden;
 }
 
 .cardCol {

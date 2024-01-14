@@ -71,8 +71,8 @@ const UserAuth: NextPage = () => {
               // リクエスト先がローカルホストの場合、遷移先は固定とする.
               // 必要に応じて書き換えること.
               if (usersApi.getReqDest() === 'localhost') {
-                router.push('/buyer/GoodsList')
-                // router.push('/seller/GoodsRegist')
+                // router.push('/buyer/GoodsList')
+                router.push('/seller/GoodsRegist')
               }
             }
           }
