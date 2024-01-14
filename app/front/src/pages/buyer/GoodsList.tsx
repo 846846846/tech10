@@ -2,6 +2,7 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import { Container } from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import MyNavVar from '@/components/NavVar'
@@ -104,19 +105,21 @@ const GoodsList: NextPage = () => {
       <main className={styles.main}>
         <MyNavVar styles={styles.navBar} />
         <Breadcrumbs items={breadcrumbItems} styles={styles} />
-        <CardList
-          items={cardList}
-          itemsPerRow={ITEMS_PER_ROW}
-          styles={styles}
-        />
-        <MyPagination
-          items={data}
-          itemsPerPage={ITEMS_PER_PAGE}
-          paginationMaxDisp={PANIGATION_MAX_DISP}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          styles={styles}
-        />
+        <Container className={styles.container}>
+          <CardList
+            items={cardList}
+            itemsPerRow={ITEMS_PER_ROW}
+            styles={styles}
+          />
+          <MyPagination
+            items={data}
+            itemsPerPage={ITEMS_PER_PAGE}
+            paginationMaxDisp={PANIGATION_MAX_DISP}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            styles={styles}
+          />
+        </Container>
       </main>
     </>
   )

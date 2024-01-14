@@ -95,7 +95,7 @@
 
   - コミット＆リモートブランチへのプッシュ
     - git add .
-    - git commit -m "ECSITE-36: 顧客または販売者として、ナビゲーションバーで情報を確認できるようにしたい。(中間コミット2)"
+    - git commit -m "ECSITE-36: 顧客または販売者として、ナビゲーションバーで情報を確認できるようにしたい。"
     - git push origin ECSITE-36
 
 ## docker

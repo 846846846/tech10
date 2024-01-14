@@ -73,10 +73,10 @@ const GoodsView: NextPage = () => {
         <title>{data?.name}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <main>
+      <main className={styles.main}>
         <MyNavVar styles={styles.navBar} />
         <Breadcrumbs items={breadcrumbItems} styles={styles} />
-        <Container>
+        <Container className={styles.container}>
           <Row className={styles.rowView}>
             <Carousel interval={null} indicators={false} variant="dark">
               {/* [TODO] サブ画像対応 */}

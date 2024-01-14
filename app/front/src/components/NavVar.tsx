@@ -67,7 +67,13 @@ const MyNavVar = ({ styles }: PropsType) => {
               />
             </Col>
             <Col xs="auto">
-              <Button type="submit">Submit</Button>
+              <Button
+                onClick={() => {
+                  alert('TBD')
+                }}
+              >
+                Submit
+              </Button>
             </Col>
           </Row>
         </Form>
