@@ -288,8 +288,8 @@ def moto(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  domain = "http://localhost:3001/local/api/v1"
-  # domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  # domain = "http://localhost:3001/local/api/v1"
+  domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   def generate_dummy_integer(max_value=100):
     return random.randint(1, max_value)
