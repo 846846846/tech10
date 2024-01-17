@@ -95,7 +95,7 @@
 
   - コミット＆リモートブランチへのプッシュ
     - git add .
-    - git commit -m "GitHubAction対応(フロントエンド)"
+    - git commit -m "GitHubAction対応(バックエンド)"
     - git push origin ECSITE-37
 
 ## docker

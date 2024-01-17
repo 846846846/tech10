@@ -3,7 +3,7 @@ name: Deploy to AWS S3 with AWS CLI
 on:
   push:
     branches:
-      - ECSITE-37 # または適用したいブランチを指定
+      - ECSITE-37
 
 jobs:
   deploy:
