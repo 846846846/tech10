@@ -47,7 +47,7 @@ jobs:
           aws-region: "ap-northeast-1"
 
       - name: Empty S3 bucket
-        run: aws s3 rm s3://${{ env.AWS_S3_BUCKET_FRONT_DEV }} --recursive
+        run: aws s3 rm s3://${{ vars.AWS_S3_BUCKET_FRONT_DEV }} --recursive
 
       - name: Sync files to S3
-        run: aws s3 sync app/front/out s3://${{ env.AWS_S3_BUCKET_FRONT_DEV }}/
+        run: aws s3 sync app/front/out s3://${{ vars.AWS_S3_BUCKET_FRONT_DEV }}/
