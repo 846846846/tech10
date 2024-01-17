@@ -83,20 +83,21 @@
       - https://getbootstrap.jp/docs/5.3/examples/navbars/
       - https://getbootstrap.jp/docs/5.3/examples/features/
 
-# 忘備録
+# 備忘録
 ## チケット化したいアイテム
   - 画像ファイル格納用S3バケットの定期的クリーニング
   - 固定ドメインを得る。
 
 ## git
   - リモートブランチの新規作成
-    - git switch -c ECSITE-36
-    - git push -u origin ECSITE-36
+    - git switch -c ECSITE-37
+    - git push -u origin ECSITE-37
 
   - コミット＆リモートブランチへのプッシュ
+    - git status
     - git add .
-    - git commit -m "ECSITE-36: 顧客または販売者として、ナビゲーションバーで情報を確認できるようにしたい。"
-    - git push origin ECSITE-36
+    - git commit -m "GitHubAction対応"
+    - git push origin ECSITE-37
 
 ## docker
   - WSLのシャットダウン
@@ -147,23 +148,16 @@
   - テンプレートの構造分析
     - https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-anatomy.html
 
-## 一時メモ
-  - buyer1
-  - ayas88888+buyer1@gmail.com
-  - Bf12Asf123
+## 試験用アカウント
+  - 販売者
+    - seller1
+    - ayas88888+seller1@gmail.com
+    - Yash88888
 
-  - buyer2
-  - ayas88888+buyer2@gmail.com
-  - Bf12Asf123
+  - 購入者
+    - buyer1
+    - ayas88888+buyer1@gmail.com
+    - Bf12Asf123
 
-
-http://localhost:5000/images/satou/20240106T090501483_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20240106%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240106T001025Z&X-Amz-Expires=600&X-Amz-Signature=139d10a5aa3fef255340c3eab053e5b89266ef2775007ac3f4dd7720b0965676&X-Amz-SignedHeaders=host&x-id=GetObject
-satou/20240106T085311445_Healslime.png
-
-http://localhost:5000/images/satou/20240106T085311445_Healslime.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=dummy%2F20240106%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240106T001025Z&X-Amz-Expires=600&X-Amz-Signature=139d10a5aa3fef255340c3eab053e5b89266ef2775007ac3f4dd7720b0965676&X-Amz-SignedHeaders=host&x-id=GetObject
-
-aws --endpoint-url=http://localhost:4566 s3api get-bucket-policy --bucket images --profile localstack 
-
-aws s3api list-buckets --endpoint-url=http://localhost:4566 --profile localstack 
-
-aws s3api get-bucket-policy --bucket images --endpoint-url=http://localhost:4566 --profile localstack 
+# 一時メモ
+  - 

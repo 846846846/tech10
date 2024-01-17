@@ -288,8 +288,8 @@ def moto(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  domain = "http://localhost:3001/local/api/v1"
-  # domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  # domain = "http://localhost:3001/local/api/v1"
+  domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   def generate_dummy_integer(max_value=100):
     return random.randint(1, max_value)
@@ -303,8 +303,8 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/signin'
     print('S: signin => ' + url)
     payload = {
-      'name': 'satou',
-      'password': 'Satou12345', 
+      'name': 'seller1',
+      'password': 'Yash88888', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
@@ -341,9 +341,9 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/signup'
     print(url)
     payload = {
-      'name': 'satou', 
+      'name': 'seller1', 
       'email': 'ayas88888+seller1@gmail.com', 
-      'password': 'Satou12345',
+      'password': 'Yash88888',
       'role': {'seller': True, 'buyer': False},
     }
     headers = {'Content-Type': 'application/json'}
@@ -353,7 +353,7 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/confirmSignUp'
     print(url)
     payload = {
-      'name': 'satou', 
+      'name': 'seller1', 
       'confirmationCode': '809654', 
     }
     headers = {'Content-Type': 'application/json'}
@@ -363,8 +363,8 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/signin'
     print(url)
     payload = {
-      'name': 'satou',
-      'password': 'Satou12345', 
+      'name': 'seller1',
+      'password': 'Yash88888', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
