@@ -1,8 +1,10 @@
-name: Deploy to AWS S3 with AWS CLI
+name: Deploy to AWS
 
 on:
   push:
     branches:
+      - main
+      - develop
       - ECSITE-37
 
 jobs:
@@ -18,7 +20,18 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Install dependencies
+      - name: Install dependencies(back)
+        run: npm install
+        working-directory: app/back
+
+      - name: Deploy to AWS using Serverless Framework
+        run: npx serverless deploy
+        working-directory: app/back
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Install dependencies(front)
         run: npm install
         working-directory: app/front
 
@@ -34,7 +47,7 @@ jobs:
           aws-region: "ap-northeast-1"
 
       - name: Empty S3 bucket
-        run: aws s3 rm s3://${{ secrets.AWS_S3_BUCKET_TECH10_FRONT_DEV }} --recursive
+        run: aws s3 rm s3://${{ env.AWS_S3_BUCKET_FRONT_DEV }} --recursive
 
       - name: Sync files to S3
-        run: aws s3 sync app/front/out s3://${{ secrets.AWS_S3_BUCKET_TECH10_FRONT_DEV }}/
+        run: aws s3 sync app/front/out s3://${{ env.AWS_S3_BUCKET_FRONT_DEV }}/
