@@ -67,44 +67,42 @@
     1. cd app/back/
     2. npm run dev
 
-# 参考
-  - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
-    - https://repost.aws/ja/knowledge-center/s3-http-307-response
-
-  - クライアントからS3に署名付きURLでアップロードする
-    - https://r-tech14.com/pre-signed-url-upload/
-
-  - Dockerを使っていたらPC容量が枯渇したので対処した（ext4.vhdxの最適化）
-    - https://qiita.com/msymacromill/items/282a2212b93380511437
-
-  - BootStrapのサンプル
-    - https://getbootstrap.jp/docs/5.3/examples/
-      - https://getbootstrap.jp/docs/5.3/examples/sign-in/
-      - https://getbootstrap.jp/docs/5.3/examples/navbars/
-      - https://getbootstrap.jp/docs/5.3/examples/features/
-
 # 備忘録
 ## チケット化したいアイテム
-  - 画像ファイル格納用S3バケットの定期的クリーニング
-  - 固定ドメインを得る。
+  - 固定ドメインを割り当てる。
+  - 画像ファイル格納用S3バケットを定期的にクリーニングする。
+  - dockerのCPU使用率が100%から回復しない問題の対策。
+  - サブの商品画像の登録参照に対応する。
+  - roleによるバックエンドAPIの機能利用制限
+
+## 試験用アカウント
+  - 販売者
+    - seller1
+    - ayas88888+seller1@gmail.com
+    - Bf12Asf123
+
+  - 購入者
+    - buyer1
+    - ayas88888+buyer1@gmail.com
+    - Bf12Asf123
 
 ## git
   - リモートブランチの新規作成
-    - git switch -c ECSITE-37
-    - git push -u origin ECSITE-37
+    - git switch -c ECSITE-4
+    - git push -u origin ECSITE-4
 
-  - コミット＆リモートブランチへのプッシュ
+  - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "GitHubAction対応"
-    - git push origin ECSITE-37
+    - git commit -m "リファクタ(ユーザー登録周り)"
+    - git push origin ECSITE-4
 
 ## docker
   - WSLのシャットダウン
     - wsl --shutdown
     - ※再起動はDokcerDesktopからstartで。
 
-  - 最適化
+  - 仮想ストレージ領域の最適化
     - diskpart
     - select vdisk file="C:\Users\ss7wp\AppData\Local\Docker\wsl\data\ext4.vhdx"
     - attach vdisk readonly
@@ -112,24 +110,9 @@
     - detach vdisk
     - exit
 
-## localhost
-  - APIGateway + Lambda
-    - sls local
-  - DynamoDB
-    - DynamoDB Local
-  - S3
-    - localstack
-  - Cognito
-    - localstackのCognitoはPro(有償版)しか利用できない。
-
-## Next.js
-  - TypeScirptセットアップ手順
-    1. npx create-next-app testApp
-    2. cd testApp
-    3. npm install --save-dev typescript @types/react @types/node
-    4. touch tsconfig.json
-    5. npm run dev
-    6. .js ファイルを .tsx に変更
+  - 参考サイト 
+    - Dockerを使っていたらPC容量が枯渇したので対処した（ext4.vhdxの最適化）
+      - https://qiita.com/msymacromill/items/282a2212b93380511437
 
 ## node.js
   - グローバルインストールのNPM一覧表示
@@ -141,23 +124,40 @@
   - アンインストールコマンド
     - npm uninstall {パッケージ名}
 
-## amplify
-  - amplify status
+  - Next.js(TypeScirpt)セットアップ手順
+    1. npx create-next-app testApp
+    2. cd testApp
+    3. npm install --save-dev typescript @types/react @types/node
+    4. touch tsconfig.json
+    5. npm run dev
+    6. .js ファイルを .tsx に変更
 
-## CloudFormation
-  - テンプレートの構造分析
-    - https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-anatomy.html
+## AWS
+  - localhost内のスタブ構成
+    - APIGateway + Lambda
+      - ServerlessFramework local
+    - DynamoDB
+      - DynamoDB Local
+    - S3
+      - localstack
+    - Cognito
+      - moto
+      - localstackのCognitoはPro(有償版)しか利用できないため。
+  
+  - 参考サイト 
+    - CloudFormationテンプレートの構造分析
+      - https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-anatomy.html
 
-## 試験用アカウント
-  - 販売者
-    - seller1
-    - ayas88888+seller1@gmail.com
-    - Yash88888
+    - Amazon S3 から HTTP 307 Temporary Redirect レスポンスが返されるのはなぜですか?
+      - https://repost.aws/ja/knowledge-center/s3-http-307-response
 
-  - 購入者
-    - buyer1
-    - ayas88888+buyer1@gmail.com
-    - Bf12Asf123
+    - クライアントからS3に署名付きURLでアップロードする
+      - https://r-tech14.com/pre-signed-url-upload/
 
-# 一時メモ
-  - 
+## BootStrap
+  - 参考サイト
+    - サンプル
+      - https://getbootstrap.jp/docs/5.3/examples/
+
+## 一時メモ
+  - you are silly.

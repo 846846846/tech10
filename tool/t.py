@@ -288,8 +288,8 @@ def moto(arg1, arg2):
 # http req.
 def req(arg1, arg2):
 
-  # domain = "http://localhost:3001/local/api/v1"
-  domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
+  domain = "http://localhost:3001/local/api/v1"
+  # domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   def generate_dummy_integer(max_value=100):
     return random.randint(1, max_value)
@@ -304,7 +304,7 @@ def req(arg1, arg2):
     print('S: signin => ' + url)
     payload = {
       'name': 'seller1',
-      'password': 'Yash88888', 
+      'password': 'Bf12Asf123', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
@@ -343,11 +343,12 @@ def req(arg1, arg2):
     payload = {
       'name': 'seller1', 
       'email': 'ayas88888+seller1@gmail.com', 
-      'password': 'Yash88888',
+      'password': 'Bf12Asf123',
       'role': {'seller': True, 'buyer': False},
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
+    print(response.text)
 
   elif arg1 == "confirmSignUp":
     url = domain + '/public' + '/users/confirmSignUp'
@@ -418,7 +419,7 @@ def req(arg1, arg2):
           'owner': generate_random_string(10),
           'explanation': generate_random_string(100),
           'price': str(generate_dummy_integer(10000)),
-          'image':  'satou/' + imageName,
+          'image':  'seller1/' + imageName,
           'category': generate_random_string(30),
         }
         headers['Content-Type'] = 'application/json'
@@ -444,6 +445,47 @@ def req(arg1, arg2):
     url = domain + '/private' + '/goods/' + arg2
     headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.delete(url, headers=headers)
+
+  elif arg1 == "user":
+    userLists = [
+      {
+        'name': 'seller1', 
+        'email': 'ayas88888+seller1@gmail.com', 
+        'password': 'Bf12Asf123',
+        'role': {'seller': True, 'buyer': False},
+      },
+      {
+        'name': 'buyer1', 
+        'email': 'ayas88888+buyer1@gmail.com', 
+        'password': 'Bf12Asf123',
+        'role': {'seller': False, 'buyer': True},
+      },
+    ]
+
+    for user in userLists:
+      url = domain + '/public' + '/users/signup'
+      print(url)
+      payload = {
+        'name': user['name'], 
+        'email': user['email'], 
+        'password': user['password'],
+        'role': user['role'],
+      }
+      headers = {'Content-Type': 'application/json'}
+      response = requests.post(url, headers=headers, json=payload)
+      print(response.status_code)
+      print(response.text)
+
+      url = domain + '/public' + '/users/confirmSignUp'
+      print(url)
+      payload = {
+        'name': user['name'], 
+        'confirmationCode': user['password'],
+      }
+      headers = {'Content-Type': 'application/json'}
+      response = requests.post(url, headers=headers, json=payload)
+      print(response.status_code)
+      print(response.text)
 
   elif arg1 == "localstack":
     response = requests.get('http://localhost:4566/health')

@@ -68,11 +68,12 @@ const UserAuth: NextPage = () => {
               console.error('unknown role')
               // バックエンドのMockサーバーであるmotoには.
               // レスポンスのJWTにカスタム属性情報を含ませる処理がないためロールが判断できない.
-              // リクエスト先がローカルホストの場合、遷移先は固定とする.
-              // 必要に応じて書き換えること.
+              // リクエスト先がローカルホストの場合、ユーザ名からの推測とする.
               if (usersApi.getReqDest() === 'localhost') {
-                // router.push('/buyer/GoodsList')
-                router.push('/seller/GoodsRegist')
+                const owner = userInfoLib.getOwner(res.data.IdToken) as string
+                owner.includes('seller')
+                  ? router.push('/seller/GoodsRegist')
+                  : router.push('/buyer/GoodsList')
               }
             }
           }
