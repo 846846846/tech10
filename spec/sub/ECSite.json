@@ -1,0 +1,239 @@
+{
+  "ModelName": "ECSite",
+  "ModelMetadata": {
+    "Author": "8463",
+    "DateCreated": "Jan 27, 2024, 01:41 PM",
+    "DateLastModified": "Feb 07, 2024, 08:22 AM",
+    "Description": "",
+    "AWSService": "Amazon DynamoDB",
+    "Version": "3.0"
+  },
+  "DataModel": [
+    {
+      "TableName": "ECSite",
+      "KeyAttributes": {
+        "PartitionKey": {
+          "AttributeName": "PK",
+          "AttributeType": "S"
+        },
+        "SortKey": {
+          "AttributeName": "SK",
+          "AttributeType": "S"
+        }
+      },
+      "NonKeyAttributes": [
+        {
+          "AttributeName": "EntityType",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Detail",
+          "AttributeType": "M"
+        },
+        {
+          "AttributeName": "Price",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "Date",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Quantity",
+          "AttributeType": "N"
+        }
+      ],
+      "GlobalSecondaryIndexes": [
+        {
+          "IndexName": "GSI-ListFromEntity",
+          "KeyAttributes": {
+            "PartitionKey": {
+              "AttributeName": "EntityType",
+              "AttributeType": "S"
+            },
+            "SortKey": {
+              "AttributeName": "PK",
+              "AttributeType": "S"
+            }
+          },
+          "Projection": {
+            "ProjectionType": "ALL"
+          }
+        }
+      ],
+      "TableData": [
+        {
+          "PK": {
+            "S": "p#12345"
+          },
+          "SK": {
+            "S": "p#12345"
+          },
+          "EntityType": {
+            "S": "Product"
+          },
+          "Detail": {
+            "M": {
+              "Name": {
+                "S": "りんご"
+              },
+              "Explanation": {
+                "S": "りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。"
+              },
+              "Image0001": {
+                "S": "20230928T073511479_Apple.jpeg"
+              },
+              "Category": {
+                "S": "Food"
+              }
+            }
+          },
+          "Price": {
+            "N": "100"
+          }
+        },
+        {
+          "PK": {
+            "S": "o#12345"
+          },
+          "SK": {
+            "S": "o#12345"
+          },
+          "EntityType": {
+            "S": "Order"
+          },
+          "Date": {
+            "S": "2023-11-24T10:12:28+09:00"
+          }
+        },
+        {
+          "PK": {
+            "S": "o#12345"
+          },
+          "SK": {
+            "S": "p#12345"
+          },
+          "EntityType": {
+            "S": "Order2Product"
+          },
+          "Price": {
+            "N": "100"
+          },
+          "Quantity": {
+            "N": "5"
+          }
+        },
+        {
+          "PK": {
+            "S": "p#12777"
+          },
+          "SK": {
+            "S": "p#12777"
+          },
+          "EntityType": {
+            "S": "Product"
+          },
+          "Detail": {
+            "M": {
+              "Name": {
+                "S": "コーヒー"
+              },
+              "Explanation": {
+                "S": "コーヒーは、最も広く親しまれている嗜好品の一つです。"
+              },
+              "Image0001": {
+                "S": "20240104T123553572_Coffee.jpeg"
+              },
+              "Category": {
+                "S": "Drink"
+              }
+            }
+          },
+          "Price": {
+            "N": "200"
+          }
+        },
+        {
+          "PK": {
+            "S": "o#12345"
+          },
+          "SK": {
+            "S": "c#{CogId1}"
+          },
+          "EntityType": {
+            "S": "Order2Customer"
+          }
+        },
+        {
+          "PK": {
+            "S": "o#31234"
+          },
+          "SK": {
+            "S": "o#31234"
+          },
+          "EntityType": {
+            "S": "Order"
+          },
+          "Date": {
+            "S": "2024-03-03T12:14:01+09:00"
+          }
+        },
+        {
+          "PK": {
+            "S": "o#31234"
+          },
+          "SK": {
+            "S": "p#12777"
+          },
+          "EntityType": {
+            "S": "Order2Product"
+          },
+          "Price": {
+            "N": "200"
+          },
+          "Quantity": {
+            "N": "20"
+          }
+        },
+        {
+          "PK": {
+            "S": "o#31234"
+          },
+          "SK": {
+            "S": "c#{CogId2}"
+          },
+          "EntityType": {
+            "S": "Order2Customer"
+          }
+        },
+        {
+          "PK": {
+            "S": "p#12345"
+          },
+          "SK": {
+            "S": "ow#{CogId3}"
+          },
+          "EntityType": {
+            "S": "Product2Owner"
+          }
+        },
+        {
+          "PK": {
+            "S": "p#12777"
+          },
+          "SK": {
+            "S": "ow#{CogId4}"
+          },
+          "EntityType": {
+            "S": "Product2Owner"
+          }
+        }
+      ],
+      "DataAccess": {
+        "MySql": {}
+      },
+      "SampleDataFormats": {},
+      "BillingMode": "PAY_PER_REQUEST"
+    }
+  ]
+}

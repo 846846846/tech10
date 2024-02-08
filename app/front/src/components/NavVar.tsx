@@ -1,17 +1,27 @@
 'use strict'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import { Nav, Navbar, Container, Form, Row, Col, Button } from 'react-bootstrap'
-import { BoxArrowRight } from 'react-bootstrap-icons'
+import {
+  Nav,
+  Navbar,
+  Container,
+  Form,
+  Row,
+  Col,
+  Button,
+  Badge,
+} from 'react-bootstrap'
+import { BoxArrowRight, Cart3 } from 'react-bootstrap-icons'
 import UserInfoLib from '../webapi/libs/userInfo'
 import MyModal from '@/components/Modal'
 
 // local type definition.
 type PropsType = {
   styles: any
+  itemNum?: number
 }
 
-const MyNavVar = ({ styles }: PropsType) => {
+const MyNavVar = ({ styles, itemNum = 0 }: PropsType) => {
   // hooks.
   const [owner, setOwner] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -57,7 +67,7 @@ const MyNavVar = ({ styles }: PropsType) => {
             <Nav.Link href="#OpeC">操作C</Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <Form>
+        {/* <Form>
           <Row>
             <Col xs="auto">
               <Form.Control
@@ -76,7 +86,16 @@ const MyNavVar = ({ styles }: PropsType) => {
               </Button>
             </Col>
           </Row>
-        </Form>
+        </Form> */}
+        <Cart3
+          size="48px"
+          color="white"
+          cursor="pointer"
+          onClick={() => {
+            alert('TBD')
+          }}
+        />
+        <Badge>{itemNum}</Badge>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
             ログイン中: <span>{owner} </span>

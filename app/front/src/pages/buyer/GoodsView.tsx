@@ -2,7 +2,15 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Container, Row, Col, Image, Carousel } from 'react-bootstrap'
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Carousel,
+  Button,
+  Table,
+} from 'react-bootstrap'
 import { GoodsAPI } from '../../webapi/entity/goods'
 import { MetaAPI } from '../../webapi/entity/meta'
 import MyNavVar from '@/components/NavVar'
@@ -19,6 +27,7 @@ const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
 const GoodsView: NextPage = () => {
   // hooks.
   const [data, setData] = useState<Goods>()
+  const [itemNum, setItemNum] = useState<number>(0)
 
   const router = useRouter()
   const { id } = router.query
@@ -74,7 +83,7 @@ const GoodsView: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <MyNavVar styles={styles.navBar} />
+        <MyNavVar styles={styles.navBar} itemNum={itemNum} />
         <Breadcrumbs items={breadcrumbItems} styles={styles} />
         <Container className={styles.container}>
           <Row className={styles.rowView}>
@@ -97,10 +106,46 @@ const GoodsView: NextPage = () => {
           </Row>
           <Row>
             <Col className={styles.detail}>
-              <div>商品名：{data?.name}</div>
-              <div>値段：{data?.price + '円'}</div>
-              <div>説明：{data?.explanation}</div>
-              <div>販売者：{data?.owner}</div>
+              <Table>
+                <tbody>
+                  <tr>
+                    <td id={styles.tableData}>商品名</td>
+                    <td id={styles.tableData}>{data?.name}</td>
+                  </tr>
+                  <tr>
+                    <td id={styles.tableData}>値段</td>
+                    <td id={styles.tableData}>{data?.price + '円'}</td>
+                  </tr>
+                  <tr>
+                    <td id={styles.tableData}>説明</td>
+                    <td id={styles.tableData}>{data?.explanation}</td>
+                  </tr>
+                  <tr>
+                    <td id={styles.tableData}>販売者</td>
+                    <td id={styles.tableData}>{data?.owner}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+          <Row className="mb-5">
+            <Col>
+              <Button
+                onClick={() => {
+                  setItemNum(itemNum + 1)
+                }}
+              >
+                カートに入れる
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                onClick={() => {
+                  setItemNum(itemNum - 1)
+                }}
+              >
+                カートから削除する
+              </Button>
             </Col>
           </Row>
         </Container>
