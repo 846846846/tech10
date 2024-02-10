@@ -82,12 +82,12 @@
   - AWS Well-Architected ツールを利用してレビューする。
 
 ## 試験用アカウント
-  - 販売者
+  - 所有者
     - seller1
     - ayas88888+seller1@gmail.com
     - Bf12Asf123
 
-  - 購入者
+  - 顧客
     - buyer1
     - ayas88888+buyer1@gmail.com
     - Bf12Asf123
@@ -100,7 +100,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "DB設計見直し"
+    - git commit -m "WebAPI設計見直し"
     - git push origin ECSITE-4
 
 ## docker
@@ -257,6 +257,10 @@
   - 参考サイト
     - ダイアグラムの構文
       - https://mermaid.js.org/intro/syntax-reference.html
+
+## Windows
+  - ポートオープン確認
+    - netstat -an | findstr :{port number}
 
 ## 一時メモ
   - you are silly.

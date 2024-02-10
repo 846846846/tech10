@@ -2,22 +2,24 @@ openapi: 3.0.0
 
 info:
   title: ECSite API
-  description: ECSiteのWebAPI仕様。URL定義はケバブケース(-)を採用。
+  description: エンドポイントの命名にはケバブケース、小文字、複数形を採用。
   version: 1.0.0
 
 servers:
   - url: http://localhost:3001/dev/api/v1
     description: localhost
-  - url: https://5adqe2wdk2.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1
+  - url: https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1
     description: dev server
 
 tags:
   - name: meta
-    description: メタ情報を扱うAPI。
+    description: メタ情報
   - name: users
-    description: ユーザー情報を扱うAPI。
-  - name: goods
-    description: 商品情報を扱うAPI。
+    description: ユーザー情報
+  - name: products
+    description: 商品情報
+  - name: orders
+    description: 注文情報
 
 paths:
   /health:
@@ -41,40 +43,18 @@ paths:
         - meta
       summary: S3 PresignedURL(アップロード用)を取得する。
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
-        - name: name
-          in: path
-          required: true
-          description: アップロードするファイルの名称
-          schema:
-            type: string
-        - name: type
-          in: path
-          required: true
-          description: アップロードするファイルのコンテンツタイプ
-          schema:
-            type: string
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/FileName"
+        - $ref: "#/components/parameters/FileType"
       description: S3 PresginedURL(アップロード用)を取得する。
       operationId: presignedUrl
       responses:
         "200":
-          description: S3 PresginedURL(アップロード用)の生成に成功。
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  presignedUrl:
-                    type: string
+          $ref: "#components/responses/PresginedURL"
         "400":
-          description: Invalid input
+          description: 不正な入力パラメータ
         "500":
-          description: Server error
+          description: サーバーサイドエラー
 
   /presigned-url/download:
     get:
@@ -82,96 +62,34 @@ paths:
         - meta
       summary: S3 PresignedURL(ダウンロード用)を取得する。
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
-        - name: name
-          in: query
-          required: true
-          description: ダウンロードするファイルの名称。
-          schema:
-            type: string
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/FileName"
       description: S3 PresginedURL(ダウンロード用)を取得する。
       operationId: presignedUrl
       responses:
         "200":
-          description: S3 PresginedURL(ダウンロード用)の生成に成功。
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  presignedUrl:
-                    type: string
+          $ref: "#components/responses/PresginedURL"
         "400":
-          description: Invalid input
+          description: 不正な入力パラメータ
         "500":
-          description: Server error
+          description: サーバーサイドエラー
 
   /users/signup:
     post:
-      summary: ユーザーを新規登録する。
+      summary: ユーザー情報を新規登録する。
       description: Cognitoのユーザープールに新規ユーザアカウントを登録する。
       tags:
         - users
       operationId: signUp
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-                  format: password
-                role:
-                  type: object
-                  properties:
-                    seller:
-                      type: boolean
-                    buyer:
-                      type: boolean
-              required:
-                - name
-                - email
-                - password
-            example:
-              name: sample
-              email: samlple@example.com
-              password: a1faS112
-              role:
-                seller: true
-                buyer: false
+        $ref: "#/components/requestBodies/Signup"
       responses:
         "200":
-          description: 新規登録に成功した。
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+          description: 成功
         "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+          description: 不正な入力パラメータ
 
-  /users/confirmSignup:
+  /users/confirm-signup:
     post:
       summary: ユーザーを有効化する。
       description: ユーザーが入力したチャレンジレスポンスを送信し、Cognitoが管理するユーザーを有効化する。
@@ -179,41 +97,12 @@ paths:
         - users
       operationId: activate
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                confirmationCode:
-                  type: string
-              required:
-                - name
-                - confirmationCode
-            example:
-              name: samlple
-              confirmationCode: 752763
+        $ref: "#/components/requestBodies/UserConfirm"
       responses:
         "200":
-          description: 有効化に成功した。
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+          description: 成功
         "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+          description: 不正な入力パラメータ
 
   /users/signin:
     post:
@@ -223,224 +112,137 @@ paths:
         - users
       operationId: signIn
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                password:
-                  type: string
-                  format: password
-              required:
-                - name
-                - password
-            example:
-              name: samlple
-              password: a1faS112
+        $ref: "#/components/requestBodies/Signin"
       responses:
         "200":
-          description: サインインに成功した。
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  accessToken:
-                    type: string
-                  idToken:
-                    type: string
-                  refreshToken:
-                    type: string
+          $ref: "#components/responses/Signin"
         "400":
           description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
         "401":
           description: 認証に失敗した。
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
 
-  /goods:
-    get:
-      tags:
-        - goods
-      summary: 販売者が所有する商品の一覧を取得する。
-      parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
-      responses:
-        "200":
-          description: 販売者が所有する商品の一覧
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/GoodsList"
-              examples:
-                goodsList:
-                  $ref: "#/components/examples/GoodsList"
-  /goods/new:
+  /products/:
     post:
       tags:
-        - goods
-      summary: 商品を新規登録する。
+        - products
+      summary: 商品情報を新規登録する。
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
+        - $ref: "#/components/parameters/Authorization"
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GoodsDetail"
-            examples:
-              goods:
-                $ref: "#/components/examples/GoodsDetail"
+        $ref: "#/components/requestBodies/Product"
       responses:
         "201":
-          description: Created
-
-  /goods/{id}:
+          $ref: "#/components/responses/Product"
     get:
       tags:
-        - goods
-      summary: 指定された商品IDの情報を取得する。
+        - products
+      summary: 商品情報の一覧を取得する。
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
-        - name: id
-          in: path
-          required: true
-          description: 商品ID
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/Authorization"
       responses:
         "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GoodsDetail"
-              examples:
-                goods:
-                  $ref: "#/components/examples/GoodsDetail"
+          $ref: "#/components/responses/ProductList"
+
+  /products/{id}:
+    get:
+      tags:
+        - products
+      summary: 指定されたIDの商品情報を取得する。
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          $ref: "#/components/responses/ProductDetail"
     put:
       tags:
-        - goods
-      summary: 指定された商品IDの情報を更新する。
+        - products
+      summary: 指定されたIDの商品情報を更新する。
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
-        - name: id
-          in: path
-          required: true
-          description: 商品ID
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/Id"
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GoodsDetail"
-            examples:
-              goods:
-                $ref: "#/components/examples/GoodsDetail"
+        $ref: "#/components/requestBodies/Product"
       responses:
         "200":
-          description: Successful update
+          $ref: "#/components/responses/Product"
     delete:
       tags:
-        - goods
-      summary: 指定された商品IDの情報を削除する。
+        - products
+      summary: 指定されたIDの商品情報を削除する。
       parameters:
-        - name: Authorization
-          in: header
-          required: true
-          description: (TBD:チケットNoのECSITE-14で対応) 認証情報。
-          schema:
-            type: string
-        - name: id
-          in: path
-          required: true
-          description: 商品ID
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/Id"
       responses:
         "204":
-          description: Successfully deleted
+          description: 削除成功
+
+  /orders/:
+    post:
+      tags:
+        - orders
+      summary: 注文情報を新規登録する。
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+      requestBody:
+        $ref: "#/components/requestBodies/Product"
+      responses:
+        "201":
+          $ref: "#/components/responses/Product"
 
 components:
   schemas:
-    GoodsDetail:
+    ID:
       type: object
       properties:
         id:
-          type: integer
-          description: 商品ID。各商品を一意に識別するための番号やコード。
-        owner:
           type: string
-          description: 商品の販売者。
+          description: 一意に識別するための番号。
+      required:
+        - id
+    Date:
+      type: object
+      properties:
+        createAt:
+          type: string
+          description: 作成日時。
+        updateAt:
+          type: string
+          description: 更新日時。
+      required:
+        - createAt
+        - updateAt
+    ProductDetail:
+      type: object
+      properties:
         name:
           type: string
           description: 商品名。ユーザーが商品を検索や認識するための名前。
+        price:
+          type: number
+          description: 商品の販売価格。
+        image0001:
+          type: string
+          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
+        owner:
+          type: string
+          description: 商品の販売者。
         explanation:
           type: string
           description: 商品説明。商品の詳細な情報や特徴を説明するテキスト。
-        price:
-          type: integer
-          description: 商品の販売価格。
-        image:
-          type: string
-          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
         category:
           type: string
           description: 商品の分類。例：「家電」「ファッション」「食品」など。
-        createAt:
-          type: string
-          description: 商品情報の作成日時。
-        updateAt:
-          type: string
-          description: 商品情報の更新日時。
       required:
-        - id
         - name
         - price
-    GoodsList:
+        - image0001
+        - owner
+    ProductsList:
       type: object
       properties:
         id:
-          type: integer
+          type: number
           description: 商品ID。各商品を一意に識別するための番号やコード。
         owner:
           type: string
@@ -449,48 +251,197 @@ components:
           type: string
           description: 商品名。ユーザーが商品を検索や認識するための名前。
         price:
-          type: integer
+          type: number
           description: 商品の販売価格。
-        image:
+        image0001:
           type: string
           description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
+      required:
+        - id
+        - owner
+        - name
+        - price
+        - image0001
 
-  examples:
-    GoodsDetail:
-      value:
-        id: apple_001
-        name: りんご
-        owner: さとう
-        explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。その鮮やかな赤や緑の色合いは、見る者の目を引きつけ、果肉のジューシーで甘酸っぱい味は多くの人々の舌を楽しませてきました。りんごにはビタミンCや食物繊維が豊富に含まれており、健康に対するメリットも多いとされています。特に、食物繊維は腸内環境の改善に役立つとされています。また、様々な料理やデザート、ジュースとしての利用方法も幅広く、その利便性と美味しさから多くの家庭の食卓に欠かせない存在となっています。異なる品種や栽培方法によって、りんごの味や食感はさまざま。甘さを追求したものから、爽やかな酸味を持つものまで、好みに合わせて選ぶ楽しさも魅力の一つです。
-        price: 100
-        image: 20230928T073511479_Apple.jpeg
-        category: 食品
-        createAt: 20230828T050442+0900
-        updateAt: 20230828T050442+0900
-    GoodsList:
-      value:
-        - id: apple_001
-          name: りんご
-          price: 100
-          owner: さとう
-          image: 20230928T073511479_Apple.jpeg
-        - id: apple_002
-          name: りんご2
-          price: 200
-          owner: さとう
-          image: 20230928T073511479_Apple2.jpeg
-        - id: apple_003
-          name: りんご
-          price: 300
-          owner: さとう
-          image: 20230928T073511479_Apple3.jpeg
-        - id: orange_001
-          name: おれんじ
-          price: 100
-          owner: かとう
-          image: 20230928T073511479_Orange.jpeg
-        - id: orange_002
-          name: おれんじ
-          price: 200
-          owner: かとう
-          image: 20230928T073511479_Orange2.jpeg
+  requestBodies:
+    Product:
+      description: 商品情報の詳細
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProductDetail"
+          example:
+            name: りんご
+            price: 100
+            image0001: 20230928T073511479_Apple.jpeg
+            owner: さとう
+            explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。
+            category: Food
+    Signup:
+      description: サインアップ情報
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
+              role:
+                type: string
+            required:
+              - name
+              - email
+              - password
+              - role
+            example:
+              name: customer1
+              email: customer1@test.com
+              password: F123i12
+              role: customer
+    UserConfirm:
+      description: ユーザー有効化情報
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              confirmationCode:
+                type: string
+            required:
+              - name
+              - confirmationCode
+          example:
+            name: samlple
+            confirmationCode: 752763
+    Signin:
+      description: サインイン情報
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              password:
+                type: string
+                format: password
+            required:
+              - name
+              - password
+          example:
+            name: samlple
+            password: a1faS112
+
+  responses:
+    PresginedURL:
+      description: S3 PresginedURLの生成に成功。
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              presignedUrl:
+                type: string
+    Signin:
+      description: サインイン成功。
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accessToken:
+                type: string
+              idToken:
+                type: string
+              refreshToken:
+                type: string
+    Product:
+      description: 登録もしくは更新成功
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ID"
+              - $ref: "#/components/schemas/Date"
+            example:
+              id: p#12345
+              createAt: 20230828T050442+0900
+              updateAt: 20230828T050442+0900
+    ProductList:
+      description: 商品情報の一覧
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ProductsList"
+          example:
+            value:
+              - id: p#12345
+                owner: さとう
+                name: りんご
+                price: 100
+                image0001: 20230928T073511479_Apple.jpeg
+              - id: p#12777
+                owner: さとう
+                name: コーヒー
+                price: 200
+                image0001: 20240104T123553572_Coffee.jpeg
+    ProductDetail:
+      description: 商品詳細
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/ID"
+              - $ref: "#/components/schemas/ProductDetail"
+            example:
+              id: p#12345
+              name: りんご
+              price: 100
+              image0001: 20230928T073511479_Apple.jpeg
+              owner: さとう
+              explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。
+              category: Food
+
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: Bearerトークン
+      schema:
+        type: string
+    Id:
+      name: id
+      in: path
+      required: true
+      description: 商品ID
+      schema:
+        type: string
+    FileName:
+      name: file-name
+      in: query
+      required: true
+      description: ファイル名称
+      schema:
+        type: string
+    FileType:
+      name: file-type
+      in: query
+      required: true
+      description: ファイルのコンテンツタイプ
+      schema:
+        type: string
