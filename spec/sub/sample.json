@@ -1,8 +1,8 @@
 {
-  "Name": { "S": "コーヒー" },
-  "Explanation": {
-    "S": "コーヒーは、最も広く親しまれている嗜好品の一つです。"
-  },
-  "Image0001": { "S": "20240104T123553572_Coffee.jpeg" },
-  "Category": { "S": "Drink" }
+  "name": "TFsyWzXHi4",
+  "owner": "Yg7wPK8Amn",
+  "explanation": "fc8osCR2hZOpqS1aUsgIxGGaatnG3Q2BfNTKke5AC4tIgF2Afgz00AuOzvPHxXfb8aRTQG0ZLRsSuejro3Hvm5J4iDxFUaVJK9XV",
+  "price": "7593",
+  "image": ["Yg7wPK8Amn/20240215T193523522_Healslime.png"],
+  "category": "S2zLVRp4dIsaynfSVBmIJ5xNwadlUc"
 }

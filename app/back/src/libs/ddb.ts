@@ -1,5 +1,12 @@
-import { DynamoDBClient, AttributeValue, ScanCommand, ScanCommandInput, TransactWriteItem } from '@aws-sdk/client-dynamodb'
-import { DynamoDBDocumentClient, QueryCommand, QueryCommandInput, TransactWriteCommand, TransactWriteCommandInput } from '@aws-sdk/lib-dynamodb'
+import { DynamoDBClient, AttributeValue, ScanCommand, ScanCommandInput, TransactWriteItem, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import {
+  DynamoDBDocumentClient,
+  QueryCommand,
+  QueryCommandInput,
+  TransactWriteCommand,
+  TransactWriteCommandInput,
+  GetCommandInput,
+} from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 
 export type DDBItemType = Record<string, AttributeValue>
@@ -29,6 +36,27 @@ export const scan = async (TableName: string) => {
     // なぜかマーシャリング（変換）されないので自力で.
     results.Items = results.Items?.map((item) => unmarshall(item))
     return results
+  } catch (err) {
+    throw err
+  }
+}
+
+export const getItem = async (TableName: string, primaryKey: string, primaryKeyValue: string, sortKey: string, sortKeyValue: string) => {
+  try {
+    const params: GetCommandInput = {
+      TableName: TableName,
+      Key: {
+        [primaryKey]: { S: primaryKeyValue },
+        [sortKey]: { S: sortKeyValue },
+      },
+    }
+
+    const response = await ddbDocClient.send(new GetItemCommand(params))
+    if (response.Item) {
+      return response.Item
+    } else {
+      return null
+    }
   } catch (err) {
     throw err
   }

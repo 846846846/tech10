@@ -1,10 +1,12 @@
 import serverlessExpress from '@vendia/serverless-express'
 import express from 'express'
+import { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
 import * as meta from '../entity/meta'
 import * as goods from '../entity/goods'
+import Products from '../entity/products'
 
 sourceMapSupport.install()
 
@@ -99,6 +101,19 @@ router.delete(domain + '/goods/:id', async (_req, res, _next) => {
   } catch (err) {
     const error = new Error(err.message)
     _next(error)
+  }
+})
+
+// product.
+router.use(domain + '/products', async (req: Request, res: Response, next) => {
+  try {
+    const ins = new Products()
+    const result = await ins.exec(req)
+    res.set('content-type', 'applicaion/json')
+    res.send(result)
+  } catch (err) {
+    const error = new Error(err.message)
+    next(error)
   }
 })
 

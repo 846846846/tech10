@@ -221,12 +221,11 @@ components:
         price:
           type: number
           description: 商品の販売価格。
-        image0001:
-          type: string
-          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
-        owner:
-          type: string
-          description: 商品の販売者。
+        image:
+          type: array
+          items:
+            description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
+            type: string
         explanation:
           type: string
           description: 商品説明。商品の詳細な情報や特徴を説明するテキスト。
@@ -236,7 +235,7 @@ components:
       required:
         - name
         - price
-        - image0001
+        - image
         - owner
     ProductsList:
       type: object
@@ -253,15 +252,15 @@ components:
         price:
           type: number
           description: 商品の販売価格。
-        image0001:
+        image:
           type: string
-          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名。
+          description: 商品の実際の見た目を示す画像(写真やイラスト)のファイル名(メイン画像)。
       required:
         - id
         - owner
         - name
         - price
-        - image0001
+        - image
 
   requestBodies:
     Product:
@@ -274,7 +273,10 @@ components:
           example:
             name: りんご
             price: 100
-            image0001: 20230928T073511479_Apple.jpeg
+            image:
+              - 20230928T073511479_Apple.jpeg
+              - 20230928T073511479_Apple.jpeg
+              - 20230928T073511479_Apple.jpeg
             owner: さとう
             explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。
             category: Food
@@ -376,7 +378,7 @@ components:
               - $ref: "#/components/schemas/ID"
               - $ref: "#/components/schemas/Date"
             example:
-              id: p#12345
+              id: 12345
               createAt: 20230828T050442+0900
               updateAt: 20230828T050442+0900
     ProductList:
@@ -389,16 +391,16 @@ components:
               $ref: "#/components/schemas/ProductsList"
           example:
             value:
-              - id: p#12345
+              - id: 12345
                 owner: さとう
                 name: りんご
                 price: 100
-                image0001: 20230928T073511479_Apple.jpeg
-              - id: p#12777
+                image: 20230928T073511479_Apple.jpeg
+              - id: 12777
                 owner: さとう
                 name: コーヒー
                 price: 200
-                image0001: 20240104T123553572_Coffee.jpeg
+                image: 20240104T123553572_Coffee.jpeg
     ProductDetail:
       description: 商品詳細
       content:
@@ -408,13 +410,16 @@ components:
               - $ref: "#/components/schemas/ID"
               - $ref: "#/components/schemas/ProductDetail"
             example:
-              id: p#12345
+              id: 12345
               name: りんご
               price: 100
-              image0001: 20230928T073511479_Apple.jpeg
+              image:
+                - 20230928T073511479_Apple.jpeg
+                - 20230928T070000000_Apple.jpeg
+                - 20240000T120000000_Apple.jpeg
               owner: さとう
               explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。
-              category: Food
+              category: food
 
   parameters:
     Authorization:

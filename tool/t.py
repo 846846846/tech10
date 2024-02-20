@@ -235,14 +235,14 @@ def moto(arg1, arg2):
 
       # ユーザープールごとにクライアントのリストを取得します。
       for pool in pools_response['UserPools']:
-          user_pool_id = pool['Id']
-          print(f"User Pool ID: {user_pool_id}")
-          
-          # ユーザープールクライアントの一覧を取得します。
-          clients_response = client.list_user_pool_clients(UserPoolId=user_pool_id, MaxResults=60)
-          print(f"User Pool Clients for {user_pool_id}:")
-          for client_data in clients_response['UserPoolClients']:
-              print(client_data)
+        user_pool_id = pool['Id']
+        print(f"User Pool ID: {user_pool_id}")
+        
+        # ユーザープールクライアントの一覧を取得します。
+        clients_response = client.list_user_pool_clients(UserPoolId=user_pool_id, MaxResults=60)
+        print(f"User Pool Clients for {user_pool_id}:")
+        for client_data in clients_response['UserPoolClients']:
+          print(client_data)
 
     show_user_pool()
 
@@ -303,7 +303,7 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/signin'
     print('S: signin => ' + url)
     payload = {
-      'name': 'seller1',
+      'name': 'Owner1',
       'password': 'Bf12Asf123', 
     }
     headers = {'Content-Type': 'application/json'}
@@ -341,8 +341,8 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/signup'
     print(url)
     payload = {
-      'name': 'seller1', 
-      'email': 'ayas88888+seller1@gmail.com', 
+      'name': 'Owner1', 
+      'email': 'ayas88888+Owner1@gmail.com', 
       'password': 'Bf12Asf123',
       'role': {'seller': True, 'buyer': False},
     }
@@ -354,7 +354,7 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/confirmSignUp'
     print(url)
     payload = {
-      'name': 'seller1', 
+      'name': 'Owner1', 
       'confirmationCode': '809654', 
     }
     headers = {'Content-Type': 'application/json'}
@@ -364,20 +364,26 @@ def req(arg1, arg2):
     url = domain + '/public' + '/users/signin'
     print(url)
     payload = {
-      'name': 'seller1',
+      'name': 'Owner1',
       'password': 'Yash88888', 
     }
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
 
-  elif arg1 == "gets":
-    url = domain + '/private' + '/goods'
-    print(url)
-    headers = {'Authorization': 'Bearer ' + getBearer()}
-    response = requests.get(url, headers=headers)
+  # elif arg1 == "gets":
+  #   url = domain + '/private' + '/goods'
+  #   print(url)
+  #   headers = {'Authorization': 'Bearer ' + getBearer()}
+  #   response = requests.get(url, headers=headers)
+
+  # elif arg1 == "get":
+  #   url = domain + '/private' + '/goods/' + arg2
+  #   print(url)
+  #   headers = {'Authorization': 'Bearer ' + getBearer()}
+  #   response = requests.get(url, headers=headers)
 
   elif arg1 == "get":
-    url = domain + '/private' + '/goods/' + arg2
+    url = domain + '/private' + '/products/' + arg2
     print(url)
     headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.get(url, headers=headers)
@@ -412,53 +418,54 @@ def req(arg1, arg2):
         imageName = re.search(r"/([^/]+)\?", endpoint).group(1)
 
         # 3. アップロードした画像ファイル名を含めて商品情報をPOST.
-        endpoint = '/private/goods/'
+        endpoint = '/private/products/'
+        owner = 'Owner1'  # 固定
         payload = {
-          'id': generate_random_string(10), 
           'name': generate_random_string(10),
-          'owner': generate_random_string(10),
+          'owner': owner,
           'explanation': generate_random_string(100),
           'price': str(generate_dummy_integer(10000)),
-          'image':  'seller1/' + imageName,
+          'image':  [owner + '/' + imageName],
           'category': generate_random_string(30),
         }
         headers['Content-Type'] = 'application/json'
-        print('S: post goods data => ' + domain + endpoint)
+        print('S: post products data => ' + domain + endpoint)
         response = requests.post(domain + endpoint, headers=headers, json=payload)
-        print('E: post goods data => ' + str(response.status_code))
+        print('E: post products data => ' + str(response.status_code))
 
   elif arg1 == "put":
-    url = domain + '/private' + '/goods/' + arg2
+    url = domain + '/private' + '/products/' + arg2
+    owner = 'Owner1'  # 固定
     payload = {
-      'id': '', 
-      'name': '', 
-      'explanation': '', 
-      'price': '', 
-      'image': '', 
-      'category': '', 
+      'name': 'テスト', 
+      'owner': owner,
+      'explanation': 'テスト', 
+      'price': 9999, 
+      'image':  [owner + '/' + generate_random_string(30), owner + '/' + generate_random_string(30)], 
+      'category': 'test', 
     }
     headers = {'Authorization': 'Bearer ' + getBearer(), 'Content-Type': 'application/json'}
     print(url)
     response = requests.put(url, headers=headers, json=payload)
 
   elif arg1 == "delete":
-    url = domain + '/private' + '/goods/' + arg2
+    url = domain + '/private' + '/products/' + arg2
     headers = {'Authorization': 'Bearer ' + getBearer()}
     response = requests.delete(url, headers=headers)
 
   elif arg1 == "user":
     userLists = [
       {
-        'name': 'seller1', 
-        'email': 'ayas88888+seller1@gmail.com', 
+        'name': 'Owner1', 
+        'email': 'ayas88888+Owner1@gmail.com', 
         'password': 'Bf12Asf123',
-        'role': {'seller': True, 'buyer': False},
+        'role': 'Owner',
       },
       {
-        'name': 'buyer1', 
-        'email': 'ayas88888+buyer1@gmail.com', 
+        'name': 'Customer1', 
+        'email': 'ayas88888+Customer1@gmail.com', 
         'password': 'Bf12Asf123',
-        'role': {'seller': False, 'buyer': True},
+        'role': 'Customer',
       },
     ]
 
@@ -496,7 +503,7 @@ def req(arg1, arg2):
 
 # seed.
 def seed(arg1, arg2):
-  subprocess.run("aws dynamodb create-table --cli-input-yaml file://seed/dynamodb/table.yml --endpoint-url http://localhost:8000")
+  # subprocess.run("aws dynamodb create-table --cli-input-yaml file://seed/dynamodb/table.yml --endpoint-url http://localhost:8000")
   s3("cb", "")
   s3("pbc", "")
   moto("cup", "")

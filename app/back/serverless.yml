@@ -38,12 +38,10 @@ custom:
       port: 8000
       migrate: true
     table:
-      - 'ecsite-${sls:stage}'
+      - ecsite
     gsi:
-      - GSI-General
-      - GSI-List
+      - GSI-ListFromEntity
   s3:
-    # bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-${sls:instanceId}'
     bucketName: '${self:service}-${self:provider.stage}-${self:provider.region}-image-846846846'
   serverless-offline:
     httpPort: 3001
@@ -82,7 +80,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource:
-            - Fn::GetAtt: [DBTable, Arn]
+            - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.dynamodb.table.0}'
         - Effect: Allow
           Action:
             - dynamodb:Query
@@ -98,8 +96,7 @@ provider:
   environment:
     REGION: ${self:provider.region}
     TABLE_NAME: ${self:custom.dynamodb.table.0}
-    GSI_GENERAL: ${self:custom.dynamodb.gsi.0}
-    GSI_LIST: ${self:custom.dynamodb.gsi.1}
+    GSI_LIST_FROM_ENTITY: ${self:custom.dynamodb.gsi.0}
     IMAGE_S3_BUCKET: ${self:custom.s3.bucketName}
 
 # このセクションには、サービスで定義するすべての関数が含まれます。
@@ -144,43 +141,6 @@ functions:
 # AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
 resources:
   Resources:
-    DBTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.dynamodb.table.0}
-        AttributeDefinitions:
-          - AttributeName: uuid
-            AttributeType: S
-          - AttributeName: type
-            AttributeType: S
-          - AttributeName: value
-            AttributeType: S
-          - AttributeName: list
-            AttributeType: S
-        KeySchema:
-          - AttributeName: uuid
-            KeyType: HASH
-          - AttributeName: type
-            KeyType: RANGE
-        BillingMode: PAY_PER_REQUEST
-        GlobalSecondaryIndexes:
-          - IndexName: ${self:custom.dynamodb.gsi.0}
-            KeySchema:
-              - AttributeName: type
-                KeyType: HASH
-              - AttributeName: value
-                KeyType: RANGE
-            Projection:
-              ProjectionType: KEYS_ONLY
-          - IndexName: ${self:custom.dynamodb.gsi.1}
-            KeySchema:
-              - AttributeName: list
-                KeyType: HASH
-            Projection:
-              ProjectionType: INCLUDE
-              NonKeyAttributes:
-                - 'key'
-                - 'value'
     ImageS3Bucket:
       Type: AWS::S3::Bucket
       Properties:

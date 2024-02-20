@@ -100,7 +100,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "WebAPI設計見直し"
+    - git commit -m "productsのAPI完成"
     - git push origin ECSITE-4
 
 ## docker
