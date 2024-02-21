@@ -1,8 +1,8 @@
 import ClientLib, { Request } from '../libs/axios'
 
-const ENDPOINT = '/private/goods/'
+export class ProductsAPI extends ClientLib {
+  endPoint = '/private/products/'
 
-export class GoodsAPI extends ClientLib {
   constructor() {
     super()
   }
@@ -10,7 +10,7 @@ export class GoodsAPI extends ClientLib {
   public async create(params: any) {
     try {
       const req: Request = {
-        url: ENDPOINT,
+        url: this.endPoint,
         params: params,
         headers: {
           'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export class GoodsAPI extends ClientLib {
   public async readList() {
     try {
       const req: Request = {
-        url: ENDPOINT,
+        url: this.endPoint,
         headers: {
           'Content-Type': 'application/json',
           Authorization: this.getAuthorization(),
@@ -42,7 +42,7 @@ export class GoodsAPI extends ClientLib {
     try {
       console.log(Id)
       const req: Request = {
-        url: ENDPOINT + Id,
+        url: this.endPoint + Id,
         headers: {
           'Content-Type': 'application/json',
           Authorization: this.getAuthorization(),
@@ -57,7 +57,7 @@ export class GoodsAPI extends ClientLib {
   public async update(params: any) {
     try {
       const req: Request = {
-        url: ENDPOINT + params.id,
+        url: this.endPoint + params.id,
         params: params,
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export class GoodsAPI extends ClientLib {
   public async delete(params: any) {
     try {
       const req: Request = {
-        url: ENDPOINT + params.id,
+        url: this.endPoint + params.id,
         headers: {
           'Content-Type': 'application/json',
           Authorization: this.getAuthorization(),

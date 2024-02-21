@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Alert } from 'react-bootstrap'
 import { AxiosError } from 'axios'
-import { GoodsAPI } from '../../webapi/entity/goods'
+import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
 import styles from '../../styles/Seller.module.scss'
 import MyForm, { FormItem } from '@/components/Form'
@@ -16,14 +16,14 @@ import SubmitButtons from '@/components/SubmitButtons'
  *
  * @returns
  */
-const GoodsRegist: NextPage = () => {
+const ProductsRegist: NextPage = () => {
   // hooks.
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<Goods>()
+  } = useForm<Products>()
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
@@ -33,29 +33,33 @@ const GoodsRegist: NextPage = () => {
   const [upload, setUpload] = useState<number>(0)
 
   // handler.
-  const onSubmit = async (data: Goods) => {
+  const onSubmit = async (data: Products) => {
     console.log(data)
     try {
-      // 1. image upload.
       const metaApi = new MetaAPI()
-      const resGenPresignedUrl = await metaApi.generatePresignedUrl(
-        {
-          name: data.image[0].name,
-          type: data.image[0].type,
-        },
-        true
-      )
-      await metaApi.uploadPresignedUrl(
-        resGenPresignedUrl.data.url,
-        data.image[0]
-      )
-      const urlObj = new URL(resGenPresignedUrl.data.url)
-      data.image = urlObj.pathname.split('/').slice(-2).join('/') // update image name with s3 key name.
 
-      // 2. post input info.
-      const goodsApi = new GoodsAPI()
-      const resCreate = await goodsApi.create(data)
-      setUpload(resCreate.status)
+      // 1. 画像アップロード先となるS3のPresignedURLを取得.
+      const presignedUrl = await metaApi
+        .generatePresignedUrl(
+          {
+            name: data.image[0].name,
+            type: data.image[0].type,
+          },
+          true
+        )
+        .then((value) => value.data.url)
+
+      // 2. S3のPresignedURLに画像をアップロード.
+      await metaApi.uploadPresignedUrl(presignedUrl, data.image[0])
+
+      // 3. ImageをS3キーのURLで更新.
+      const urlObj = new URL(presignedUrl)
+      data.image = []
+      data.image.push(urlObj.pathname.split('/').slice(-2).join('/'))
+
+      // 4. 商品情報を登録.
+      const res = await new ProductsAPI().create(data)
+      setUpload(res.status)
       reset()
     } catch (err) {
       if (err instanceof AxiosError) {
@@ -75,19 +79,6 @@ const GoodsRegist: NextPage = () => {
   // display.
   const title = '商品登録'
   const formItems: Array<FormItem> = [
-    {
-      id: 'id',
-      type: 'text',
-      title: '商品ID',
-      explanation: '一意の識別子。各商品を一意に識別するための番号やコード。',
-      options: {
-        required: { value: true, message: '入力必須のパラメータです。' },
-        pattern: {
-          value: /^[a-zA-Z0-9]{1,10}$/,
-          message: '半角英数字かつ1文字から10文字で入力してください。',
-        },
-      },
-    },
     {
       id: 'name',
       type: 'text',
@@ -197,4 +188,4 @@ const GoodsRegist: NextPage = () => {
   )
 }
 
-export default GoodsRegist
+export default ProductsRegist

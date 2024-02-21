@@ -15,23 +15,23 @@ export default abstract class Base {
   }
 
   // 実行関数の抽象定義群.
-  abstract create(req: Request): Promise<string>
-  abstract read(req: Request): Promise<string>
-  abstract update(req: Request): Promise<string>
-  abstract delete(req: Request): Promise<string>
+  abstract create(req: Request, res: Response): Promise<void>
+  abstract read(req: Request, res: Response): Promise<void>
+  abstract update(req: Request, res: Response): Promise<void>
+  abstract delete(req: Request, res: Response): Promise<void>
 
   // リクエストを元に実行関数を選び実行する.
-  async exec(req: Request): Promise<string | undefined> {
+  async exec(req: Request, res: Response): Promise<void> {
     try {
       switch (req.method) {
         case 'POST':
-          return await this.create(req)
+          return await this.create(req, res)
         case 'GET':
-          return await this.read(req)
+          return await this.read(req, res)
         case 'PUT':
-          return await this.update(req)
+          return await this.update(req, res)
         case 'DELETE':
-          return await this.delete(req)
+          return await this.delete(req, res)
         default:
           throw new Error('400:Unsupported methods.')
       }

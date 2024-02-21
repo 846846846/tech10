@@ -11,22 +11,19 @@ import {
   Button,
   Table,
 } from 'react-bootstrap'
-import { GoodsAPI } from '../../webapi/entity/goods'
+import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
 import MyNavVar from '@/components/NavVar'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import styles from '../../styles/Buyer.module.scss'
 
-// constant declaration.
-const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
-
 /**
  *
  * @returns
  */
-const GoodsView: NextPage = () => {
+const ProductsView: NextPage = () => {
   // hooks.
-  const [data, setData] = useState<Goods>()
+  const [data, setData] = useState<Products>()
   const [itemNum, setItemNum] = useState<number>(0)
 
   const router = useRouter()
@@ -38,25 +35,18 @@ const GoodsView: NextPage = () => {
         // コンポーネントの初期レンダリング時にはundefinedとなるためガードする.
         if (id !== undefined) {
           // 1. 商品情報の詳細を取得する.
-          const goodsApi = new GoodsAPI()
-          const res = await goodsApi.readDetail(id as string)
+          const res = await new ProductsAPI().readDetail(id as string)
 
           // 2. 画像情報が格納されたS3のPresginedURLを取得する.
-          const metaApi = new MetaAPI()
-          const url =
-            res.data.image === 'dummy'
-              ? DUMMY_IMAGE
-              : await metaApi
-                  .generatePresignedUrl(
-                    {
-                      name: res.data.image,
-                    },
-                    false
-                  )
-                  .then((result) => result.data.url)
+          const url = await new MetaAPI().generatePresignedUrl(
+            {
+              name: res.data.image[0],
+            },
+            false
+          )
 
           // 3. stateにセットする.
-          res.data.image = url
+          res.data.image[0] = url
           setData(res.data)
         }
       } catch (err) {
@@ -71,7 +61,7 @@ const GoodsView: NextPage = () => {
   // display.
   const breadcrumbItems: BreadcrumbItem[] = [
     { text: 'トップ', href: '/' },
-    { text: '商品一覧', href: '/buyer/GoodsList' },
+    { text: '商品一覧', href: '/customer/ProductsList' },
     { text: '商品詳細' },
   ]
 
@@ -93,7 +83,7 @@ const GoodsView: NextPage = () => {
                 <Carousel.Item key={i}>
                   <div className={styles.carouselItem2}>
                     <Image
-                      src={data?.image}
+                      src={data?.image[0].data.url}
                       alt={data?.name}
                       className={styles.image}
                       rounded
@@ -154,4 +144,4 @@ const GoodsView: NextPage = () => {
   )
 }
 
-export default GoodsView
+export default ProductsView

@@ -1,9 +1,9 @@
-declare type Goods = {
+declare type Products = {
   id: string
   name: string
   explanation: string
   price: string
-  image: any
+  image: Array<any>
   category: string
   owner: string
 }

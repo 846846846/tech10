@@ -60,10 +60,10 @@ const UserAuth: NextPage = () => {
             const userInfoLib = new UserInfoLib()
             const role = userInfoLib.getRole(res.data.IdToken)
             console.log(role)
-            if (role === 'buyer') {
-              router.push('/buyer/GoodsList')
-            } else if (role === 'seller') {
-              router.push('/seller/GoodsRegist')
+            if (role === 'Customer') {
+              router.push('/customer/ProductsList')
+            } else if (role === 'Owner') {
+              router.push('/owner/ProductsRegist')
             } else {
               console.error('unknown role')
               // バックエンドのMockサーバーであるmotoには.
@@ -71,9 +71,9 @@ const UserAuth: NextPage = () => {
               // リクエスト先がローカルホストの場合、ユーザ名からの推測とする.
               if (usersApi.getReqDest() === 'localhost') {
                 const owner = userInfoLib.getOwner(res.data.IdToken) as string
-                owner.includes('seller')
-                  ? router.push('/seller/GoodsRegist')
-                  : router.push('/buyer/GoodsList')
+                owner.includes('Owner')
+                  ? router.push('/owner/ProductsRegist')
+                  : router.push('/customer/ProductsList')
               }
             }
           }

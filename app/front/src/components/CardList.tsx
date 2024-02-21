@@ -31,7 +31,7 @@ const CardList = ({ items, itemsPerRow, styles }: PropsType) => {
                 <Col className={styles.cardCol} key={j}>
                   {id !== undefined && (
                     <Card className={styles.card}>
-                      <Link href={'/buyer/GoodsView?id=' + id}>
+                      <Link href={'/customer/ProductsView?id=' + id}>
                         <Card.Img src={image} alt={title} />
                       </Link>
                       <Card.Body>

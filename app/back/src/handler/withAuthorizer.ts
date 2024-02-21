@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
 import * as meta from '../entity/meta'
-import * as goods from '../entity/goods'
+// import * as goods from '../entity/goods'
 import Products from '../entity/products'
 
 sourceMapSupport.install()
@@ -46,82 +46,78 @@ router.get(domain + '/presigned-url/download', async (_req, res, _next) => {
 })
 
 // goods.
-router.get(domain + '/goods', async (_req, res, _next) => {
+// router.get(domain + '/goods', async (_req, res, _next) => {
+//   try {
+//     const result = await goods.readAll(_req)
+//     res.set('content-type', 'applicaion/json')
+//     res.send(result)
+//   } catch (err) {
+//     const error = new Error(err.message)
+//     _next(error)
+//   }
+// })
+
+// router.get(domain + '/goods/:id', async (_req, res, _next) => {
+//   const id = _req.params.id
+//   try {
+//     const result = await goods.readByID(_req, id)
+//     res.set('content-type', 'applicaion/json')
+//     res.send(result)
+//   } catch (err) {
+//     const error = new Error(err.message)
+//     _next(error)
+//   }
+// })
+
+// router.post(domain + '/goods', async (_req, res, _next) => {
+//   try {
+//     const result = await goods.create(_req)
+//     res.set('content-type', 'applicaion/json')
+//     res.send(result)
+//   } catch (err) {
+//     const error = new Error(err.message)
+//     _next(error)
+//   }
+// })
+
+// router.put(domain + '/goods/:id', async (_req, res, _next) => {
+//   const id = _req.params.id
+//   try {
+//     const result = await goods.update(_req, id)
+//     res.set('content-type', 'applicaion/json')
+//     res.send(result)
+//   } catch (err) {
+//     const error = new Error(err.message)
+//     _next(error)
+//   }
+// })
+
+// router.delete(domain + '/goods/:id', async (_req, res, _next) => {
+//   const id = _req.params.id
+//   try {
+//     const result = await goods.deleteCus(_req, id)
+//     res.set('content-type', 'applicaion/json')
+//     res.send(result)
+//   } catch (err) {
+//     const error = new Error(err.message)
+//     _next(error)
+//   }
+// })
+
+// [entity] 商品情報.
+router.use(domain + '/products', async (req: Request, res: Response) => {
   try {
-    const result = await goods.readAll(_req)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
+    await new Products().exec(req, res)
   } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
+    console.error(err)
   }
 })
 
-router.get(domain + '/goods/:id', async (_req, res, _next) => {
-  const id = _req.params.id
-  try {
-    const result = await goods.readByID(_req, id)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-router.post(domain + '/goods', async (_req, res, _next) => {
-  try {
-    const result = await goods.create(_req)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-router.put(domain + '/goods/:id', async (_req, res, _next) => {
-  const id = _req.params.id
-  try {
-    const result = await goods.update(_req, id)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-router.delete(domain + '/goods/:id', async (_req, res, _next) => {
-  const id = _req.params.id
-  try {
-    const result = await goods.deleteCus(_req, id)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-// product.
-router.use(domain + '/products', async (req: Request, res: Response, next) => {
-  try {
-    const ins = new Products()
-    const result = await ins.exec(req)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
-  } catch (err) {
-    const error = new Error(err.message)
-    next(error)
-  }
-})
-
-// [middleware] unexpected.
+// [middleware] 要求されたAPIは未実装
 router.use((_req, res, _next) => {
   console.error(_req)
   return res.status(404).json({
-    error: 'Not Found API',
+    error: '指定されたエンドポイントは見つかりません',
   })
 })
 

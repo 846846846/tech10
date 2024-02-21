@@ -83,13 +83,13 @@
 
 ## 試験用アカウント
   - 所有者
-    - seller1
-    - ayas88888+seller1@gmail.com
+    - Owner1
+    - ayas88888+Owner1@gmail.com
     - Bf12Asf123
 
   - 顧客
-    - buyer1
-    - ayas88888+buyer1@gmail.com
+    - Customer1
+    - ayas88888+Customer1@gmail.com
     - Bf12Asf123
 
 ## git
@@ -100,7 +100,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "productsのAPI完成"
+    - git commit -m "フロントエンドの参照をproductsに変更"
     - git push origin ECSITE-4
 
 ## docker

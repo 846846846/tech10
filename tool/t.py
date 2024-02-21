@@ -370,18 +370,6 @@ def req(arg1, arg2):
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, headers=headers, json=payload)
 
-  # elif arg1 == "gets":
-  #   url = domain + '/private' + '/goods'
-  #   print(url)
-  #   headers = {'Authorization': 'Bearer ' + getBearer()}
-  #   response = requests.get(url, headers=headers)
-
-  # elif arg1 == "get":
-  #   url = domain + '/private' + '/goods/' + arg2
-  #   print(url)
-  #   headers = {'Authorization': 'Bearer ' + getBearer()}
-  #   response = requests.get(url, headers=headers)
-
   elif arg1 == "get":
     url = domain + '/private' + '/products/' + arg2
     print(url)

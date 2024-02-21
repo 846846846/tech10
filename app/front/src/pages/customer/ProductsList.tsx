@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
-import { GoodsAPI } from '../../webapi/entity/goods'
+import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
 import MyNavVar from '@/components/NavVar'
 import CardList, { CardItemType } from '@/components/CardList'
@@ -12,10 +12,9 @@ import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import styles from '../../styles/Buyer.module.scss'
 
 // local type definition.
-type ListItems = Pick<Goods, 'id' | 'name' | 'price' | 'owner' | 'image'>
+type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'owner' | 'image'>
 
 // constant declaration.
-const DUMMY_IMAGE = 'https://placehold.jp/150x150.png'
 const ITEMS_PER_ROW = 2
 const ITEMS_PER_PAGE = 10
 const PANIGATION_MAX_DISP = 5
@@ -24,7 +23,7 @@ const PANIGATION_MAX_DISP = 5
  *
  * @returns
  */
-const GoodsList: NextPage = () => {
+const ProductsList: NextPage = () => {
   // hooks.
   const [data, setData] = useState<Array<ListItems>>([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -33,8 +32,7 @@ const GoodsList: NextPage = () => {
     const fetchData = async () => {
       try {
         // 1.商品情報の一覧を取得する.
-        const goodsApi = new GoodsAPI()
-        const res = await goodsApi.readList()
+        const res = await new ProductsAPI().readList()
 
         // 2.画像情報が格納されたS3のPresginedURLを取得する.
         const metaApi = new MetaAPI()
@@ -42,17 +40,14 @@ const GoodsList: NextPage = () => {
           res.data.map(async (item: ListItems) => {
             return {
               id: item.id,
-              image:
-                item.image === 'dummy'
-                  ? DUMMY_IMAGE
-                  : await metaApi
-                      .generatePresignedUrl(
-                        {
-                          name: item.image,
-                        },
-                        false
-                      )
-                      .then((result) => result.data.url),
+              image: await metaApi
+                .generatePresignedUrl(
+                  {
+                    name: item.image[0],
+                  },
+                  false
+                )
+                .then((result) => result.data.url),
             }
           })
         )
@@ -125,4 +120,4 @@ const GoodsList: NextPage = () => {
   )
 }
 
-export default GoodsList
+export default ProductsList

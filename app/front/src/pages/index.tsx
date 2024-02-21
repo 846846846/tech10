@@ -11,10 +11,6 @@ const Top = () => {
       </Head>
       <main>
         <UserAuth />
-        {/* <Link href="seller/GoodsRegist">販売者/商品登録</Link>
-        <br />
-        <Link href="buyer/GoodsList">購入者/商品一覧</Link>
-        <br /> */}
       </main>
     </>
   )
