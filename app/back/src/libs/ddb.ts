@@ -1,100 +1,137 @@
-import { DynamoDBClient, AttributeValue, ScanCommand, ScanCommandInput, TransactWriteItem, GetItemCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, TransactWriteItem, GetItemCommand } from '@aws-sdk/client-dynamodb'
 import {
   DynamoDBDocumentClient,
+  GetCommandInput,
   QueryCommand,
   QueryCommandInput,
   TransactWriteCommand,
   TransactWriteCommandInput,
-  GetCommandInput,
 } from '@aws-sdk/lib-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
 
-export type DDBItemType = Record<string, AttributeValue>
+export default class DDB {
+  dynamoDBClient = process.env.IS_OFFLINE
+    ? new DynamoDBClient({
+        region: process.env.REGION!,
+        endpoint: 'http://localhost:8000',
+        // endpoint: 'http://dynamodb-local:8000',  // docker用.
+      })
+    : new DynamoDBClient({
+        region: process.env.REGION!,
+      })
+  ddbDocClient = DynamoDBDocumentClient.from(this.dynamoDBClient)
 
-const REGION: string = process.env.REGION!
-const dynamoDBClient = process.env.IS_OFFLINE
-  ? new DynamoDBClient({
-      region: REGION,
-      endpoint: 'http://localhost:8000',
-      // endpoint: 'http://dynamodb-local:8000',  // docker用.
-    })
-  : new DynamoDBClient({
-      region: REGION,
-    })
-const ddbDocClient = DynamoDBDocumentClient.from(dynamoDBClient)
+  getItem = async (TableName: string, primaryKey: string, primaryKeyValue: string, sortKey: string, sortKeyValue: string) => {
+    try {
+      const params: GetCommandInput = {
+        TableName,
+        Key: {
+          [primaryKey]: { S: primaryKeyValue },
+          [sortKey]: { S: sortKeyValue },
+        },
+      }
 
-/*
- * DynamoDB Wrapper API群.
- */
-export const scan = async (TableName: string) => {
-  const params: ScanCommandInput = {
-    TableName: TableName,
-  }
-
-  try {
-    const results = await ddbDocClient.send(new ScanCommand(params))
-    // なぜかマーシャリング（変換）されないので自力で.
-    results.Items = results.Items?.map((item) => unmarshall(item))
-    return results
-  } catch (err) {
-    throw err
-  }
-}
-
-export const getItem = async (TableName: string, primaryKey: string, primaryKeyValue: string, sortKey: string, sortKeyValue: string) => {
-  try {
-    const params: GetCommandInput = {
-      TableName: TableName,
-      Key: {
-        [primaryKey]: { S: primaryKeyValue },
-        [sortKey]: { S: sortKeyValue },
-      },
+      const response = await this.ddbDocClient.send(new GetItemCommand(params))
+      if (response.Item) {
+        return response.Item
+      } else {
+        return null
+      }
+    } catch (err) {
+      throw err
     }
+  }
 
-    const response = await ddbDocClient.send(new GetItemCommand(params))
-    if (response.Item) {
-      return response.Item
-    } else {
-      return null
+  query = async (
+    TableName: string,
+    KeyConditionExpression: string,
+    ExpressionAttributeValues: Record<string, any>,
+    ExpressionAttributeNames?: Record<string, any>,
+    IndexName?: string
+  ) => {
+    try {
+      const params: QueryCommandInput =
+        IndexName !== undefined
+          ? {
+              TableName,
+              KeyConditionExpression: KeyConditionExpression,
+              ExpressionAttributeValues,
+              ExpressionAttributeNames,
+              IndexName,
+            }
+          : {
+              TableName,
+              KeyConditionExpression: KeyConditionExpression,
+              ExpressionAttributeValues,
+              ExpressionAttributeNames,
+            }
+
+      console.dir(params, { depth: null })
+      return await this.ddbDocClient.send(new QueryCommand(params))
+    } catch (err) {
+      throw err
     }
-  } catch (err) {
-    throw err
   }
-}
 
-export const query = async (
-  TableName: string,
-  keyConExp: string,
-  expAttrVals: Record<string, any>,
-  expAttrNames?: Record<string, any>,
-  indexName?: string
-) => {
-  try {
-    const params: QueryCommandInput =
-      indexName !== undefined
-        ? {
-            TableName: TableName,
-            KeyConditionExpression: keyConExp,
-            ExpressionAttributeValues: expAttrVals,
-            ExpressionAttributeNames: expAttrNames,
-            IndexName: indexName,
-          }
-        : {
-            TableName: TableName,
-            KeyConditionExpression: keyConExp,
-            ExpressionAttributeValues: expAttrVals,
-            ExpressionAttributeNames: expAttrNames,
-          }
+  transactWrite = async (action: string, TableName: string, items: Record<string, any>[]) => {
+    try {
+      // TransactWriteItemsで1度に書き込めるアイテム上限数を超える場合は分割.
+      const LIMIT_ITEM_NUM_ONE_TRANSACT = 100
+      const chunks = this.chunkArray(items, LIMIT_ITEM_NUM_ONE_TRANSACT)
 
-    console.dir(params, { depth: null })
-    return await ddbDocClient.send(new QueryCommand(params))
-  } catch (err) {
-    throw err
+      for (const chunk of chunks) {
+        const TransactItems: TransactWriteItem[] = chunk.map((item) => {
+          switch (action) {
+            case 'Put':
+              return {
+                [action]: {
+                  TableName,
+                  Item: item,
+                },
+              }
+            case 'Update':
+              const { Key, attrs } = item
+              const { UpdateExpression, ExpressionAttributeNames, ExpressionAttributeValues } = this.generateUpdateCommand(attrs)
+              return {
+                [action]: {
+                  TableName,
+                  Key,
+                  UpdateExpression,
+                  ExpressionAttributeNames,
+                  ExpressionAttributeValues,
+                  ConditionExpression: 'attribute_exists(#pk) AND attribute_exists(#sk)', // 該当アイテムの存在確認.
+                },
+              }
+            case 'Delete': {
+              const { Key } = item
+              return {
+                [action]: {
+                  TableName,
+                  Key,
+                  ExpressionAttributeNames: {
+                    '#pk': 'pk',
+                    '#sk': 'sk',
+                  },
+                  ConditionExpression: 'attribute_exists(#pk) AND attribute_exists(#sk)', // 該当アイテムの存在確認.
+                },
+              }
+            }
+            default:
+              return {}
+          }
+        })
+
+        const params: TransactWriteCommandInput = {
+          TransactItems,
+        }
+        // console.dir(params, { depth: null })
+        await this.ddbDocClient.send(new TransactWriteCommand(params))
+      }
+    } catch (err) {
+      throw err
+    }
   }
-}
 
-export const transactWrite = async (action: string, tableName: string, items: DDBItemType[]) => {
-  function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  private chunkArray = <T>(array: T[], chunkSize: number): T[][] => {
     const result: T[][] = []
     for (let i = 0; i < array.length; i += chunkSize) {
       result.push(array.slice(i, i + chunkSize))
@@ -102,85 +139,30 @@ export const transactWrite = async (action: string, tableName: string, items: DD
     return result
   }
 
-  try {
-    // TransactWriteItemsが1度に書き込めるアイテム上限数を超える場合は分割.
-    const LIMIT_ITEM_NUM_ONE_TRANSACT = 100
-    const chunks = chunkArray(items, LIMIT_ITEM_NUM_ONE_TRANSACT)
+  private generateUpdateCommand(attributes: Record<string, any>[]): any {
+    const temp = attributes.map((_, index) => {
+      return `#attr${index + 1} = :value${index + 1}`
+    })
+    const UpdateExpression = `SET ${temp.join(', ')}`
 
-    for (const chunk of chunks) {
-      const requestItems: TransactWriteItem[] = chunk.map((item) => {
-        switch (action) {
-          case 'Put':
-            return {
-              [action]: {
-                TableName: tableName,
-                Item: item,
-              },
-            }
-          case 'Update':
-            return {
-              [action]: {
-                TableName: tableName,
-                Key: { uuid: item.uuid, type: item.type },
-                UpdateExpression: 'SET #value = :value',
-                ExpressionAttributeValues: { ':value': item.value },
-                ExpressionAttributeNames: {
-                  '#value': 'value',
-                },
-              },
-            }
-          case 'Delete':
-            return {
-              [action]: {
-                TableName: tableName,
-                Key: item,
-              },
-            }
-          default:
-            return {}
-        }
+    const ExpressionAttributeNames = attributes
+      .map((e, index) => {
+        return { [`#attr${index + 1}`]: e.name }
       })
+      .reduce((acc, attr) => {
+        return { ...acc, ...attr }
+      }, {})
+    ExpressionAttributeNames['#pk'] = 'pk'
+    ExpressionAttributeNames['#sk'] = 'sk'
 
-      const params: TransactWriteCommandInput = {
-        TransactItems: requestItems,
-      }
-      // console.dir(params, { depth: null })
-      await dynamoDBClient.send(new TransactWriteCommand(params))
-    }
-  } catch (err) {
-    throw err
-  }
-}
+    const ExpressionAttributeValues = attributes
+      .map((e, index) => {
+        return { [`:value${index + 1}`]: e.value }
+      })
+      .reduce((acc, attr) => {
+        return { ...acc, ...attr }
+      }, {})
 
-/*
- * DynamoDB Wrapper APIを利用した特化API群.
- */
-// 指定されたTypeからuuidを特定し返却する.
-export const getUuidByType = async (type: string, value: string, tableName: string, gsi: string, errHandling: boolean = true) => {
-  try {
-    const data = await query(
-      tableName,
-      '#type = :v1 and #value = :v2',
-      {
-        ':v1': type,
-        ':v2': value,
-      },
-      {
-        '#type': 'type',
-        '#value': 'value',
-      },
-      gsi
-    )
-
-    if (!data.Count || data.Items === undefined) {
-      if (errHandling) {
-        throw new Error('404:unregistered.')
-      } else {
-        return null
-      }
-    }
-    return data.Items[0].uuid
-  } catch (err) {
-    throw err
+    return { UpdateExpression, ExpressionAttributeNames, ExpressionAttributeValues }
   }
 }

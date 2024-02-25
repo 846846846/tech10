@@ -164,8 +164,8 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/Product"
       responses:
-        "200":
-          $ref: "#/components/responses/Product"
+        "204":
+          description: 更新成功
     delete:
       tags:
         - products
@@ -185,10 +185,53 @@ paths:
       parameters:
         - $ref: "#/components/parameters/Authorization"
       requestBody:
-        $ref: "#/components/requestBodies/Product"
+        $ref: "#/components/requestBodies/Order"
       responses:
         "201":
-          $ref: "#/components/responses/Product"
+          $ref: "#/components/responses/Order"
+    get:
+      tags:
+        - orders
+      summary: 注文情報の一覧を取得する。
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+      responses:
+        "200":
+          $ref: "#/components/responses/OrderList"
+
+  /orders/{id}:
+    get:
+      tags:
+        - orders
+      summary: 指定されたIDの注文情報を取得する。
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          $ref: "#/components/responses/OrderDetail"
+    put:
+      tags:
+        - orders
+      summary: 指定されたIDの注文情報を更新する。
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        $ref: "#/components/requestBodies/Order"
+      responses:
+        "204":
+          description: 更新成功
+    delete:
+      tags:
+        - orders
+      summary: 指定されたIDの注文情報を削除する。
+      parameters:
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: 削除成功
 
 components:
   schemas:
@@ -261,6 +304,22 @@ components:
         - name
         - price
         - image
+    OrderDetail:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: 注文対象の商品ID。
+        price:
+          type: number
+          description: 商品の販売価格。
+        quantity:
+          type: number
+          description: 商品の注文個数。
+      required:
+        - productId
+        - price
+        - quantity
 
   requestBodies:
     Product:
@@ -280,6 +339,17 @@ components:
             owner: さとう
             explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。
             category: Food
+    Order:
+      description: 注文情報の詳細
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OrderDetail"
+          example:
+            productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
+            price: 100
+            quantity: 5
     Signup:
       description: サインアップ情報
       required: true
@@ -370,7 +440,7 @@ components:
               refreshToken:
                 type: string
     Product:
-      description: 登録もしくは更新成功
+      description: 登録成功
       content:
         application/json:
           schema:
@@ -390,17 +460,16 @@ components:
             items:
               $ref: "#/components/schemas/ProductsList"
           example:
-            value:
-              - id: 12345
-                owner: さとう
-                name: りんご
-                price: 100
-                image: 20230928T073511479_Apple.jpeg
-              - id: 12777
-                owner: さとう
-                name: コーヒー
-                price: 200
-                image: 20240104T123553572_Coffee.jpeg
+            - id: 12345
+              owner: さとう
+              name: りんご
+              price: 100
+              image: 20230928T073511479_Apple.jpeg
+            - id: 12777
+              owner: さとう
+              name: コーヒー
+              price: 200
+              image: 20240104T123553572_Coffee.jpeg
     ProductDetail:
       description: 商品詳細
       content:
@@ -420,6 +489,53 @@ components:
               owner: さとう
               explanation: りんごは、数ある果物の中でも人々に広く親しまれているものの一つです。
               category: food
+    Order:
+      description: 登録成功
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ID"
+          example:
+            id: 12345
+    OrderList:
+      description: 注文情報の一覧
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              allOf:
+                - $ref: "#/components/schemas/ID"
+                - $ref: "#/components/schemas/Date"
+          example:
+            - id: 12345
+              createAt: 20230828T050442+0900
+              updateAt: 20230828T050442+0900
+            - id: 31234
+              createAt: 20230828T050442+0900
+              updateAt: 20230828T050442+0900
+    OrderDetail:
+      description: 注文詳細
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/OrderDetail"
+              - $ref: "#/components/schemas/Date"
+              - type: object
+                properties:
+                  customerId:
+                    type: string
+                    description: 顧客ID
+                required:
+                  - customerId
+            example:
+              productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
+              price: 100
+              quantity: 5
+              createAt: 20230828T050442+0900
+              updateAt: 20230828T050442+0900
+              customerId: matsuda
 
   parameters:
     Authorization:
@@ -433,7 +549,7 @@ components:
       name: id
       in: path
       required: true
-      description: 商品ID
+      description: 対象を一意に特定するID
       schema:
         type: string
     FileName:

@@ -3,6 +3,7 @@
 
 # サイト
   - https://d3g1t7tx4q2vwo.cloudfront.net/
+  - http://localhost:3000/
 
 # スキルセット
   |カテゴリ|名称|説明|備考|
@@ -100,7 +101,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "フロントエンドの参照をproductsに変更"
+    - git commit -m "注文情報のバックエンドAPI実装"
     - git push origin ECSITE-4
 
 ## docker

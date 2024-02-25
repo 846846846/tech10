@@ -27,6 +27,20 @@ export default class ClientLib {
       : 'remote'
   }
 
+  public async post(req: Request, autoAddHost: boolean = true) {
+    try {
+      const { url, params, headers } = { ...req }
+      const res = await axios.post(
+        autoAddHost || url == undefined ? this.host + url : url,
+        params,
+        { headers }
+      )
+      return res
+    } catch (err) {
+      throw err
+    }
+  }
+
   public async get(req: Request, autoAddHost: boolean = true) {
     try {
       const { url, params, headers } = { ...req }
@@ -36,20 +50,6 @@ export default class ClientLib {
           params,
           headers,
         }
-      )
-      return res
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public async post(req: Request, autoAddHost: boolean = true) {
-    try {
-      const { url, params, headers } = { ...req }
-      const res = await axios.post(
-        autoAddHost || url == undefined ? this.host + url : url,
-        params,
-        { headers }
       )
       return res
     } catch (err) {

@@ -5,8 +5,8 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
 import * as meta from '../entity/meta'
-// import * as goods from '../entity/goods'
 import Products from '../entity/products'
+import Orders from '../entity/orders'
 
 sourceMapSupport.install()
 
@@ -45,69 +45,19 @@ router.get(domain + '/presigned-url/download', async (_req, res, _next) => {
   }
 })
 
-// goods.
-// router.get(domain + '/goods', async (_req, res, _next) => {
-//   try {
-//     const result = await goods.readAll(_req)
-//     res.set('content-type', 'applicaion/json')
-//     res.send(result)
-//   } catch (err) {
-//     const error = new Error(err.message)
-//     _next(error)
-//   }
-// })
-
-// router.get(domain + '/goods/:id', async (_req, res, _next) => {
-//   const id = _req.params.id
-//   try {
-//     const result = await goods.readByID(_req, id)
-//     res.set('content-type', 'applicaion/json')
-//     res.send(result)
-//   } catch (err) {
-//     const error = new Error(err.message)
-//     _next(error)
-//   }
-// })
-
-// router.post(domain + '/goods', async (_req, res, _next) => {
-//   try {
-//     const result = await goods.create(_req)
-//     res.set('content-type', 'applicaion/json')
-//     res.send(result)
-//   } catch (err) {
-//     const error = new Error(err.message)
-//     _next(error)
-//   }
-// })
-
-// router.put(domain + '/goods/:id', async (_req, res, _next) => {
-//   const id = _req.params.id
-//   try {
-//     const result = await goods.update(_req, id)
-//     res.set('content-type', 'applicaion/json')
-//     res.send(result)
-//   } catch (err) {
-//     const error = new Error(err.message)
-//     _next(error)
-//   }
-// })
-
-// router.delete(domain + '/goods/:id', async (_req, res, _next) => {
-//   const id = _req.params.id
-//   try {
-//     const result = await goods.deleteCus(_req, id)
-//     res.set('content-type', 'applicaion/json')
-//     res.send(result)
-//   } catch (err) {
-//     const error = new Error(err.message)
-//     _next(error)
-//   }
-// })
-
 // [entity] 商品情報.
 router.use(domain + '/products', async (req: Request, res: Response) => {
   try {
     await new Products().exec(req, res)
+  } catch (err) {
+    console.error(err)
+  }
+})
+
+// [entity] 注文情報.
+router.use(domain + '/orders', async (req: Request, res: Response) => {
+  try {
+    await new Orders().exec(req, res)
   } catch (err) {
     console.error(err)
   }

@@ -160,8 +160,8 @@ const UserAuth: NextPage = () => {
       type: 'check',
       placeholder: 'ロール',
       children: [
-        { value: 'seller', type: 'radio', label: '販売者' },
-        { value: 'buyer', type: 'radio', label: '購入者' },
+        { value: 'Owner', type: 'radio', label: '販売者' },
+        { value: 'Customer', type: 'radio', label: '購入者' },
       ],
     },
     {

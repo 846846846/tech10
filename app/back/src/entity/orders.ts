@@ -11,44 +11,42 @@ class ConsideredError extends Error {
   }
 }
 
-export default class Products extends Base {
-  prefixPK: string = 'p#'
-  prefixSK: string = 'ow#'
+export default class Orders extends Base {
+  prefixPK: string = 'o#'
   contentType = { 'content-type': 'applicaion/json' }
 
   ddb = new DDB()
 
   constructor() {
-    super('product', process.env.TABLE_NAME!, process.env.GSI_LIST_FROM_ENTITY!)
+    super('order', process.env.TABLE_NAME!, process.env.GSI_LIST_FROM_ENTITY!)
   }
 
   create = async (req: Request, res: Response) => {
     try {
-      // [TODO] 商品名称の重複チェック(そもそも必要かも含めて検討)
       const pk = this.addPrefix(this.generateUUID(), this.prefixPK)
-      const sk = this.addPrefix(new UserInfoLib().getOwner(req.headers['authorization']), this.prefixSK)
+      const customer = new UserInfoLib().getOwner(req.headers['authorization'])
       const createAt = this.getCurrentTime()
-      const { name, price, image, explanation, category } = req.body
+      const { productId, price, quantity } = req.body
 
       const items: any = [
         {
           pk,
           sk: pk,
-          entityType: this.entity,
-          detail: {
-            name,
-            explanation,
-            image,
-            category,
-          },
-          price,
+          entityType: 'order',
           createAt,
           updateAt: createAt,
         },
         {
           pk,
-          sk: sk,
-          entityType: 'product2owner',
+          sk: this.addPrefix(customer, 'c#'),
+          entityType: 'order2customer',
+        },
+        {
+          pk,
+          sk: this.addPrefix(productId, 'p#'),
+          entityType: 'order2product',
+          price,
+          quantity,
         },
       ]
 
@@ -79,27 +77,27 @@ export default class Products extends Base {
           }
         )
         // console.dir(data, { depth: null })
-        if (!data.Count || data.Items === undefined) throw new ConsideredError('指定された商品情報は存在しません', 404)
 
-        const product = data.Items.filter((i) => i.entityType === 'product')[0]
-        const product2owner = data.Items.filter((i) => i.entityType === 'product2owner')[0]
+        if (!data.Count || data.Items === undefined) throw new ConsideredError('指定された情報は存在しません', 404)
+
+        const { createAt, updateAt } = data.Items.filter((i) => i.entityType === 'order')[0]
+        const { sk: psk, price, quantity } = data.Items.filter((i) => i.entityType === 'order2product')[0]
+        const { sk: csk } = data.Items.filter((i) => i.entityType === 'order2customer')[0]
+
         result = {
-          id: this.removePrefix(product.pk, this.prefixPK),
-          name: product.detail.name,
-          price: product.price,
-          image: product.detail.image,
-          explanation: product.detail.explanation,
-          category: product.detail.category,
-          createAt: product.createAt,
-          updateAt: product.updateAt,
-          owner: product2owner.sk,
+          productId: this.removePrefix(psk, 'p#'),
+          price,
+          quantity,
+          createAt,
+          updateAt,
+          customerId: this.removePrefix(csk, 'c#'),
         }
       } else {
         const data = await this.ddb.query(
           this.table,
           '#entityType = :v1',
           {
-            ':v1': 'product',
+            ':v1': 'order',
           },
           {
             '#entityType': 'entityType',
@@ -107,14 +105,11 @@ export default class Products extends Base {
           this.gsi1
         )
         // console.dir(data, { depth: null })
+
         if (!data.Count || data.Items === undefined) throw new ConsideredError('商品情報が見つかりません', 404)
-        result = data.Items.map(({ price, updateAt, pk, detail, createAt }) => ({
+
+        result = data.Items.map(({ pk, createAt, updateAt }) => ({
           id: this.removePrefix(pk, this.prefixPK),
-          price,
-          name: detail.name,
-          image: detail.image,
-          explanation: detail.explanation,
-          category: detail.category,
           createAt,
           updateAt,
         }))
@@ -134,19 +129,20 @@ export default class Products extends Base {
   update = async (req: Request, res: Response) => {
     try {
       const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
-      const { name, price, image, explanation, category } = req.body
+      const { productId, price, quantity } = req.body
       const updateAt = this.getCurrentTime()
 
       const items: Record<string, any>[] = [
         {
-          Key: { pk: id, sk: id },
+          Key: { pk: id, sk: this.addPrefix(productId, 'p#') },
           attrs: [
-            { name: 'detail', value: { name, explanation, image, category } },
             { name: 'price', value: price },
+            { name: 'quantity', value: quantity },
             { name: 'updateAt', value: updateAt },
           ],
         },
       ]
+      console.dir(items, { depth: null })
 
       await this.ddb.transactWrite('Update', this.table, items)
 
@@ -164,13 +160,23 @@ export default class Products extends Base {
   delete = async (req: Request, res: Response) => {
     try {
       const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
-      const sk = this.addPrefix(new UserInfoLib().getOwner(req.headers['authorization']), this.prefixSK)
-      const items: Record<string, any>[] = [
+
+      const data = await this.ddb.query(
+        this.table,
+        '#pk = :v1',
+        { ':v1': this.addPrefix(id, this.prefixPK) },
         {
-          Key: { pk: id, sk: id },
-        },
-        { Key: { pk: id, sk } },
-      ]
+          '#pk': 'pk',
+        }
+      )
+      // console.dir(data, { depth: null })
+
+      if (!data.Count || data.Items === undefined) throw new ConsideredError('指定された情報は存在しません', 404)
+
+      const productId = this.addPrefix(data.Items.filter((i) => i.entityType === 'order2product')[0].sk, 'p#')
+      const customerId = this.addPrefix(data.Items.filter((i) => i.entityType === 'order2customer')[0].sk, 'c#')
+
+      const items: Record<string, any>[] = [{ Key: { pk: id, sk: id } }, { Key: { pk: id, sk: customerId } }, { Key: { pk: id, sk: productId } }]
 
       await this.ddb.transactWrite('Delete', this.table, items)
 
