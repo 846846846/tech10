@@ -13,6 +13,7 @@ import {
 } from 'react-bootstrap'
 import { BoxArrowRight, Cart3 } from 'react-bootstrap-icons'
 import UserInfoLib from '../webapi/libs/userInfo'
+import WebAPI from '../webapi/entity/entity'
 import MyModal from '@/components/Modal'
 
 // local type definition.
@@ -91,8 +92,9 @@ const MyNavVar = ({ styles, itemNum = 0 }: PropsType) => {
           size="48px"
           color="white"
           cursor="pointer"
-          onClick={() => {
+          onClick={async () => {
             alert('TBD')
+            const res = await new WebAPI('orders').create({})
           }}
         />
         <Badge>{itemNum}</Badge>

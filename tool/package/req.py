@@ -1,9 +1,9 @@
+import os
 import requests
 import string
 import json
 import random
 import re
-
 
 class Req:
   def __init__(self):
@@ -33,12 +33,12 @@ class Req:
     return bearer
 
   # meta.
-  def health(self, op1):
+  def _health(self, op1):
     url = self.domain + '/public/health'
     print(url)
     return requests.get(url)
 
-  def upload(self, op1):
+  def _upload(self, op1):
     url = self.domain + '/private/presigned-url/upload'
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     params = {
@@ -48,7 +48,7 @@ class Req:
     print(url)
     return requests.get(url, params=params, headers=headers)
 
-  def download(self, op1):
+  def _download(self, op1):
     url = self.domain + '/private/presigned-url/download'
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     params = {
@@ -58,7 +58,7 @@ class Req:
     return requests.get(url, params=params, headers=headers)
 
   # users 
-  def signup(self, op1):
+  def _signup(self, op1):
     url = self.domain + '/public/users/signup'
     headers = {'Content-Type': 'application/json'}
     payload = {
@@ -70,7 +70,7 @@ class Req:
     print(url)
     return requests.post(url, headers=headers, json=payload)
 
-  def confirmSignUp(self, op1):
+  def _confirmSignUp(self, op1):
     url = self.domain + '/public/users/confirmSignUp'
     headers = {'Content-Type': 'application/json'}
     payload = {
@@ -80,7 +80,7 @@ class Req:
     print(url)
     return requests.post(url, headers=headers, json=payload)
 
-  def signin(self, op1):
+  def _signin(self, op1):
     url = self.domain + '/public' + '/users/signin'
     headers = {'Content-Type': 'application/json'}
     payload = {
@@ -90,7 +90,7 @@ class Req:
     print(url)
     return requests.post(url, headers=headers, json=payload)
 
-  def userReg(self, op1):
+  def _userReg(self, op1):
     userLists = [
       {
         'name': 'Owner1', 
@@ -132,14 +132,13 @@ class Req:
       print(response.text)
 
   # products.
-  def p_get(self, op1):
-    print(op1)
+  def _p_get(self, op1):
     url = self.domain + '/private/products/' + op1
     print(url)
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     return requests.get(url, headers=headers)
 
-  def p_post(self, op1):
+  def _p_post(self, op1):
     dummyFileName = './assets/Healslime.png'
     dummyFileType = 'image/png'
 
@@ -150,7 +149,7 @@ class Req:
         endpoint = '/private/presigned-url/upload'
         headers = {'Authorization': 'Bearer ' + self._getBearer()}
         params = {
-          "name": dummyFileName,
+          "name": os.path.basename(dummyFileName),
           'type': dummyFileType
         }
         print('S: get presignedUrl => ' + self.domain + endpoint)
@@ -184,7 +183,7 @@ class Req:
         response = requests.post(self.domain + endpoint, headers=headers, json=payload)
         print('E: post products data => ' + str(response.status_code))
 
-  def p_put(self, op1):
+  def _p_put(self, op1):
     url = self.domain + '/private/products/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer(), 'Content-Type': 'application/json'}
     owner = 'Owner1'  # 固定
@@ -199,20 +198,20 @@ class Req:
     print(url)
     return requests.put(url, headers=headers, json=payload)
 
-  def p_delete(self, op1):
+  def _p_delete(self, op1):
     url = self.domain + '/private/products/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     print(url)
     return requests.delete(url, headers=headers)
 
   # orders.
-  def o_get(self, op1):
+  def _o_get(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     print(url)
     return requests.get(url, headers=headers)
 
-  def o_post(self, op1):
+  def _o_post(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     payload = {
@@ -223,7 +222,7 @@ class Req:
     print(url)
     return requests.post(url, headers=headers, json=payload)
 
-  def o_put(self, op1):
+  def _o_put(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     payload = {
@@ -234,34 +233,35 @@ class Req:
     print(url)
     return requests.put(url, headers=headers, json=payload)
 
-  def o_delete(self, op1):
+  def _o_delete(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     print(url)
     return requests.delete(url, headers=headers)
 
-  def na(self, op1):
+  def _na(self, op1):
     return 'na'
 
-  def exec(self, cmd, op1 = ""):
-    cylinder = {
-      "1": self.health,
-      "2": self.upload,
-      "3": self.download,
-      "4": self.signup,
-      "5": self.confirmSignUp,
-      "6": self.signin,
-      "7": self.userReg,
-      "8": self.p_get,
-      "9": self.p_post,
-      "10": self.p_put,
-      "11": self.p_delete,
-      "12": self.o_get,
-      "13": self.o_post,
-      "14": self.o_put,
-      "15": self.o_delete,
+  # public.
+  def exec(self, arg1, arg2 = ""):
+    cmdList = {
+      "1": self._health,
+      "2": self._upload,
+      "3": self._download,
+      "4": self._signup,
+      "5": self._confirmSignUp,
+      "6": self._signin,
+      "7": self._userReg,
+      "8": self._p_get,
+      "9": self._p_post,
+      "10": self._p_put,
+      "11": self._p_delete,
+      "12": self._o_get,
+      "13": self._o_post,
+      "14": self._o_put,
+      "15": self._o_delete,
     }
-    response = cylinder.get(cmd, self.na)(op1)
+    response = cmdList.get(arg1, self._na)(arg2)
     if response != None:
       print(response.status_code)
       print(response.text)

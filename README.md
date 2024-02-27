@@ -101,7 +101,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "注文情報のバックエンドAPI実装"
+    - git commit -m "動作確認用スクリプトを修正"
     - git push origin ECSITE-4
 
 ## docker
