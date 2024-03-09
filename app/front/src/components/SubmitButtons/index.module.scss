@@ -1,0 +1,12 @@
+.container {
+  width: 30%;
+  margin-left: auto;
+  display: flex;
+  .ok {
+    flex: 1;
+  }
+  .cancel {
+    flex: 1;
+    margin-right: 1rem;
+  }
+}

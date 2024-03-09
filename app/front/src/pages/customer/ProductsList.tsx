@@ -1,15 +1,14 @@
-'use strict'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
-import MyNavVar from '@/components/NavVar'
+import NavBar from '@/components/NavBar'
 import CardList, { CardItemType } from '@/components/CardList'
-import MyPagination from '@/components/Pagination'
+import Pagination from '@/components/Pagination'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
-import styles from '../../styles/Customer.module.scss'
+import styles from './Customer.module.scss'
 
 // local type definition.
 type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'owner' | 'image'>
@@ -98,21 +97,16 @@ const ProductsList: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <MyNavVar styles={styles.navBar} />
-        <Breadcrumbs items={breadcrumbItems} styles={styles} />
+        <NavBar />
+        <Breadcrumbs items={breadcrumbItems} />
         <Container className={styles.container}>
-          <CardList
-            items={cardList}
-            itemsPerRow={ITEMS_PER_ROW}
-            styles={styles}
-          />
-          <MyPagination
+          <CardList items={cardList} itemsPerRow={ITEMS_PER_ROW} />
+          <Pagination
             items={data}
             itemsPerPage={ITEMS_PER_PAGE}
             paginationMaxDisp={PANIGATION_MAX_DISP}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
-            styles={styles}
           />
         </Container>
       </main>

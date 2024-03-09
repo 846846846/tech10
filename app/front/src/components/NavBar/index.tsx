@@ -1,27 +1,18 @@
-'use strict'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import {
-  Nav,
-  Navbar,
-  Container,
-  Form,
-  Row,
-  Col,
-  Button,
-  Badge,
-} from 'react-bootstrap'
+import { Nav, Navbar, Container, Badge } from 'react-bootstrap'
 import { BoxArrowRight, Cart3 } from 'react-bootstrap-icons'
-import UserInfoLib from '../webapi/libs/userInfo'
-import WebAPI from '../webapi/entity/entity'
-import MyModal from '@/components/Modal'
+import UserInfoLib from '../../webapi/libs/userInfo'
+import WebAPI from '../../webapi/entity/entity'
+import Modal from '@/components/Modal'
 import { useGenericInfo } from '@/components/GenericContext'
+import styles from './index.module.scss'
+
 interface NavVarProps {
-  styles: any
   itemNum?: number
 }
 
-const MyNavVar: React.FC<NavVarProps> = ({ styles, itemNum = 0 }) => {
+const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
   // hooks.
   const [owner, setOwner] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
@@ -48,7 +39,7 @@ const MyNavVar: React.FC<NavVarProps> = ({ styles, itemNum = 0 }) => {
   // tsx.
   return (
     <Navbar bg="dark" data-bs-theme="dark" fixed="top">
-      <MyModal
+      <Modal
         show={showModal}
         title="確認"
         body="ログアウトしますか？"
@@ -100,4 +91,4 @@ const MyNavVar: React.FC<NavVarProps> = ({ styles, itemNum = 0 }) => {
   )
 }
 
-export default MyNavVar
+export default _NavBar

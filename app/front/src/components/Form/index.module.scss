@@ -1,0 +1,29 @@
+.form {
+  width: 95%;
+  height: 100%;
+  margin: 20px 0px 10px 0px;
+  padding: 0px 10px 10px 10px;
+  background-color: white;
+  border: 0.5px solid gray;
+  border-top: none; /* 上辺のボーダーを除外 */
+  .label {
+    margin-bottom: 0px;
+    font-weight: bold;
+  }
+  .text {
+    display: block;
+    margin-top: 0px;
+  }
+  .error {
+    color: red;
+    font-size: 0.85rem;
+  }
+  .buttonUpload {
+    flex: 1;
+    margin-top: 5px;
+  }
+  .roleCheckBox {
+    display: flex;
+    gap: 20px;
+  }
+}

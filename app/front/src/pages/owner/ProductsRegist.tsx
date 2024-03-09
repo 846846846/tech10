@@ -7,9 +7,9 @@ import { Alert } from 'react-bootstrap'
 import { AxiosError } from 'axios'
 import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
-import styles from '../../styles/Owner.module.scss'
-import MyForm, { FormItem } from '@/components/Form'
-import NavBar from '@/components/NavVar'
+import styles from './Owner.module.scss'
+import Form, { FormItem } from '@/components/Form'
+import NavBar from '@/components/NavBar'
 import SubmitButtons from '@/components/SubmitButtons'
 
 /**
@@ -138,7 +138,6 @@ const ProductsRegist: NextPage = () => {
   // extraComponent.
   const extraComponent = (
     <SubmitButtons
-      styles={styles}
       handleSubmit={handleSubmit}
       onSubmit={onSubmit}
       onClose={onClose}
@@ -153,7 +152,7 @@ const ProductsRegist: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <NavBar styles={styles.navBar} />
+        <NavBar />
         <div className={styles.goodsRegist}>
           <Alert
             variant={upload === 200 ? 'success' : 'danger'}
@@ -174,12 +173,11 @@ const ProductsRegist: NextPage = () => {
               </span>
             )}
           </Alert>
-          <MyForm
+          <Form
             formItems={formItems}
             formRef={formRef}
             errors={errors}
             register={register}
-            styles={styles}
             extraComponent={extraComponent}
           />
         </div>

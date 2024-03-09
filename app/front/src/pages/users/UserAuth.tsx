@@ -7,10 +7,10 @@ import { useEffect, useRef, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { UsersAPI } from '../../webapi/entity/users'
-import styles from '../../styles/Users.module.scss'
+import styles from './Users.module.scss'
 import { AxiosError } from 'axios'
 import UserInfoLib from '../../webapi/libs/userInfo'
-import MyForm, { FormItem } from '@/components/Form'
+import Form, { FormItem } from '@/components/Form'
 import SubmitButtons from '@/components/SubmitButtons'
 
 // local type definition.
@@ -239,7 +239,6 @@ const UserAuth: NextPage = () => {
   const extraComponent = (
     <>
       <SubmitButtons
-        styles={styles}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         onClose={authFlow === AuthFlow.signin ? undefined : onClose}
@@ -276,12 +275,11 @@ const UserAuth: NextPage = () => {
             <Col>{title()}</Col>
           </Row>
           <Row>
-            <MyForm
+            <Form
               formItems={formItems}
               formRef={formRef}
               errors={errors}
               register={register}
-              styles={styles}
               extraComponent={extraComponent}
             />
           </Row>

@@ -1,6 +1,6 @@
-// Breadcrumbs.tsx
 import React from 'react'
 import Link from 'next/link'
+import styles from './index.module.scss'
 
 export interface BreadcrumbItem {
   text: string
@@ -9,10 +9,9 @@ export interface BreadcrumbItem {
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[]
-  styles: any
 }
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, styles }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   return (
     <nav aria-label="breadcrumb" className={styles.breadcrumbs}>
       {items.map((item, index) => (

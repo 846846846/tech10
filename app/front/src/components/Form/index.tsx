@@ -1,9 +1,8 @@
-'use strict'
 import { RefObject } from 'react'
 import { Form, FormCheckProps } from 'react-bootstrap'
 import { FieldErrors, UseFormRegister } from 'react-hook-form'
+import styles from './index.module.scss'
 
-// local type definition.
 export interface FormItem {
   id: string
   type: string
@@ -24,16 +23,14 @@ interface MyFormProps {
   formRef: RefObject<HTMLFormElement>
   errors: FieldErrors<any>
   register: UseFormRegister<any>
-  styles: any
   extraComponent?: React.ReactNode
 }
 
-const MyForm: React.FC<MyFormProps> = ({
+const _Form: React.FC<MyFormProps> = ({
   formItems,
   formRef,
   errors,
   register,
-  styles,
   extraComponent,
 }) => {
   return (
@@ -111,4 +108,4 @@ const MyForm: React.FC<MyFormProps> = ({
   )
 }
 
-export default MyForm
+export default _Form

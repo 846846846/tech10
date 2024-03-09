@@ -1,6 +1,6 @@
-'use strict'
 import Link from 'next/link'
 import { Row, Col, Card } from 'react-bootstrap'
+import styles from './index.module.scss'
 
 export interface CardItemType {
   id: string
@@ -12,24 +12,23 @@ export interface CardItemType {
 interface CardListProps {
   items: CardItemType[]
   itemsPerRow: number
-  styles: any
 }
 
-const CardList: React.FC<CardListProps> = ({ items, itemsPerRow, styles }) => {
+const CardList: React.FC<CardListProps> = ({ items, itemsPerRow }) => {
   // tsx.
   return (
     <>
       {Array.from({ length: Math.ceil(items.length / itemsPerRow) }).map(
         (_, i) => (
-          <Row md={2} className={`${styles.cardRow}`} key={i}>
+          <Row md={2} key={i}>
             {Array.from({ length: itemsPerRow }).map((_, j) => {
               const { id, image, title, text } = {
                 ...items[j + i * itemsPerRow],
               }
               return (
-                <Col className={styles.cardCol} key={j}>
+                <Col className={styles.col} key={j}>
                   {id !== undefined && (
-                    <Card className={styles.card}>
+                    <Card>
                       <Link href={'/customer/ProductsView?id=' + id}>
                         <Card.Img src={image} alt={title} />
                       </Link>

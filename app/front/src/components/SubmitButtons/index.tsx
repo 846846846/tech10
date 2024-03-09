@@ -1,24 +1,22 @@
-'use strict'
 import { Button } from 'react-bootstrap'
+import styles from './index.module.scss'
 
 interface SubmitButtonsProps {
-  styles: any
   handleSubmit?: any
   onSubmit?: any
   onClose?: any
 }
 
 const SubmitButtons: React.FC<SubmitButtonsProps> = ({
-  styles,
   handleSubmit,
   onSubmit,
   onClose,
 }) => {
   return (
-    <div className={styles.buttonContainer}>
+    <div className={styles.container}>
       {onClose !== undefined && (
         <Button
-          className={styles.buttonCancel}
+          className={styles.cancel}
           variant="secondary"
           size="sm"
           onClick={onClose}
@@ -27,7 +25,7 @@ const SubmitButtons: React.FC<SubmitButtonsProps> = ({
         </Button>
       )}
       <Button
-        className={styles.buttonOk}
+        className={styles.ok}
         variant="primary"
         size="sm"
         type="submit"

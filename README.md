@@ -101,7 +101,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "ディレクトリ構造の見直しその１"
+    - git commit -m "ディレクトリ構造の見直しその2"
     - git push origin ECSITE-4
 
     - git rm -rf tool/package/__pycache__/

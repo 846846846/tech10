@@ -1,6 +1,6 @@
-'use strict'
 import { Dispatch, SetStateAction } from 'react'
 import { Pagination } from 'react-bootstrap'
+import styles from './index.module.scss'
 
 interface PaginationProps {
   items: Array<any>
@@ -8,16 +8,14 @@ interface PaginationProps {
   paginationMaxDisp: number
   currentPage: number
   setCurrentPage: Dispatch<SetStateAction<number>>
-  styles: any
 }
 
-const MyPagination: React.FC<PaginationProps> = ({
+const _Pagination: React.FC<PaginationProps> = ({
   items,
   itemsPerPage,
   paginationMaxDisp,
   currentPage,
   setCurrentPage,
-  styles,
 }) => {
   const totalItems = items.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
@@ -74,4 +72,4 @@ const MyPagination: React.FC<PaginationProps> = ({
   )
 }
 
-export default MyPagination
+export default _Pagination

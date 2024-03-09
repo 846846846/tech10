@@ -13,11 +13,11 @@ import {
 } from 'react-bootstrap'
 import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
-import MyNavVar from '@/components/NavVar'
+import NavBar from '@/components/NavBar'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import { useGenericInfo } from '@/components/GenericContext'
 import QuantitySelector from '@/components/QuantitySelector'
-import styles from '../../styles/Customer.module.scss'
+import styles from './Customer.module.scss'
 
 /**
  *
@@ -81,8 +81,8 @@ const ProductsView: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <MyNavVar styles={styles.navBar} itemNum={itemNum} />
-        <Breadcrumbs items={breadcrumbItems} styles={styles} />
+        <NavBar itemNum={itemNum} />
+        <Breadcrumbs items={breadcrumbItems} />
         <Container className={styles.container}>
           <Row className={styles.rowView}>
             <Carousel interval={null} indicators={false} variant="dark">

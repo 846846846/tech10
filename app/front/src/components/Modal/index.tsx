@@ -1,4 +1,5 @@
 import { Modal, Button } from 'react-bootstrap'
+import styles from './index.module.scss'
 
 interface ModalProps {
   show: boolean
@@ -8,10 +9,9 @@ interface ModalProps {
   messageColse: string
   handleOK: () => void
   handleClose: () => void
-  styles?: any
 }
 
-const MyModal: React.FC<ModalProps> = ({
+const _Modal: React.FC<ModalProps> = ({
   show,
   title,
   body,
@@ -19,7 +19,6 @@ const MyModal: React.FC<ModalProps> = ({
   messageColse,
   handleOK,
   handleClose,
-  styles,
 }) => {
   // tsx.
   return (
@@ -40,4 +39,4 @@ const MyModal: React.FC<ModalProps> = ({
   )
 }
 
-export default MyModal
+export default _Modal
