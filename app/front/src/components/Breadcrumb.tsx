@@ -7,12 +7,12 @@ export interface BreadcrumbItem {
   href?: string
 }
 
-type PropsType = {
+interface BreadcrumbsProps {
   items: BreadcrumbItem[]
   styles: any
 }
 
-const Breadcrumbs = ({ items, styles }: PropsType) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, styles }) => {
   return (
     <nav aria-label="breadcrumb" className={styles.breadcrumbs}>
       {items.map((item, index) => (

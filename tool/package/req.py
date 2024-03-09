@@ -132,12 +132,6 @@ class Req:
       print(response.text)
 
   # products.
-  def _p_get(self, op1):
-    url = self.domain + '/private/products/' + op1
-    print(url)
-    headers = {'Authorization': 'Bearer ' + self._getBearer()}
-    return requests.get(url, headers=headers)
-
   def _p_post(self, op1):
     dummyFileName = './assets/Healslime.png'
     dummyFileType = 'image/png'
@@ -183,6 +177,12 @@ class Req:
         response = requests.post(self.domain + endpoint, headers=headers, json=payload)
         print('E: post products data => ' + str(response.status_code))
 
+  def _p_get(self, op1):
+    url = self.domain + '/private/products/' + op1
+    print(url)
+    headers = {'Authorization': 'Bearer ' + self._getBearer()}
+    return requests.get(url, headers=headers)
+
   def _p_put(self, op1):
     url = self.domain + '/private/products/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer(), 'Content-Type': 'application/json'}
@@ -205,12 +205,6 @@ class Req:
     return requests.delete(url, headers=headers)
 
   # orders.
-  def _o_get(self, op1):
-    url = self.domain + '/private/orders/' + op1
-    headers = {'Authorization': 'Bearer ' + self._getBearer()}
-    print(url)
-    return requests.get(url, headers=headers)
-
   def _o_post(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
@@ -221,6 +215,12 @@ class Req:
     }
     print(url)
     return requests.post(url, headers=headers, json=payload)
+
+  def _o_get(self, op1):
+    url = self.domain + '/private/orders/' + op1
+    headers = {'Authorization': 'Bearer ' + self._getBearer()}
+    print(url)
+    return requests.get(url, headers=headers)
 
   def _o_put(self, op1):
     url = self.domain + '/private/orders/' + op1
@@ -239,29 +239,26 @@ class Req:
     print(url)
     return requests.delete(url, headers=headers)
 
-  def _na(self, op1):
-    return 'na'
-
   # public.
   def exec(self, arg1, arg2 = ""):
     cmdList = {
-      "1": self._health,
-      "2": self._upload,
-      "3": self._download,
-      "4": self._signup,
-      "5": self._confirmSignUp,
-      "6": self._signin,
-      "7": self._userReg,
-      "8": self._p_get,
-      "9": self._p_post,
-      "10": self._p_put,
-      "11": self._p_delete,
-      "12": self._o_get,
-      "13": self._o_post,
-      "14": self._o_put,
-      "15": self._o_delete,
+      "health": self._health,
+      "upload": self._upload,
+      "download": self._download,
+      "signup": self._signup,
+      "confirmSignUp": self._confirmSignUp,
+      "signin": self._signin,
+      "userReg": self._userReg,
+      "p_post": self._p_post,
+      "p_get": self._p_get,
+      "p_put": self._p_put,
+      "p_delete": self._p_delete,
+      "o_post": self._o_post,
+      "o_get": self._o_get,
+      "o_put": self._o_put,
+      "o_delete": self._o_delete,
     }
-    response = cmdList.get(arg1, self._na)(arg2)
+    response = cmdList.get(arg1, self._health)(arg2)
     if response != None:
       print(response.status_code)
       print(response.text)

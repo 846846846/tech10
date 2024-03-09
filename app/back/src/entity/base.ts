@@ -25,12 +25,16 @@ export default abstract class Base {
     try {
       switch (req.method) {
         case 'POST':
+          console.log('exec create')
           return await this.create(req, res)
         case 'GET':
+          console.log('exec read')
           return await this.read(req, res)
         case 'PUT':
+          console.log('exec put')
           return await this.update(req, res)
         case 'DELETE':
+          console.log('exec delete')
           return await this.delete(req, res)
         default:
           throw new Error('400:Unsupported methods.')

@@ -9,7 +9,7 @@ import MyNavVar from '@/components/NavVar'
 import CardList, { CardItemType } from '@/components/CardList'
 import MyPagination from '@/components/Pagination'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
-import styles from '../../styles/Buyer.module.scss'
+import styles from '../../styles/Customer.module.scss'
 
 // local type definition.
 type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'owner' | 'image'>

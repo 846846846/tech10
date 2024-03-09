@@ -4,7 +4,7 @@ import { Form, FormCheckProps } from 'react-bootstrap'
 import { FieldErrors, UseFormRegister } from 'react-hook-form'
 
 // local type definition.
-export type FormItem = {
+export interface FormItem {
   id: string
   type: string
   title?: string
@@ -13,12 +13,13 @@ export type FormItem = {
   options?: any
   children?: Array<FormCheck>
 }
-type FormCheck = {
+interface FormCheck {
   value: string
   type: FormCheckProps['type']
   label?: string
 }
-type PropsType = {
+
+interface MyFormProps {
   formItems: Array<FormItem>
   formRef: RefObject<HTMLFormElement>
   errors: FieldErrors<any>
@@ -27,14 +28,14 @@ type PropsType = {
   extraComponent?: React.ReactNode
 }
 
-const MyForm = ({
+const MyForm: React.FC<MyFormProps> = ({
   formItems,
   formRef,
   errors,
   register,
   styles,
   extraComponent,
-}: PropsType) => {
+}) => {
   return (
     <Form ref={formRef} className={styles.form}>
       {formItems.map((item, index) => {

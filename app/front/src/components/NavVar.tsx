@@ -15,19 +15,20 @@ import { BoxArrowRight, Cart3 } from 'react-bootstrap-icons'
 import UserInfoLib from '../webapi/libs/userInfo'
 import WebAPI from '../webapi/entity/entity'
 import MyModal from '@/components/Modal'
-
-// local type definition.
-type PropsType = {
+import { useGenericInfo } from '@/components/GenericContext'
+interface NavVarProps {
   styles: any
   itemNum?: number
 }
 
-const MyNavVar = ({ styles, itemNum = 0 }: PropsType) => {
+const MyNavVar: React.FC<NavVarProps> = ({ styles, itemNum = 0 }) => {
   // hooks.
   const [owner, setOwner] = useState<string>('')
   const [showModal, setShowModal] = useState<boolean>(false)
 
   const router = useRouter()
+
+  const { genericInfo, setGenericInfo } = useGenericInfo()
 
   useEffect(() => {
     try {
@@ -68,33 +69,14 @@ const MyNavVar = ({ styles, itemNum = 0 }: PropsType) => {
             <Nav.Link href="#OpeC">操作C</Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        {/* <Form>
-          <Row>
-            <Col xs="auto">
-              <Form.Control
-                type="text"
-                placeholder="Search"
-                className=" mr-sm-2"
-              />
-            </Col>
-            <Col xs="auto">
-              <Button
-                onClick={() => {
-                  alert('TBD')
-                }}
-              >
-                Submit
-              </Button>
-            </Col>
-          </Row>
-        </Form> */}
         <Cart3
           size="48px"
           color="white"
           cursor="pointer"
           onClick={async () => {
-            alert('TBD')
-            const res = await new WebAPI('orders').create({})
+            console.log(genericInfo)
+            const res = await new WebAPI('orders').create(genericInfo)
+            alert(res)
           }}
         />
         <Badge>{itemNum}</Badge>

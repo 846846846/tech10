@@ -101,8 +101,10 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "動作確認用スクリプトを修正"
+    - git commit -m "ディレクトリ構造の見直しその１"
     - git push origin ECSITE-4
+
+    - git rm -rf tool/package/__pycache__/
 
 ## docker
   - WSLのシャットダウン

@@ -123,7 +123,7 @@ export default class DDB {
         const params: TransactWriteCommandInput = {
           TransactItems,
         }
-        // console.dir(params, { depth: null })
+        console.dir(params, { depth: null })
         await this.ddbDocClient.send(new TransactWriteCommand(params))
       }
     } catch (err) {

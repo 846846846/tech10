@@ -46,11 +46,11 @@ paths:
         - $ref: "#/components/parameters/Authorization"
         - $ref: "#/components/parameters/FileName"
         - $ref: "#/components/parameters/FileType"
-      description: S3 PresginedURL(アップロード用)を取得する。
+      description: S3 PresignedURL(アップロード用)を取得する。
       operationId: presignedUrl
       responses:
         "200":
-          $ref: "#components/responses/PresginedURL"
+          $ref: "#/components/responses/PresignedURL"
         "400":
           description: 不正な入力パラメータ
         "500":
@@ -64,11 +64,11 @@ paths:
       parameters:
         - $ref: "#/components/parameters/Authorization"
         - $ref: "#/components/parameters/FileName"
-      description: S3 PresginedURL(ダウンロード用)を取得する。
+      description: S3 PresignedURL(ダウンロード用)を取得する。
       operationId: presignedUrl
       responses:
         "200":
-          $ref: "#components/responses/PresginedURL"
+          $ref: "#/components/responses/PresignedURL"
         "400":
           description: 不正な入力パラメータ
         "500":
@@ -115,7 +115,7 @@ paths:
         $ref: "#/components/requestBodies/Signin"
       responses:
         "200":
-          $ref: "#components/responses/Signin"
+          $ref: "#/components/responses/Signin"
         "400":
           description: Bad Request
         "401":
@@ -417,8 +417,8 @@ components:
             password: a1faS112
 
   responses:
-    PresginedURL:
-      description: S3 PresginedURLの生成に成功。
+    PresignedURL:
+      description: S3 PresignedURLの生成に成功。
       content:
         application/json:
           schema:

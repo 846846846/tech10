@@ -2,21 +2,20 @@
 import Link from 'next/link'
 import { Row, Col, Card } from 'react-bootstrap'
 
-// local type definition.
-export type CardItemType = {
+export interface CardItemType {
   id: string
   image: any
   title: string
   text: string[]
 }
 
-type PropsType = {
+interface CardListProps {
   items: CardItemType[]
   itemsPerRow: number
   styles: any
 }
 
-const CardList = ({ items, itemsPerRow, styles }: PropsType) => {
+const CardList: React.FC<CardListProps> = ({ items, itemsPerRow, styles }) => {
   // tsx.
   return (
     <>

@@ -28,6 +28,8 @@ export default class Orders extends Base {
       const createAt = this.getCurrentTime()
       const { productId, price, quantity } = req.body
 
+      if (productId === undefined || price === undefined || quantity === undefined) throw new ConsideredError('必須パラメータが不足しています', 400)
+
       const items: any = [
         {
           pk,

@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
 interface GenericInfo {
-  XXX: string
+  productId: string | undefined
+  price: string | undefined
+  quantity: number | undefined
 }
 
 interface GenericInfoContextType {

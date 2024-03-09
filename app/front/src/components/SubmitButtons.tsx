@@ -1,20 +1,19 @@
 'use strict'
 import { Button } from 'react-bootstrap'
 
-// local type definition.
-type PropsType = {
+interface SubmitButtonsProps {
   styles: any
   handleSubmit?: any
   onSubmit?: any
   onClose?: any
 }
 
-const SubmitButtons = ({
+const SubmitButtons: React.FC<SubmitButtonsProps> = ({
   styles,
   handleSubmit,
   onSubmit,
   onClose,
-}: PropsType) => {
+}) => {
   return (
     <div className={styles.buttonContainer}>
       {onClose !== undefined && (

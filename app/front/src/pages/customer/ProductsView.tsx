@@ -15,7 +15,9 @@ import { ProductsAPI } from '../../webapi/entity/products'
 import { MetaAPI } from '../../webapi/entity/meta'
 import MyNavVar from '@/components/NavVar'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
-import styles from '../../styles/Buyer.module.scss'
+import { useGenericInfo } from '@/components/GenericContext'
+import QuantitySelector from '@/components/QuantitySelector'
+import styles from '../../styles/Customer.module.scss'
 
 /**
  *
@@ -25,9 +27,12 @@ const ProductsView: NextPage = () => {
   // hooks.
   const [data, setData] = useState<Products>()
   const [itemNum, setItemNum] = useState<number>(0)
+  const [quantity, setQuantity] = useState<number>(1)
 
   const router = useRouter()
   const { id } = router.query
+
+  const { genericInfo, setGenericInfo } = useGenericInfo()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,7 +61,10 @@ const ProductsView: NextPage = () => {
     fetchData()
   }, [id])
 
-  console.log(data)
+  // handler.
+  const handleQuantityChange = (newQuantity: number) => {
+    setQuantity(newQuantity)
+  }
 
   // display.
   const breadcrumbItems: BreadcrumbItem[] = [
@@ -118,23 +126,27 @@ const ProductsView: NextPage = () => {
               </Table>
             </Col>
           </Row>
-          <Row className="mb-5">
+          <Row className="mb-5 justify-content-center">
+            <Col>
+              <QuantitySelector
+                quantity={quantity}
+                onQuantityChange={handleQuantityChange}
+                label="個数"
+              />
+            </Col>
             <Col>
               <Button
+                variant="outline-secondary"
                 onClick={() => {
+                  setGenericInfo({
+                    productId: data?.id,
+                    price: data?.price,
+                    quantity: itemNum + 1,
+                  })
                   setItemNum(itemNum + 1)
                 }}
               >
                 カートに入れる
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                onClick={() => {
-                  setItemNum(itemNum - 1)
-                }}
-              >
-                カートから削除する
               </Button>
             </Col>
           </Row>

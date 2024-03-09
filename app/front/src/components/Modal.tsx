@@ -1,7 +1,6 @@
 import { Modal, Button } from 'react-bootstrap'
 
-// local type definition.
-type PropsType = {
+interface ModalProps {
   show: boolean
   title: string
   body: string
@@ -12,7 +11,7 @@ type PropsType = {
   styles?: any
 }
 
-const MyModal = ({
+const MyModal: React.FC<ModalProps> = ({
   show,
   title,
   body,
@@ -21,7 +20,7 @@ const MyModal = ({
   handleOK,
   handleClose,
   styles,
-}: PropsType) => {
+}) => {
   // tsx.
   return (
     <Modal show={show} onHide={handleClose} animation={false}>

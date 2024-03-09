@@ -1,10 +1,8 @@
 'use strict'
-import Link from 'next/link'
 import { Dispatch, SetStateAction } from 'react'
 import { Pagination } from 'react-bootstrap'
 
-// local type definition.
-type PropsType = {
+interface PaginationProps {
   items: Array<any>
   itemsPerPage: number
   paginationMaxDisp: number
@@ -13,14 +11,14 @@ type PropsType = {
   styles: any
 }
 
-const MyPagination = ({
+const MyPagination: React.FC<PaginationProps> = ({
   items,
   itemsPerPage,
   paginationMaxDisp,
   currentPage,
   setCurrentPage,
   styles,
-}: PropsType) => {
+}) => {
   const totalItems = items.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
   let startPage: number, endPage: number
