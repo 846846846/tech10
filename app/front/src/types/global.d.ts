@@ -1,4 +1,4 @@
-declare type Products = {
+interface Products {
   id: string
   name: string
   explanation: string
@@ -8,7 +8,7 @@ declare type Products = {
   owner: string
 }
 
-declare type Users = {
+interface Users {
   name: string
   role: {
     seller: boolean
@@ -18,4 +18,10 @@ declare type Users = {
   password: string
   passwordConfirm: string
   confirmationCode: string
+}
+interface Orders {
+  productId: string
+  productName: string
+  price: string
+  quantity: number
 }

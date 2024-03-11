@@ -1,4 +1,3 @@
-'use strict'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -6,14 +5,13 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-import { UsersAPI } from '../../webapi/entity/users'
 import styles from './Users.module.scss'
+import UsersAPI from '../../libs/webapi/users'
 import { AxiosError } from 'axios'
-import UserInfoLib from '../../webapi/libs/userInfo'
+import JWTWrap from '../../utils/jwt'
 import Form, { FormItem } from '@/components/Form'
 import SubmitButtons from '@/components/SubmitButtons'
 
-// local type definition.
 enum AuthFlow {
   signin = 0,
   signup,
@@ -57,8 +55,8 @@ const UserAuth: NextPage = () => {
             console.log(res)
             localStorage.setItem('jwtToken', JSON.stringify(res.data))
 
-            const userInfoLib = new UserInfoLib()
-            const role = userInfoLib.getRole(res.data.IdToken)
+            const jwtToken = new JWTWrap(res.data.IdToken)
+            const role = jwtToken.getRole()
             console.log(role)
             if (role === 'Customer') {
               router.push('/customer/ProductsList')
@@ -70,7 +68,7 @@ const UserAuth: NextPage = () => {
               // レスポンスのJWTにカスタム属性情報を含ませる処理がないためロールが判断できない.
               // リクエスト先がローカルホストの場合、ユーザ名からの推測とする.
               if (usersApi.getReqDest() === 'localhost') {
-                const owner = userInfoLib.getOwner(res.data.IdToken) as string
+                const owner = jwtToken.getOwner()
                 owner.includes('Owner')
                   ? router.push('/owner/ProductsRegist')
                   : router.push('/customer/ProductsList')

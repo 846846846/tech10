@@ -2,11 +2,10 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { Nav, Navbar, Container, Badge } from 'react-bootstrap'
 import { BoxArrowRight, Cart3 } from 'react-bootstrap-icons'
-import UserInfoLib from '../../webapi/libs/userInfo'
-import WebAPI from '../../webapi/entity/entity'
-import Modal from '@/components/Modal'
-import { useGenericInfo } from '@/components/GenericContext'
 import styles from './index.module.scss'
+import EntityAPI from '../../libs/webapi/entity'
+import JWTWrap from '../../utils/jwt'
+import Modal from '@/components/Modal'
 
 interface NavVarProps {
   itemNum?: number
@@ -15,18 +14,17 @@ interface NavVarProps {
 const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
   // hooks.
   const [owner, setOwner] = useState<string>('')
-  const [showModal, setShowModal] = useState<boolean>(false)
+  const [showModalLogout, setShowModalLogout] = useState<boolean>(false)
+  const [showModalCart, setShowModalCart] = useState<boolean>(false)
 
   const router = useRouter()
 
-  const { genericInfo, setGenericInfo } = useGenericInfo()
-
   useEffect(() => {
     try {
-      const jwtToken = localStorage.getItem('jwtToken')
-      if (jwtToken !== null) {
-        const userInfoLib = new UserInfoLib()
-        const owner = userInfoLib.getOwner(JSON.parse(jwtToken).IdToken)
+      const orgToken = localStorage.getItem('jwtToken')
+      if (orgToken !== null) {
+        const jwtToken = new JWTWrap(JSON.parse(orgToken).IdToken)
+        const owner = jwtToken.getOwner()
         setOwner(owner)
       } else {
         console.error('jwtToken is not found !!')
@@ -36,11 +34,19 @@ const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
     }
   }, [])
 
+  // handler.
+  const handleOrderFix = async () => {
+    const cart = localStorage.getItem('cart')
+    console.log(cart)
+    // const res = await new EntityAPI('orders').create(cart)
+    // console.log(res.status)
+  }
+
   // tsx.
   return (
     <Navbar bg="dark" data-bs-theme="dark" fixed="top">
       <Modal
-        show={showModal}
+        show={showModalLogout}
         title="確認"
         body="ログアウトしますか？"
         messageOK="はい"
@@ -49,7 +55,18 @@ const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
           router.push('/')
         }}
         handleClose={() => {
-          setShowModal(false)
+          setShowModalLogout(false)
+        }}
+      />
+      <Modal
+        show={showModalCart}
+        title="カート"
+        body="注文しますか？"
+        messageOK="はい"
+        messageColse="いいえ"
+        handleOK={handleOrderFix}
+        handleClose={() => {
+          setShowModalCart(false)
         }}
       />
       <Container fluid>
@@ -64,10 +81,8 @@ const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
           size="48px"
           color="white"
           cursor="pointer"
-          onClick={async () => {
-            console.log(genericInfo)
-            const res = await new WebAPI('orders').create(genericInfo)
-            alert(res)
+          onClick={() => {
+            setShowModalCart(true)
           }}
         />
         <Badge>{itemNum}</Badge>
@@ -77,7 +92,7 @@ const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
             <Navbar.Brand>
               <BoxArrowRight
                 onClick={() => {
-                  setShowModal(true)
+                  setShowModalLogout(true)
                 }}
                 size="24px"
                 color="white"

@@ -11,13 +11,12 @@ import {
   Button,
   Table,
 } from 'react-bootstrap'
-import { ProductsAPI } from '../../webapi/entity/products'
-import { MetaAPI } from '../../webapi/entity/meta'
+import styles from './Customer.module.scss'
+import EntityAPI from '../../libs/webapi/entity'
+import MetaAPI from '../../libs/webapi/meta'
 import NavBar from '@/components/NavBar'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
-import { useGenericInfo } from '@/components/GenericContext'
 import QuantitySelector from '@/components/QuantitySelector'
-import styles from './Customer.module.scss'
 
 /**
  *
@@ -25,14 +24,12 @@ import styles from './Customer.module.scss'
  */
 const ProductsView: NextPage = () => {
   // hooks.
-  const [data, setData] = useState<Products>()
-  const [itemNum, setItemNum] = useState<number>(0)
+  const [product, setProduct] = useState<Products>()
+  const [cart, setCart] = useState<Orders[]>([])
   const [quantity, setQuantity] = useState<number>(1)
 
   const router = useRouter()
   const { id } = router.query
-
-  const { genericInfo, setGenericInfo } = useGenericInfo()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +37,7 @@ const ProductsView: NextPage = () => {
         // コンポーネントの初期レンダリング時にはundefinedとなるためガードする.
         if (id !== undefined) {
           // 1. 商品情報の詳細を取得する.
-          const res = await new ProductsAPI().readDetail(id as string)
+          const res = await new EntityAPI('products').readDetail(id as string)
 
           // 2. 画像情報が格納されたS3のPresginedURLを取得する.
           const url = await new MetaAPI().generatePresignedUrl(
@@ -52,7 +49,7 @@ const ProductsView: NextPage = () => {
 
           // 3. stateにセットする.
           res.data.image[0] = url
-          setData(res.data)
+          setProduct(res.data)
         }
       } catch (err) {
         console.error(err)
@@ -61,9 +58,35 @@ const ProductsView: NextPage = () => {
     fetchData()
   }, [id])
 
+  useEffect(() => {
+    const storedCart = localStorage.getItem('cart')
+    if (storedCart) {
+      setCart(JSON.parse(storedCart))
+    }
+  }, [])
+
   // handler.
   const handleQuantityChange = (newQuantity: number) => {
     setQuantity(newQuantity)
+  }
+
+  const handleAddtoCart = () => {
+    if (product) {
+      const { id: productId, name: productName, price } = product
+      const newCart = [
+        ...cart,
+        {
+          productId,
+          productName,
+          price,
+          quantity,
+        },
+      ]
+      setCart(() => newCart)
+      localStorage.setItem('cart', JSON.stringify(newCart))
+    } else {
+      console.log('商品情報が未取得')
+    }
   }
 
   // display.
@@ -77,11 +100,11 @@ const ProductsView: NextPage = () => {
   return (
     <>
       <Head>
-        <title>{data?.name}</title>
+        <title>{product?.name}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <NavBar itemNum={itemNum} />
+        <NavBar itemNum={cart.length} />
         <Breadcrumbs items={breadcrumbItems} />
         <Container className={styles.container}>
           <Row className={styles.rowView}>
@@ -91,8 +114,8 @@ const ProductsView: NextPage = () => {
                 <Carousel.Item key={i}>
                   <div className={styles.carouselItem2}>
                     <Image
-                      src={data?.image[0].data.url}
-                      alt={data?.name}
+                      src={product?.image[0].data.url}
+                      alt={product?.name}
                       className={styles.image}
                       rounded
                     />
@@ -108,25 +131,25 @@ const ProductsView: NextPage = () => {
                 <tbody>
                   <tr>
                     <td id={styles.tableData}>商品名</td>
-                    <td id={styles.tableData}>{data?.name}</td>
+                    <td id={styles.tableData}>{product?.name}</td>
                   </tr>
                   <tr>
                     <td id={styles.tableData}>値段</td>
-                    <td id={styles.tableData}>{data?.price + '円'}</td>
+                    <td id={styles.tableData}>{product?.price + '円'}</td>
                   </tr>
                   <tr>
                     <td id={styles.tableData}>説明</td>
-                    <td id={styles.tableData}>{data?.explanation}</td>
+                    <td id={styles.tableData}>{product?.explanation}</td>
                   </tr>
                   <tr>
                     <td id={styles.tableData}>販売者</td>
-                    <td id={styles.tableData}>{data?.owner}</td>
+                    <td id={styles.tableData}>{product?.owner}</td>
                   </tr>
                 </tbody>
               </Table>
             </Col>
           </Row>
-          <Row className="mb-5 justify-content-center">
+          <Row>
             <Col>
               <QuantitySelector
                 quantity={quantity}
@@ -135,17 +158,7 @@ const ProductsView: NextPage = () => {
               />
             </Col>
             <Col>
-              <Button
-                variant="outline-secondary"
-                onClick={() => {
-                  setGenericInfo({
-                    productId: data?.id,
-                    price: data?.price,
-                    quantity: itemNum + 1,
-                  })
-                  setItemNum(itemNum + 1)
-                }}
-              >
+              <Button variant="outline-secondary" onClick={handleAddtoCart}>
                 カートに入れる
               </Button>
             </Col>

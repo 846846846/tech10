@@ -1,6 +1,6 @@
-import ClientLib, { Request } from '../libs/axios'
+import ClientLib, { Request } from './axios'
 
-export class MetaAPI extends ClientLib {
+export default class MetaAPI extends ClientLib {
   constructor() {
     super()
   }

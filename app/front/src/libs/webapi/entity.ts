@@ -1,7 +1,6 @@
-import ClientLib, { Request } from '../libs/axios'
+import ClientLib, { Request } from './axios'
 
-export default class WebAPI extends ClientLib {
-  // endPoint = '/private/products/'
+export default class EntityAPI extends ClientLib {
   entity: string
 
   constructor(entity: string) {

@@ -5,31 +5,14 @@
   overflow: auto;
 }
 
-// GoodsList
+// List
 .container {
   position: relative;
   top: 90px;
   background-color: whitesmoke;
 }
 
-.row {
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.cardCol {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.carouselItem {
-  display: flex;
-  justify-content: center;
-}
-
-// GoodsView
+// View
 .rowView {
   justify-content: center;
 }

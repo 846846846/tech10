@@ -1,8 +1,8 @@
-import ClientLib, { Request } from '../libs/axios'
+import ClientLib, { Request } from './axios'
 
 const ENDPOINT = '/public/users/'
 
-export class UsersAPI extends ClientLib {
+export default class UsersAPI extends ClientLib {
   constructor() {
     super()
   }

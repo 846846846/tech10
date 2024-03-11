@@ -1,13 +1,12 @@
-'use strict'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Alert } from 'react-bootstrap'
 import { AxiosError } from 'axios'
-import { ProductsAPI } from '../../webapi/entity/products'
-import { MetaAPI } from '../../webapi/entity/meta'
 import styles from './Owner.module.scss'
+import EntityAPI from '../../libs/webapi/entity'
+import MetaAPI from '../../libs/webapi/meta'
 import Form, { FormItem } from '@/components/Form'
 import NavBar from '@/components/NavBar'
 import SubmitButtons from '@/components/SubmitButtons'
@@ -58,7 +57,7 @@ const ProductsRegist: NextPage = () => {
       data.image.push(urlObj.pathname.split('/').slice(-2).join('/'))
 
       // 4. 商品情報を登録.
-      const res = await new ProductsAPI().create(data)
+      const res = await new EntityAPI('products').create(data)
       setUpload(res.status)
       reset()
     } catch (err) {
@@ -153,15 +152,15 @@ const ProductsRegist: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <NavBar />
-        <div className={styles.goodsRegist}>
+        <div className={styles.regist}>
           <Alert
-            variant={upload === 200 ? 'success' : 'danger'}
+            variant={upload === 201 ? 'success' : 'danger'}
             className={styles.alert}
             onClose={() => setUpload(0)}
             show={upload !== 0}
             dismissible
           >
-            {upload === 200 ? (
+            {upload === 201 ? (
               <span>
                 商品情報の登録が完了しました。プレビューはこちらから。
                 <Alert.Link href="#">goods preview(TBD)</Alert.Link>

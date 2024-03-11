@@ -6,7 +6,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:3001/dev/api/v1
+  - url: http://localhost:3001/local/api/v1
     description: localhost
   - url: https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1
     description: dev server
@@ -22,7 +22,7 @@ tags:
     description: 注文情報
 
 paths:
-  /health:
+  /public/health:
     get:
       tags:
         - meta
@@ -37,7 +37,7 @@ paths:
                 type: string
                 example: Hello World!!
 
-  /presigned-url/upload:
+  /private/presigned-url/upload:
     get:
       tags:
         - meta
@@ -56,7 +56,7 @@ paths:
         "500":
           description: サーバーサイドエラー
 
-  /presigned-url/download:
+  /private/presigned-url/download:
     get:
       tags:
         - meta
@@ -74,7 +74,7 @@ paths:
         "500":
           description: サーバーサイドエラー
 
-  /users/signup:
+  /public/users/signup:
     post:
       summary: ユーザー情報を新規登録する。
       description: Cognitoのユーザープールに新規ユーザアカウントを登録する。
@@ -89,7 +89,7 @@ paths:
         "400":
           description: 不正な入力パラメータ
 
-  /users/confirm-signup:
+  /public/users/confirm-signup:
     post:
       summary: ユーザーを有効化する。
       description: ユーザーが入力したチャレンジレスポンスを送信し、Cognitoが管理するユーザーを有効化する。
@@ -104,7 +104,7 @@ paths:
         "400":
           description: 不正な入力パラメータ
 
-  /users/signin:
+  /public/users/signin:
     post:
       summary: ユーザーのログインを行う。
       description: 要求されたユーザー情報とCognitoのユーザープールに登録された情報を検証する。
@@ -121,7 +121,7 @@ paths:
         "401":
           description: 認証に失敗した。
 
-  /products/:
+  /private/products/:
     post:
       tags:
         - products
@@ -143,7 +143,7 @@ paths:
         "200":
           $ref: "#/components/responses/ProductList"
 
-  /products/{id}:
+  /private/products/{id}:
     get:
       tags:
         - products
@@ -177,7 +177,7 @@ paths:
         "204":
           description: 削除成功
 
-  /orders/:
+  /private/orders/:
     post:
       tags:
         - orders
@@ -199,7 +199,7 @@ paths:
         "200":
           $ref: "#/components/responses/OrderList"
 
-  /orders/{id}:
+  /private/orders/{id}:
     get:
       tags:
         - orders
@@ -345,11 +345,16 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/OrderDetail"
+            type: array
+            items:
+              $ref: "#/components/schemas/OrderDetail"
           example:
-            productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
-            price: 100
-            quantity: 5
+            - productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
+              price: 100
+              quantity: 5
+            - productId: rc19f107-as-4a88-bd73-306b37fa8b22
+              price: 200
+              quantity: 15
     Signup:
       description: サインアップ情報
       required: true
@@ -519,23 +524,35 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-              - $ref: "#/components/schemas/OrderDetail"
-              - $ref: "#/components/schemas/Date"
-              - type: object
-                properties:
-                  customerId:
-                    type: string
-                    description: 顧客ID
-                required:
-                  - customerId
-            example:
-              productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
-              price: 100
-              quantity: 5
+            type: object
+            properties:
+              detail:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/OrderDetail"
+                    - type: object
+                      properties:
+                        customerId:
+                          type: string
+                          description: 顧客ID
+                      required:
+                        - customerId
+              data:
+                $ref: "#/components/schemas/Date"
+          example:
+            detail:
+              - productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
+                price: 100
+                quantity: 5
+                customerId: matsuda
+              - productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
+                price: 100
+                quantity: 5
+                customerId: matsuda
+            date:
               createAt: 20230828T050442+0900
               updateAt: 20230828T050442+0900
-              customerId: matsuda
 
   parameters:
     Authorization:

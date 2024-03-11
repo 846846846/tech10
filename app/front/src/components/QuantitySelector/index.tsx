@@ -1,7 +1,5 @@
 import React from 'react'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import InputGroup from 'react-bootstrap/InputGroup'
+import { Container, Form, InputGroup, Button } from 'react-bootstrap'
 import styles from './index.module.scss'
 
 interface QuantitySelectorProps {
@@ -25,9 +23,9 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   }
 
   return (
-    <div className="d-flex">
-      {label && <Form.Label>{label}</Form.Label>}
-      <InputGroup className="mb-3">
+    <Container className={styles.container}>
+      {label && <Form.Label className={styles.label}>{label}</Form.Label>}
+      <InputGroup>
         <Button variant="outline-secondary" onClick={handleDecrement}>
           -
         </Button>
@@ -42,7 +40,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
           +
         </Button>
       </InputGroup>
-    </div>
+    </Container>
   )
 }
 

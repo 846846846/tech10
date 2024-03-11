@@ -1,6 +1,4 @@
-'use strict'
 import Head from 'next/head'
-import Link from 'next/link'
 import UserAuth from './users/UserAuth'
 
 const Top = () => {

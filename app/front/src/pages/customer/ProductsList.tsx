@@ -2,13 +2,13 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
-import { ProductsAPI } from '../../webapi/entity/products'
-import { MetaAPI } from '../../webapi/entity/meta'
+import styles from './Customer.module.scss'
+import EntityAPI from '../../libs/webapi/entity'
+import MetaAPI from '../../libs/webapi/meta'
 import NavBar from '@/components/NavBar'
 import CardList, { CardItemType } from '@/components/CardList'
 import Pagination from '@/components/Pagination'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
-import styles from './Customer.module.scss'
 
 // local type definition.
 type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'owner' | 'image'>
@@ -31,7 +31,7 @@ const ProductsList: NextPage = () => {
     const fetchData = async () => {
       try {
         // 1.商品情報の一覧を取得する.
-        const res = await new ProductsAPI().readList()
+        const res = await new EntityAPI('products').readList()
 
         // 2.画像情報が格納されたS3のPresginedURLを取得する.
         const metaApi = new MetaAPI()
@@ -53,7 +53,7 @@ const ProductsList: NextPage = () => {
 
         // 3.imageを差し替える.
         const workMap: Map<string, string> = new Map(
-          res2.map((item) => [item.id, item.image])
+          res2.map((item: any) => [item.id, item.image])
         )
         const res3 = res.data.map((item: ListItems) => {
           if (workMap.has(item.id)) {
