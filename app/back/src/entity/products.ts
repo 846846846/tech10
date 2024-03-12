@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import Base from './base'
 import DDB from '../libs/ddb'
-import UserInfoLib from '../libs/userInfo'
+import JWTWrap from '../utlis/jwt'
 
 class ConsideredError extends Error {
   constructor(message: string, public code: number) {
@@ -26,7 +26,7 @@ export default class Products extends Base {
     try {
       // [TODO] 商品名称の重複チェック(そもそも必要かも含めて検討)
       const pk = this.addPrefix(this.generateUUID(), this.prefixPK)
-      const sk = this.addPrefix(new UserInfoLib().getOwner(req.headers['authorization']), this.prefixSK)
+      const sk = this.addPrefix(new JWTWrap(req.headers['authorization']).getOwner(), this.prefixSK)
       const createAt = this.getCurrentTime()
       const { name, price, image, explanation, category } = req.body
 
@@ -164,7 +164,7 @@ export default class Products extends Base {
   delete = async (req: Request, res: Response) => {
     try {
       const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
-      const sk = this.addPrefix(new UserInfoLib().getOwner(req.headers['authorization']), this.prefixSK)
+      const sk = this.addPrefix(new JWTWrap(req.headers['authorization']).getOwner(), this.prefixSK)
       const items: Record<string, any>[] = [
         {
           Key: { pk: id, sk: id },

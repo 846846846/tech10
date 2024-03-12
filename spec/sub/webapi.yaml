@@ -526,30 +526,27 @@ components:
           schema:
             type: object
             properties:
+              customerId:
+                type: string
+                description: 顧客ID
+                required:
+                  - customerId
               detail:
                 type: array
                 items:
                   allOf:
                     - $ref: "#/components/schemas/OrderDetail"
-                    - type: object
-                      properties:
-                        customerId:
-                          type: string
-                          description: 顧客ID
-                      required:
-                        - customerId
               data:
                 $ref: "#/components/schemas/Date"
           example:
+            customerId: matsuda
             detail:
               - productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
                 price: 100
                 quantity: 5
-                customerId: matsuda
               - productId: ac79f107-4db1-4a88-bd7d-306537fa8b22
                 price: 100
                 quantity: 5
-                customerId: matsuda
             date:
               createAt: 20230828T050442+0900
               updateAt: 20230828T050442+0900

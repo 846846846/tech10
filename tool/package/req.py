@@ -208,11 +208,23 @@ class Req:
   def _o_post(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
-    payload = {
-      'productId': self._generate_random_string(10),
-      'price': str(self._generate_dummy_integer(10000)),
-      'quantity': str(self._generate_dummy_integer(10000)),
-    }
+    payload = [
+      {
+        'productId': self._generate_random_string(10),
+        'price': str(self._generate_dummy_integer(10000)),
+        'quantity': str(self._generate_dummy_integer(10000)),
+      },
+      {
+        'productId': self._generate_random_string(10),
+        'price': str(self._generate_dummy_integer(10000)),
+        'quantity': str(self._generate_dummy_integer(10000)),
+      },
+      {
+        'productId': self._generate_random_string(10),
+        'price': str(self._generate_dummy_integer(10000)),
+        'quantity': str(self._generate_dummy_integer(10000)),
+      },
+    ]
     print(url)
     return requests.post(url, headers=headers, json=payload)
 
@@ -225,11 +237,23 @@ class Req:
   def _o_put(self, op1):
     url = self.domain + '/private/orders/' + op1
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
-    payload = {
-      'productId': self._generate_random_string(10),
-      'price': str(self._generate_dummy_integer(10000)),
-      'quantity': str(self._generate_dummy_integer(10000)),
-    }
+    payload = [
+      {
+        'productId': 'uQ7yJXmJpv',  # 存在するIDを指定.
+        'price': str(self._generate_dummy_integer(10000)),
+        'quantity': str(self._generate_dummy_integer(10000)),
+      },
+      {
+        'productId': 'W5pSuJ22FV',  # 存在するIDを指定.
+        'price': str(self._generate_dummy_integer(10000)),
+        'quantity': str(self._generate_dummy_integer(10000)),
+      },
+      {
+        'productId': '8xvpN8ayyZ',  # 存在するIDを指定.
+        'price': str(self._generate_dummy_integer(10000)),
+        'quantity': str(self._generate_dummy_integer(10000)),
+      },
+    ]
     print(url)
     return requests.put(url, headers=headers, json=payload)
 

@@ -101,7 +101,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "WebAPIラッパーの見直し"
+    - git commit -m "OrderWebAPI作"
     - git push origin ECSITE-4
 
 ## docker

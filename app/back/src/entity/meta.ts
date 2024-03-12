@@ -2,7 +2,7 @@ import { Request } from 'express'
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import moment from 'moment'
-import UserInfoLib from '../libs/userInfo'
+import JWTWrap from '../utlis/jwt'
 
 const s3Client = process.env.IS_OFFLINE
   ? new S3Client({
@@ -28,8 +28,7 @@ export const health = async (req: Request) => {
 }
 
 export const generatePresignedUrl = async (req: Request, upload: boolean) => {
-  const userInfoLib = new UserInfoLib()
-  const owner = userInfoLib.getOwner(req.headers['authorization'])
+  const owner = new JWTWrap(req.headers['authorization']).getOwner()
   const name = req.query.name as string
   const type = req.query.type as string
 
