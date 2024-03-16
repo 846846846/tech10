@@ -1,17 +1,20 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Nav, Navbar, Container, Badge } from 'react-bootstrap'
 import { BoxArrowRight, Cart3 } from 'react-bootstrap-icons'
 import styles from './index.module.scss'
 import EntityAPI from '../../libs/webapi/entity'
+import LocalStorageLib from '../../libs/storage/localStorage'
 import JWTWrap from '../../utils/jwt'
 import Modal from '@/components/Modal'
 
 interface NavVarProps {
   itemNum?: number
+  arg?: any
 }
 
-const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
+const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0, arg = null }) => {
   // hooks.
   const [owner, setOwner] = useState<string>('')
   const [showModalLogout, setShowModalLogout] = useState<boolean>(false)
@@ -36,10 +39,23 @@ const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
 
   // handler.
   const handleOrderFix = async () => {
-    const cart = localStorage.getItem('cart')
-    console.log(cart)
-    // const res = await new EntityAPI('orders').create(cart)
-    // console.log(res.status)
+    const ls = new LocalStorageLib()
+    const cart = ls.getCart()
+    if (cart) {
+      // 不要な情報は取り除く.
+      const reqBody = cart.map(({ productName, ...rest }) => rest)
+      console.log(reqBody)
+      const res = await new EntityAPI('orders').create(reqBody)
+      if (res.status === 201) {
+        ls.removeCart()
+        setShowModalCart(false)
+        arg([])
+      } else {
+        console.error('注文情報の登録に失敗', res.status)
+      }
+    } else {
+      console.error('カート情報がない')
+    }
   }
 
   // tsx.
@@ -77,14 +93,16 @@ const _NavBar: React.FC<NavVarProps> = ({ itemNum = 0 }) => {
             <Nav.Link href="#OpeC">操作C</Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <Cart3
-          size="48px"
-          color="white"
-          cursor="pointer"
-          onClick={() => {
-            setShowModalCart(true)
-          }}
-        />
+        <Link href={'/customer/CartView'}>
+          <Cart3
+            size="48px"
+            color="white"
+            cursor="pointer"
+            // onClick={() => {
+            //   setShowModalCart(true)
+            // }}
+          />
+        </Link>
         <Badge>{itemNum}</Badge>
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>

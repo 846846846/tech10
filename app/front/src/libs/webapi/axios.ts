@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
+import LocalStorageLib from '../../libs/storage/localStorage'
 
 export type Request = Pick<AxiosRequestConfig, 'url' | 'params' | 'headers'>
 
@@ -14,9 +15,9 @@ export default class ClientLib {
 
   protected getAuthorization() {
     let rtn = 'Bearer '
-    const jwtToken = localStorage.getItem('jwtToken')
-    if (jwtToken !== null) {
-      rtn += JSON.parse(jwtToken).IdToken
+    const jwtToken = new LocalStorageLib().getJwtToken()
+    if (jwtToken) {
+      rtn += jwtToken.IdToken
     }
     return rtn
   }

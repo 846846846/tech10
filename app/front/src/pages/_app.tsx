@@ -11,9 +11,6 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const path = router.pathname
     if (path.startsWith('/users/')) return
-
-    // const jwt = localStorage.getItem('jwtToken')
-    // if (!jwt) router.push('/users/Signin')
   }, [router])
 
   return (

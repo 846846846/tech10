@@ -10,10 +10,8 @@ import CardList, { CardItemType } from '@/components/CardList'
 import Pagination from '@/components/Pagination'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 
-// local type definition.
 type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'owner' | 'image'>
 
-// constant declaration.
 const ITEMS_PER_ROW = 2
 const ITEMS_PER_PAGE = 10
 const PANIGATION_MAX_DISP = 5

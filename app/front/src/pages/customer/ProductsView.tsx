@@ -14,6 +14,7 @@ import {
 import styles from './Customer.module.scss'
 import EntityAPI from '../../libs/webapi/entity'
 import MetaAPI from '../../libs/webapi/meta'
+import LocalStorageLib from '../../libs/storage/localStorage'
 import NavBar from '@/components/NavBar'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 import QuantitySelector from '@/components/QuantitySelector'
@@ -59,10 +60,8 @@ const ProductsView: NextPage = () => {
   }, [id])
 
   useEffect(() => {
-    const storedCart = localStorage.getItem('cart')
-    if (storedCart) {
-      setCart(JSON.parse(storedCart))
-    }
+    const storedCart = new LocalStorageLib().getCart()
+    if (storedCart) setCart(storedCart)
   }, [])
 
   // handler.
@@ -73,19 +72,15 @@ const ProductsView: NextPage = () => {
   const handleAddtoCart = () => {
     if (product) {
       const { id: productId, name: productName, price } = product
-      const newCart = [
-        ...cart,
-        {
-          productId,
-          productName,
-          price,
-          quantity,
-        },
-      ]
-      setCart(() => newCart)
-      localStorage.setItem('cart', JSON.stringify(newCart))
+      const result = new LocalStorageLib().setCart({
+        productId,
+        productName,
+        price,
+        quantity,
+      })
+      result ? setCart(() => result) : alert('すでにカートに入っている商品です')
     } else {
-      console.log('商品情報が未取得')
+      console.error('商品情報が取得できていない')
     }
   }
 
@@ -104,7 +99,7 @@ const ProductsView: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <NavBar itemNum={cart.length} />
+        <NavBar itemNum={cart.length} arg={setCart} />
         <Breadcrumbs items={breadcrumbItems} />
         <Container className={styles.container}>
           <Row className={styles.rowView}>

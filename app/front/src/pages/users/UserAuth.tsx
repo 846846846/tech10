@@ -7,6 +7,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import styles from './Users.module.scss'
 import UsersAPI from '../../libs/webapi/users'
+import LocalStorageLib from '../../libs/storage/localStorage'
 import { AxiosError } from 'axios'
 import JWTWrap from '../../utils/jwt'
 import Form, { FormItem } from '@/components/Form'
@@ -53,7 +54,7 @@ const UserAuth: NextPage = () => {
             const usersApi = new UsersAPI()
             const res = await usersApi.signin(data)
             console.log(res)
-            localStorage.setItem('jwtToken', JSON.stringify(res.data))
+            new LocalStorageLib().setJwtToken(res.data)
 
             const jwtToken = new JWTWrap(res.data.IdToken)
             const role = jwtToken.getRole()
