@@ -1,0 +1,60 @@
+```mermaid
+erDiagram
+	%% 注文
+	Order {
+		int OrderID PK
+		date Date
+		object Details
+	}
+	Order ||--|{ Customer : "CustomerID"
+	Order }|--|{ Product : "ProductID"
+	Order ||--|{ Shipment : "ShipmentID"
+	Order ||--|| Invoice : "InvoiceID"
+
+	%% 顧客
+	Customer {
+		int CustomerID PK
+	}
+
+	%% 所有者
+	Owner {
+		int OwnerID PK
+	}
+
+	%% 請求書
+	Invoice {
+		int InvoiceID PK
+		object Details
+	}
+	Invoice ||--|{ Payment : "PaymentID"
+
+	%% 支払い
+	Payment {
+		int PaymentID PK
+		object Details
+	}
+
+	%% 商品
+	Product {
+		int ProductID PK
+		int Price
+		int Inventory
+		object Details
+	}
+	Product }|--|{ Owner : "OwnerID"
+	Product }|--|{ Warehouse : "WarehouseID"
+	Product }|--|{ Shipment : "ShipmentID"
+
+	%% 在庫
+	Warehouse {
+		int WarehouseID PK
+		int quantity
+	}
+	Warehouse ||--|{ Shipment : "ShipmentID"
+
+	%% 出荷
+	Shipment {
+		int ShipmentID PK
+		object Details
+	}
+```

@@ -1,4 +1,3 @@
-'use strict'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -6,14 +5,14 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-import { UsersAPI } from '../../webapi/entity/users'
-import styles from '../../styles/Users.module.scss'
+import styles from './Users.module.scss'
+import UsersAPI from '../../libs/webapi/users'
+import LocalStorageLib from '../../libs/storage/localStorage'
 import { AxiosError } from 'axios'
-import UserInfoLib from '../../webapi/libs/userInfo'
-import MyForm, { FormItem } from '@/components/Form'
+import JWTWrap from '../../utils/jwt'
+import Form, { FormItem } from '@/components/Form'
 import SubmitButtons from '@/components/SubmitButtons'
 
-// local type definition.
 enum AuthFlow {
   signin = 0,
   signup,
@@ -55,24 +54,25 @@ const UserAuth: NextPage = () => {
             const usersApi = new UsersAPI()
             const res = await usersApi.signin(data)
             console.log(res)
-            localStorage.setItem('jwtToken', JSON.stringify(res.data))
+            new LocalStorageLib().setJwtToken(res.data)
 
-            const userInfoLib = new UserInfoLib()
-            const role = userInfoLib.getRole(res.data.IdToken)
+            const jwtToken = new JWTWrap(res.data.IdToken)
+            const role = jwtToken.getRole()
             console.log(role)
-            if (role === 'buyer') {
-              router.push('/buyer/GoodsList')
-            } else if (role === 'seller') {
-              router.push('/seller/GoodsRegist')
+            if (role === 'Customer') {
+              router.push('/customer/ProductsList')
+            } else if (role === 'Owner') {
+              router.push('/owner/ProductsRegist')
             } else {
               console.error('unknown role')
               // バックエンドのMockサーバーであるmotoには.
               // レスポンスのJWTにカスタム属性情報を含ませる処理がないためロールが判断できない.
-              // リクエスト先がローカルホストの場合、遷移先は固定とする.
-              // 必要に応じて書き換えること.
+              // リクエスト先がローカルホストの場合、ユーザ名からの推測とする.
               if (usersApi.getReqDest() === 'localhost') {
-                // router.push('/buyer/GoodsList')
-                router.push('/seller/GoodsRegist')
+                const owner = jwtToken.getOwner()
+                owner.includes('Owner')
+                  ? router.push('/owner/ProductsRegist')
+                  : router.push('/customer/ProductsList')
               }
             }
           }
@@ -159,8 +159,8 @@ const UserAuth: NextPage = () => {
       type: 'check',
       placeholder: 'ロール',
       children: [
-        { value: 'seller', type: 'radio', label: '販売者' },
-        { value: 'buyer', type: 'radio', label: '購入者' },
+        { value: 'Owner', type: 'radio', label: '販売者' },
+        { value: 'Customer', type: 'radio', label: '購入者' },
       ],
     },
     {
@@ -238,7 +238,6 @@ const UserAuth: NextPage = () => {
   const extraComponent = (
     <>
       <SubmitButtons
-        styles={styles}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         onClose={authFlow === AuthFlow.signin ? undefined : onClose}
@@ -275,12 +274,11 @@ const UserAuth: NextPage = () => {
             <Col>{title()}</Col>
           </Row>
           <Row>
-            <MyForm
+            <Form
               formItems={formItems}
               formRef={formRef}
               errors={errors}
               register={register}
-              styles={styles}
               extraComponent={extraComponent}
             />
           </Row>
