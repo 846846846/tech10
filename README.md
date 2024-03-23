@@ -73,13 +73,19 @@
     2. npm run deploy
 
 # 備忘録
-## チケット化したいアイテム
+## バックログ
+### テンプレート
+  - ユーザーストーリー
+  - 受け入れ基準
+  - タスク
+  - 参考情報
+
+### チケット化したいアイテム
   - 固定ドメインを割り当てる。
   - 画像ファイル格納用S3バケットを定期的にクリーニングする。
   - dockerのCPU使用率が100%から回復しない問題の対策。
   - サブの商品画像の登録参照に対応する。
   - roleによるバックエンドAPIの機能利用制限
-  - UTを実装しCI/CDに組み込む。
   - AWS Well-Architected ツールを利用してレビューする。
 
 ## 試験用アカウント
@@ -95,14 +101,14 @@
 
 ## git
   - リモートブランチの新規作成
-    - git switch -c ECSITE-4
-    - git push -u origin ECSITE-4
+    - git switch -c ECSITE-38
+    - git push -u origin ECSITE-38
 
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "商品情報の追加処理完成"
-    - git push origin ECSITE-4
+    - git commit -m "StoryBookのコード記述完了"
+    - git push origin ECSITE-38
 
 ## docker
   - WSLのシャットダウン
@@ -127,9 +133,24 @@
 
   - devDependenciesにインストールするコマンド
     - npm install --save-dev {パッケージ名}
+    - npm install --save-dev @storybook/addon-mdx-gfm
 
   - アンインストールコマンド
     - npm uninstall {パッケージ名}
+    - npm uninstall @storybook/addon-mdx-gfm
+
+  - 再インストール
+    - rm -rf node_modules package-lock.json
+    - npm install
+
+  - パッケージのアップデート
+    - npm install {パッケージ名}@latest
+    - npm update {パッケージ名}
+    - npm update @storybook/testing-library
+    - npm install @storybook/addons@latest
+
+  - アップデートが利用可能なパッケージのみを表示
+    - npm outdated
 
   - Next.js(TypeScirpt)セットアップ手順
     1. npx create-next-app testApp
@@ -263,5 +284,10 @@
   - ポートオープン確認
     - netstat -an | findstr :{port number}
 
-## 一時メモ
-  - you are silly.
+## StoryBook
+  - [備忘録] Nextjsプロジェクトにstorybookを導入する場合に発生するModule not found対応
+    - https://qiita.com/sinnlosses/items/51e614570180c5f12e86
+
+## 便利サイト
+  - 任意サイズのダミー画像生成
+    - https://placehold.jp/

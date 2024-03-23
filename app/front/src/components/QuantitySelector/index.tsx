@@ -16,6 +16,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   const handleIncrement = () => onQuantityChange(quantity + 1)
   const handleDecrement = () => onQuantityChange(Math.max(quantity - 1, 1))
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(1)
     const newValue = parseInt(e.target.value, 10)
     if (!isNaN(newValue) && newValue >= 1) {
       onQuantityChange(newValue)
