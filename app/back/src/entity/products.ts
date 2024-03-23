@@ -113,8 +113,6 @@ export default class Products extends Base {
           price,
           name: detail.name,
           image: detail.image,
-          explanation: detail.explanation,
-          category: detail.category,
           createAt,
           updateAt,
         }))

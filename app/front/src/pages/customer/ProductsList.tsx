@@ -10,7 +10,7 @@ import CardList, { CardItemType } from '@/components/CardList'
 import Pagination from '@/components/Pagination'
 import Breadcrumbs, { BreadcrumbItem } from '@/components/Breadcrumb'
 
-type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'owner' | 'image'>
+type ListItems = Pick<Products, 'id' | 'name' | 'price' | 'image'>
 
 const ITEMS_PER_ROW = 2
 const ITEMS_PER_PAGE = 10
@@ -84,7 +84,7 @@ const ProductsList: NextPage = () => {
     id: item.id,
     image: item.image,
     title: item.name,
-    text: [item.price + '円', item.owner],
+    text: [item.price + '円'],
   }))
 
   // tsx.

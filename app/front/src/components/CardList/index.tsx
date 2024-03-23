@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Row, Col, Card } from 'react-bootstrap'
+import { Container, Row, Col, Card } from 'react-bootstrap'
 import styles from './index.module.scss'
 
 export interface CardItemType {
@@ -17,10 +17,10 @@ interface CardListProps {
 const CardList: React.FC<CardListProps> = ({ items, itemsPerRow }) => {
   // tsx.
   return (
-    <>
+    <Container>
       {Array.from({ length: Math.ceil(items.length / itemsPerRow) }).map(
         (_, i) => (
-          <Row md={2} key={i}>
+          <Row className={styles.row} md={2} key={i}>
             {Array.from({ length: itemsPerRow }).map((_, j) => {
               const { id, image, title, text } = {
                 ...items[j + i * itemsPerRow],
@@ -48,7 +48,7 @@ const CardList: React.FC<CardListProps> = ({ items, itemsPerRow }) => {
           </Row>
         )
       )}
-    </>
+    </Container>
   )
 }
 
