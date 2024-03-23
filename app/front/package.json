@@ -8,7 +8,7 @@
   "scripts": {
     "local": "next dev",
     "start": "next start",
-    "build": "rm -rf out/ && next build && next export",
+    "build": "rm -rf out/ && next build",
     "s3:sy": "aws s3 sync out/ %npm_package_config_s3buket%",
     "s3:rm": "aws s3 rm %npm_package_config_s3buket% --recursive",
     "s3:ls": "aws s3 ls %npm_package_config_s3buket%",

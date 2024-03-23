@@ -107,7 +107,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "StoryBookのコード記述完了"
+    - git commit -m "next buildエラー対応"
     - git push origin ECSITE-38
 
 ## docker
