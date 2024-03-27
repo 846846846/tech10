@@ -43,6 +43,7 @@ const ProductsRegist: NextPage = () => {
           {
             name: data.image[0].name,
             type: data.image[0].type,
+            upload: true,
           },
           true
         )

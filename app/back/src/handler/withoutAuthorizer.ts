@@ -3,7 +3,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
-import * as meta from '../entity/meta'
+import Meta from '../entity/meta'
 import * as users from '../entity/users'
 
 sourceMapSupport.install()
@@ -21,14 +21,11 @@ router.use(cors())
 const domain = '/api/v1/public'
 
 // meta.
-router.get(domain + '/health', async (_req, res, _next) => {
+router.get(domain + '/health', async (req, res, _next) => {
   try {
-    const result = await meta.health(_req)
-    res.set('content-type', 'applicaion/json')
-    res.send(result)
+    await new Meta().health(req, res)
   } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
+    console.error(err)
   }
 })
 

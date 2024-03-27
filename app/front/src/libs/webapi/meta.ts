@@ -19,9 +19,7 @@ export default class MetaAPI extends ClientLib {
   public async generatePresignedUrl(params: any, upload: boolean) {
     try {
       const req: Request = {
-        url: upload
-          ? '/private/presigned-url/upload'
-          : '/private/presigned-url/download',
+        url: '/private/presigned-url',
         params,
         headers: {
           Authorization: this.getAuthorization(),

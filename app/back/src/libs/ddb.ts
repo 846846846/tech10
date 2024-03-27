@@ -9,16 +9,21 @@ import {
 } from '@aws-sdk/lib-dynamodb'
 
 export default class DDB {
-  dynamoDBClient = process.env.IS_OFFLINE
-    ? new DynamoDBClient({
-        region: process.env.REGION!,
-        endpoint: 'http://localhost:8000',
-        // endpoint: 'http://dynamodb-local:8000',  // docker用.
-      })
-    : new DynamoDBClient({
-        region: process.env.REGION!,
-      })
-  ddbDocClient = DynamoDBDocumentClient.from(this.dynamoDBClient)
+  private ddbDocClient: DynamoDBDocumentClient
+
+  constructor() {
+    this.ddbDocClient = DynamoDBDocumentClient.from(
+      process.env.IS_OFFLINE
+        ? new DynamoDBClient({
+            region: process.env.REGION!,
+            endpoint: 'http://localhost:8000',
+            // endpoint: 'http://dynamodb-local:8000',  // docker用.
+          })
+        : new DynamoDBClient({
+            region: process.env.REGION!,
+          })
+    )
+  }
 
   getItem = async (TableName: string, primaryKey: string, primaryKeyValue: string, sortKey: string, sortKeyValue: string) => {
     try {
@@ -116,8 +121,10 @@ export default class DDB {
               }
             }
             default:
-              return {}
+              console.error(`${action}は未サポートのaction`)
+              break
           }
+          return {}
         })
 
         const params: TransactWriteCommandInput = {
