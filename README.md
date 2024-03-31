@@ -101,14 +101,14 @@
 
 ## git
   - リモートブランチの新規作成
-    - git switch -c ECSITE-38
-    - git push -u origin ECSITE-38
+    - git switch -c ECSITE-39
+    - git push -u origin ECSITE-39
 
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "next buildエラー対応"
-    - git push origin ECSITE-38
+    - git commit -m "UT対応 中間コミット2"
+    - git push origin ECSITE-39
 
 ## docker
   - WSLのシャットダウン

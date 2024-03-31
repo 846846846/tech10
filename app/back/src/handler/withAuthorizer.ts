@@ -51,7 +51,7 @@ router.use(domain + '/orders', async (req: Request, res: Response) => {
 
 // [middleware] 要求されたAPIは未実装
 router.use((req: Request, res: Response, _next) => {
-  console.error('unsuppoted url: ', req.url)
+  console.error('未サポートのAPIです: ', req.url)
   return res.status(404).json({ message: '未サポートのAPIです' })
 })
 

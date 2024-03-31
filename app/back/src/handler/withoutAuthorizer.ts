@@ -1,14 +1,15 @@
 import serverlessExpress from '@vendia/serverless-express'
 import express from 'express'
+import { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
 import Meta from '../entity/meta'
-import * as users from '../entity/users'
+import Users from '../entity/users'
 
 sourceMapSupport.install()
 
-const app = express()
+export const app = express()
 const router = express.Router()
 
 // [middleware] body parser.
@@ -20,70 +21,24 @@ router.use(cors())
 
 const domain = '/api/v1/public'
 
-// meta.
+// [entity] health.
 router.get(domain + '/health', async (req, res, _next) => {
+  await new Meta().health(req, res)
+})
+
+// [entity] ユーザー情報.
+router.post(domain + '/users/*', async (req, res) => {
   try {
-    await new Meta().health(req, res)
+    await new Users().exec(req, res)
   } catch (err) {
     console.error(err)
   }
 })
 
-// users.
-router.post(domain + '/users/signup', async (_req, res, _next) => {
-  try {
-    const result = await users.signup(_req)
-    const { statusCode, body } = { ...result }
-    res.set('content-type', 'applicaion/json')
-    res.status(statusCode).send(body)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-router.post(domain + '/users/confirmSignUp', async (_req, res, _next) => {
-  try {
-    const result = await users.confirmSignUp(_req)
-    const { statusCode, body } = { ...result }
-    res.set('content-type', 'applicaion/json')
-    res.status(statusCode).send(body)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-router.post(domain + '/users/signin', async (_req, res, _next) => {
-  try {
-    const result = await users.signin(_req)
-    const { statusCode, body } = { ...result }
-    res.set('content-type', 'applicaion/json')
-    res.status(statusCode).send(body)
-  } catch (err) {
-    const error = new Error(err.message)
-    _next(error)
-  }
-})
-
-// [middleware] unexpected.
-router.use((_req, res, _next) => {
-  console.error(_req)
-  return res.status(404).json({
-    error: 'Not Found API',
-  })
-})
-
-// [middleware] error handling.
-router.use((err, req, res, next) => {
-  console.error(err.message)
-  const status = err.message.split(':')[0]
-  console.error(status)
-  const message = err.message.split(':')[1]
-  console.error(message)
-  res.status(status).json({ message: message })
-
-  // res.status(500).json({ error: err.message })
+// [middleware] 要求されたAPIは未実装
+router.use((req: Request, res: Response, _next) => {
+  console.error('未サポートのAPIです: ', req.url)
+  return res.status(404).json({ message: '未サポートのAPIです' })
 })
 
 app.use('/', router)

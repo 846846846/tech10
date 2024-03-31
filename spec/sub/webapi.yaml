@@ -37,34 +37,17 @@ paths:
                 type: string
                 example: Hello World!!
 
-  /private/presigned-url/upload:
+  /private/presigned-url:
     get:
       tags:
         - meta
-      summary: S3 PresignedURL(アップロード用)を取得する。
+      summary: AWS S3のPresignedURLを取得する。
       parameters:
         - $ref: "#/components/parameters/Authorization"
         - $ref: "#/components/parameters/FileName"
         - $ref: "#/components/parameters/FileType"
-      description: S3 PresignedURL(アップロード用)を取得する。
-      operationId: presignedUrl
-      responses:
-        "200":
-          $ref: "#/components/responses/PresignedURL"
-        "400":
-          description: 不正な入力パラメータ
-        "500":
-          description: サーバーサイドエラー
-
-  /private/presigned-url/download:
-    get:
-      tags:
-        - meta
-      summary: S3 PresignedURL(ダウンロード用)を取得する。
-      parameters:
-        - $ref: "#/components/parameters/Authorization"
-        - $ref: "#/components/parameters/FileName"
-      description: S3 PresignedURL(ダウンロード用)を取得する。
+        - $ref: "#/components/parameters/UploadFlag"
+      description: S3 PresignedURLを取得する。
       operationId: presignedUrl
       responses:
         "200":
@@ -567,16 +550,23 @@ components:
       schema:
         type: string
     FileName:
-      name: file-name
+      name: name
       in: query
       required: true
       description: ファイル名称
       schema:
         type: string
     FileType:
-      name: file-type
+      name: type
       in: query
       required: true
       description: ファイルのコンテンツタイプ
       schema:
         type: string
+    UploadFlag:
+      name: upload
+      in: query
+      required: false
+      description: アップロードしたい場合有効に。
+      schema:
+        type: boolean

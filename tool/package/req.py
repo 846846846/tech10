@@ -39,20 +39,22 @@ class Req:
     return requests.get(url)
 
   def _upload(self, op1):
-    url = self.domain + '/private/presigned-url/upload'
+    url = self.domain + '/private/presigned-url'
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     params = {
       "name": "xxx.jpeg",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "upload": "true",
     }
     print(url)
     return requests.get(url, params=params, headers=headers)
 
   def _download(self, op1):
-    url = self.domain + '/private/presigned-url/download'
+    url = self.domain + '/private/presigned-url'
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     params = {
-      "name": "satou/20240106T091825519_Healslime.png",
+      "name": "xxx.jpeg",
+      "type": "image/jpeg",
     }
     print(url)
     return requests.get(url, params=params, headers=headers)
@@ -140,11 +142,12 @@ class Req:
 
       with open(dummyFileName, 'rb') as file:
         # 1. PresignedURLを取得.
-        endpoint = '/private/presigned-url/upload'
+        endpoint = '/private/presigned-url'
         headers = {'Authorization': 'Bearer ' + self._getBearer()}
         params = {
           "name": os.path.basename(dummyFileName),
-          'type': dummyFileType
+          "type": dummyFileType,
+          "upload": "true"
         }
         print('S: get presignedUrl => ' + self.domain + endpoint)
         preRes = requests.get(self.domain + endpoint, params=params, headers=headers)

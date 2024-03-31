@@ -2,14 +2,7 @@ import { Request, Response } from 'express'
 import Base from './base'
 import DDB from '../libs/ddb'
 import JWTWrap from '../utlis/jwt'
-
-class ConsideredError extends Error {
-  constructor(message: string, public code: number) {
-    super(message)
-    this.name = 'ConsideredError'
-    Object.setPrototypeOf(this, ConsideredError.prototype)
-  }
-}
+import CustomError from '../utlis/customError'
 
 export default class Orders extends Base {
   prefixPK: string = 'o#'
@@ -29,7 +22,7 @@ export default class Orders extends Base {
 
       const products = req.body.map((item) => {
         const { productId, price, quantity } = item
-        if (productId === undefined || price === undefined || quantity === undefined) throw new ConsideredError('必須パラメータが不足しています', 400)
+        if (productId === undefined || price === undefined || quantity === undefined) throw new CustomError(400, '必須パラメータが不足しています')
         return {
           pk,
           sk: this.addPrefix(productId, 'p#'),
@@ -60,11 +53,9 @@ export default class Orders extends Base {
 
       res.status(201).set(this.contentType).send({ id: pk })
     } catch (err) {
-      if (err instanceof ConsideredError) {
-        res.status(err.code).set(this.contentType).send(err.message)
-      } else {
-        res.status(500).set(this.contentType).send({ err })
-      }
+      const code = err instanceof CustomError ? err.code : 500
+      res.status(code).set(this.contentType).send({ message: err.message })
+
       throw err
     }
   }
@@ -84,7 +75,7 @@ export default class Orders extends Base {
         )
         console.dir(data, { depth: null })
 
-        if (!data.Count || data.Items === undefined) throw new ConsideredError('指定された情報は存在しません', 404)
+        if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
 
         const { sk: csk } = data.Items.filter((i) => i.entityType === 'order2customer')[0]
         const detail = data.Items.filter((i) => i.entityType === 'order2product')
@@ -109,7 +100,7 @@ export default class Orders extends Base {
         )
         console.dir(data, { depth: null })
 
-        if (!data.Count || data.Items === undefined) throw new ConsideredError('商品情報が見つかりません', 404)
+        if (!data.Count || data.Items === undefined) throw new CustomError(404, '商品情報が見つかりません')
 
         result = data.Items.map(({ pk, createAt, updateAt }) => ({
           id: this.removePrefix(pk, this.prefixPK),
@@ -120,11 +111,9 @@ export default class Orders extends Base {
 
       res.status(200).set(this.contentType).send(result)
     } catch (err) {
-      if (err instanceof ConsideredError) {
-        res.status(err.code).set(this.contentType).send(err.message)
-      } else {
-        res.status(500).set(this.contentType).send({ err })
-      }
+      const code = err instanceof CustomError ? err.code : 500
+      res.status(code).set(this.contentType).send({ message: err.message })
+
       throw err
     }
   }
@@ -136,7 +125,7 @@ export default class Orders extends Base {
 
       const items: Record<string, any>[] = req.body.map((item) => {
         const { productId, price, quantity } = item
-        if (productId === undefined || price === undefined || quantity === undefined) throw new ConsideredError('必須パラメータが不足しています', 400)
+        if (productId === undefined || price === undefined || quantity === undefined) throw new CustomError(400, '必須パラメータが不足しています')
         return {
           Key: { pk: id, sk: this.addPrefix(productId, 'p#') },
           attrs: [
@@ -152,11 +141,9 @@ export default class Orders extends Base {
 
       res.status(204).set(this.contentType).send({ id })
     } catch (err) {
-      if (err instanceof ConsideredError) {
-        res.status(err.code).set(this.contentType).send(err.message)
-      } else {
-        res.status(500).set(this.contentType).send({ err })
-      }
+      const code = err instanceof CustomError ? err.code : 500
+      res.status(code).set(this.contentType).send({ message: err.message })
+
       throw err
     }
   }
@@ -175,7 +162,7 @@ export default class Orders extends Base {
       )
       console.dir(data, { depth: null })
 
-      if (!data.Count || data.Items === undefined) throw new ConsideredError('指定された情報は存在しません', 404)
+      if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
 
       const productId = data.Items.filter((i) => i.entityType === 'order2product').map((i) => {
         return { Key: { pk: id, sk: i.sk } }
@@ -189,11 +176,9 @@ export default class Orders extends Base {
 
       res.status(204).set(this.contentType).send({ id })
     } catch (err) {
-      if (err instanceof ConsideredError) {
-        res.status(err.code).set(this.contentType).send(err.message)
-      } else {
-        res.status(500).set(this.contentType).send({ err })
-      }
+      const code = err instanceof CustomError ? err.code : 500
+      res.status(code).set(this.contentType).send({ message: err.message })
+
       throw err
     }
   }
