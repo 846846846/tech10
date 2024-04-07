@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - ECSITE-39
 
 jobs:
   deploy-to-aws:
