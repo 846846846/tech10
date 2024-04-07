@@ -1,6 +1,5 @@
 import serverlessExpress from '@vendia/serverless-express'
-import express from 'express'
-import { Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
@@ -21,9 +20,9 @@ router.use(cors())
 
 const domain = '/api/v1/public'
 
-// [entity] health.
-router.get(domain + '/health', async (req, res, _next) => {
-  await new Meta().health(req, res)
+// [entity] メタ情報.
+router.use(domain + '/meta', async (req: Request, res: Response) => {
+  await new Meta().exec(req, res)
 })
 
 // [entity] ユーザー情報.

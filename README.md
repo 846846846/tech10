@@ -107,7 +107,7 @@
   - リモートブランチへのプッシュ
     - git status
     - git add .
-    - git commit -m "UT対応 中間コミット2"
+    - git commit -m "UT対応 中間コミット3"
     - git push origin ECSITE-39
 
 ## docker

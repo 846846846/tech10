@@ -34,12 +34,12 @@ class Req:
 
   # meta.
   def _health(self, op1):
-    url = self.domain + '/public/health'
+    url = self.domain + '/public/meta/health'
     print(url)
     return requests.get(url)
 
   def _upload(self, op1):
-    url = self.domain + '/private/presigned-url'
+    url = self.domain + '/private/meta/presignedUrl'
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     params = {
       "name": "xxx.jpeg",
@@ -50,7 +50,7 @@ class Req:
     return requests.get(url, params=params, headers=headers)
 
   def _download(self, op1):
-    url = self.domain + '/private/presigned-url'
+    url = self.domain + '/private/meta/presignedUrl'
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     params = {
       "name": "xxx.jpeg",
@@ -142,7 +142,7 @@ class Req:
 
       with open(dummyFileName, 'rb') as file:
         # 1. PresignedURLを取得.
-        endpoint = '/private/presigned-url'
+        endpoint = '/private/meta/presignedUrl'
         headers = {'Authorization': 'Bearer ' + self._getBearer()}
         params = {
           "name": os.path.basename(dummyFileName),
@@ -242,17 +242,17 @@ class Req:
     headers = {'Authorization': 'Bearer ' + self._getBearer()}
     payload = [
       {
-        'productId': 'uQ7yJXmJpv',  # 存在するIDを指定.
+        'productId': 'ARVrwfZa8F',  # 存在するIDを指定.
         'price': str(self._generate_dummy_integer(10000)),
         'quantity': str(self._generate_dummy_integer(10000)),
       },
       {
-        'productId': 'W5pSuJ22FV',  # 存在するIDを指定.
+        'productId': 'mMGiVsO2Xx',  # 存在するIDを指定.
         'price': str(self._generate_dummy_integer(10000)),
         'quantity': str(self._generate_dummy_integer(10000)),
       },
       {
-        'productId': '8xvpN8ayyZ',  # 存在するIDを指定.
+        'productId': 'yJUBdK2Z8b',  # 存在するIDを指定.
         'price': str(self._generate_dummy_integer(10000)),
         'quantity': str(self._generate_dummy_integer(10000)),
       },

@@ -1,12 +1,5 @@
-import { DynamoDBClient, TransactWriteItem, GetItemCommand } from '@aws-sdk/client-dynamodb'
-import {
-  DynamoDBDocumentClient,
-  GetCommandInput,
-  QueryCommand,
-  QueryCommandInput,
-  TransactWriteCommand,
-  TransactWriteCommandInput,
-} from '@aws-sdk/lib-dynamodb'
+import { DynamoDBClient, TransactWriteItem } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, QueryCommand, QueryCommandInput, TransactWriteCommand, TransactWriteCommandInput } from '@aws-sdk/lib-dynamodb'
 
 export default class DDB {
   private ddbDocClient: DynamoDBDocumentClient
@@ -23,27 +16,6 @@ export default class DDB {
             region: process.env.REGION!,
           })
     )
-  }
-
-  getItem = async (TableName: string, primaryKey: string, primaryKeyValue: string, sortKey: string, sortKeyValue: string) => {
-    try {
-      const params: GetCommandInput = {
-        TableName,
-        Key: {
-          [primaryKey]: { S: primaryKeyValue },
-          [sortKey]: { S: sortKeyValue },
-        },
-      }
-
-      const response = await this.ddbDocClient.send(new GetItemCommand(params))
-      if (response.Item) {
-        return response.Item
-      } else {
-        return null
-      }
-    } catch (err) {
-      throw err
-    }
   }
 
   query = async (

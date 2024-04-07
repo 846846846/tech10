@@ -1,26 +1,38 @@
 import { Request, Response } from 'express'
 import Base from './base'
 import DDB from '../libs/ddb'
+import { generateUUID, getCurrentTime, addPrefix, removePrefix } from '../utlis'
 import JWTWrap from '../utlis/jwt'
 import CustomError from '../utlis/customError'
 
 export default class Products extends Base {
-  prefixPK: string = 'p#'
-  prefixSK: string = 'ow#'
-  contentType = { 'content-type': 'applicaion/json' }
-
   ddb = new DDB()
+  table = process.env.TABLE_NAME!
+  gsi1 = process.env.GSI_LIST_FROM_ENTITY!
+  prefixPK = 'p#'
+  prefixSK = 'ow#'
 
   constructor() {
-    super('product', process.env.TABLE_NAME!, process.env.GSI_LIST_FROM_ENTITY!)
+    super('product', { 'content-type': 'applicaion/json' })
   }
 
-  create = async (req: Request, res: Response) => {
+  reqToOperation(req: Request) {
+    const operationMap = {
+      POST: 'create',
+      GET: 'read',
+      PUT: 'update',
+      DELETE: 'delete',
+    }
+    return operationMap[req.method] || undefined
+  }
+
+  // @ts-ignore
+  private create = async (req: Request, res: Response) => {
     try {
       // [TODO] 商品名称の重複チェック(そもそも必要かも含めて検討)
-      const pk = this.addPrefix(this.generateUUID(), this.prefixPK)
-      const sk = this.addPrefix(new JWTWrap(req.headers['authorization']).getOwner(), this.prefixSK)
-      const createAt = this.getCurrentTime()
+      const pk = addPrefix(generateUUID(), this.prefixPK)
+      const sk = addPrefix(new JWTWrap(req.headers['authorization']).getOwner(), this.prefixSK)
+      const createAt = getCurrentTime()
       const { name, price, image, explanation, category } = req.body
 
       const items: any = [
@@ -45,18 +57,20 @@ export default class Products extends Base {
         },
       ]
 
+      console.dir(items, { depth: null })
       await this.ddb.transactWrite('Put', this.table, items)
 
-      res.status(201).set(this.contentType).send({ id: pk })
+      res
+        .status(201)
+        .set(this.contentType)
+        .send({ id: removePrefix(pk, this.prefixPK) })
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  read = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private read = async (req: Request, res: Response) => {
     try {
       let result: any = undefined
       const id = req.url.replace('/', '') as string
@@ -64,18 +78,18 @@ export default class Products extends Base {
         const data = await this.ddb.query(
           this.table,
           '#pk = :v1',
-          { ':v1': this.addPrefix(id, this.prefixPK) },
+          { ':v1': addPrefix(id, this.prefixPK) },
           {
             '#pk': 'pk',
           }
         )
-        // console.dir(data, { depth: null })
-        if (!data.Count || data.Items === undefined) throw new CustomError(400, '指定された商品情報は存在しません')
+        console.dir(data, { depth: null })
+        if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
 
         const product = data.Items.filter((i) => i.entityType === 'product')[0]
         const product2owner = data.Items.filter((i) => i.entityType === 'product2owner')[0]
         result = {
-          id: this.removePrefix(product.pk, this.prefixPK),
+          id: removePrefix(product.pk, this.prefixPK),
           name: product.detail.name,
           price: product.price,
           image: product.detail.image,
@@ -97,10 +111,10 @@ export default class Products extends Base {
           },
           this.gsi1
         )
-        // console.dir(data, { depth: null })
-        if (!data.Count || data.Items === undefined) throw new CustomError(400, '商品情報が見つかりません')
+        console.dir(data, { depth: null })
+        if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
         result = data.Items.map(({ price, updateAt, pk, detail, createAt }) => ({
-          id: this.removePrefix(pk, this.prefixPK),
+          id: removePrefix(pk, this.prefixPK),
           price,
           name: detail.name,
           image: detail.image,
@@ -111,18 +125,27 @@ export default class Products extends Base {
 
       res.status(200).set(this.contentType).send(result)
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  update = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private update = async (req: Request, res: Response) => {
     try {
-      const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
+      const id = addPrefix(req.url.replace('/', '') as string, this.prefixPK)
+      const data = await this.ddb.query(
+        this.table,
+        '#pk = :v1',
+        { ':v1': addPrefix(id, this.prefixPK) },
+        {
+          '#pk': 'pk',
+        }
+      )
+      console.dir(data, { depth: null })
+      if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
+
       const { name, price, image, explanation, category } = req.body
-      const updateAt = this.getCurrentTime()
+      const updateAt = getCurrentTime()
 
       const items: Record<string, any>[] = [
         {
@@ -137,19 +160,28 @@ export default class Products extends Base {
 
       await this.ddb.transactWrite('Update', this.table, items)
 
-      res.status(204).set(this.contentType).send({ id })
+      res.status(204).send()
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  delete = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private delete = async (req: Request, res: Response) => {
     try {
-      const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
-      const sk = this.addPrefix(new JWTWrap(req.headers['authorization']).getOwner(), this.prefixSK)
+      const id = addPrefix(req.url.replace('/', '') as string, this.prefixPK)
+      const data = await this.ddb.query(
+        this.table,
+        '#pk = :v1',
+        { ':v1': addPrefix(id, this.prefixPK) },
+        {
+          '#pk': 'pk',
+        }
+      )
+      console.dir(data, { depth: null })
+      if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
+
+      const sk = addPrefix(new JWTWrap(req.headers['authorization']).getOwner(), this.prefixSK)
       const items: Record<string, any>[] = [
         {
           Key: { pk: id, sk: id },
@@ -159,11 +191,8 @@ export default class Products extends Base {
 
       await this.ddb.transactWrite('Delete', this.table, items)
 
-      res.status(204).set(this.contentType).send({ id })
+      res.status(204).send()
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }

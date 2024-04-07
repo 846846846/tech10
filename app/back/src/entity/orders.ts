@@ -1,31 +1,43 @@
 import { Request, Response } from 'express'
 import Base from './base'
 import DDB from '../libs/ddb'
+import { generateUUID, getCurrentTime, addPrefix, removePrefix } from '../utlis'
 import JWTWrap from '../utlis/jwt'
 import CustomError from '../utlis/customError'
 
 export default class Orders extends Base {
-  prefixPK: string = 'o#'
-  contentType = { 'content-type': 'applicaion/json' }
-
   ddb = new DDB()
+  table = process.env.TABLE_NAME!
+  gsi1 = process.env.GSI_LIST_FROM_ENTITY!
+  prefixPK = 'o#'
 
   constructor() {
-    super('order', process.env.TABLE_NAME!, process.env.GSI_LIST_FROM_ENTITY!)
+    super('order', { 'content-type': 'applicaion/json' })
   }
 
-  create = async (req: Request, res: Response) => {
+  reqToOperation(req: Request) {
+    const operationMap = {
+      POST: 'create',
+      GET: 'read',
+      PUT: 'update',
+      DELETE: 'delete',
+    }
+    return operationMap[req.method] || undefined
+  }
+
+  // @ts-ignore
+  private create = async (req: Request, res: Response) => {
     try {
-      const pk = this.addPrefix(this.generateUUID(), this.prefixPK)
+      const pk = addPrefix(generateUUID(), this.prefixPK)
       const customer = new JWTWrap(req.headers['authorization']).getOwner()
-      const createAt = this.getCurrentTime()
+      const createAt = getCurrentTime()
 
       const products = req.body.map((item) => {
         const { productId, price, quantity } = item
         if (productId === undefined || price === undefined || quantity === undefined) throw new CustomError(400, '必須パラメータが不足しています')
         return {
           pk,
-          sk: this.addPrefix(productId, 'p#'),
+          sk: addPrefix(productId, 'p#'),
           entityType: 'order2product',
           price,
           quantity,
@@ -42,7 +54,7 @@ export default class Orders extends Base {
         },
         {
           pk,
-          sk: this.addPrefix(customer, 'c#'),
+          sk: addPrefix(customer, 'c#'),
           entityType: 'order2customer',
         },
         ...products,
@@ -51,16 +63,17 @@ export default class Orders extends Base {
 
       await this.ddb.transactWrite('Put', this.table, items)
 
-      res.status(201).set(this.contentType).send({ id: pk })
+      res
+        .status(201)
+        .set(this.contentType)
+        .send({ id: removePrefix(pk, this.prefixPK) })
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  read = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private read = async (req: Request, res: Response) => {
     try {
       let result: any = undefined
       const id = req.url.replace('/', '') as string
@@ -68,7 +81,7 @@ export default class Orders extends Base {
         const data = await this.ddb.query(
           this.table,
           '#pk = :v1',
-          { ':v1': this.addPrefix(id, this.prefixPK) },
+          { ':v1': addPrefix(id, this.prefixPK) },
           {
             '#pk': 'pk',
           }
@@ -82,7 +95,7 @@ export default class Orders extends Base {
         const { createAt, updateAt } = data.Items.filter((i) => i.entityType === 'order')[0]
 
         result = {
-          customerId: this.removePrefix(csk, 'c#'),
+          customerId: removePrefix(csk, 'c#'),
           detail,
           date: { createAt, updateAt },
         }
@@ -100,10 +113,10 @@ export default class Orders extends Base {
         )
         console.dir(data, { depth: null })
 
-        if (!data.Count || data.Items === undefined) throw new CustomError(404, '商品情報が見つかりません')
+        if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
 
         result = data.Items.map(({ pk, createAt, updateAt }) => ({
-          id: this.removePrefix(pk, this.prefixPK),
+          id: removePrefix(pk, this.prefixPK),
           createAt,
           updateAt,
         }))
@@ -111,23 +124,31 @@ export default class Orders extends Base {
 
       res.status(200).set(this.contentType).send(result)
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  update = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private update = async (req: Request, res: Response) => {
     try {
-      const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
-      const updateAt = this.getCurrentTime()
+      const id = addPrefix(req.url.replace('/', '') as string, this.prefixPK)
+      const data = await this.ddb.query(
+        this.table,
+        '#pk = :v1',
+        { ':v1': addPrefix(id, this.prefixPK) },
+        {
+          '#pk': 'pk',
+        }
+      )
+      console.dir(data, { depth: null })
+      if (!data.Count || data.Items === undefined) throw new CustomError(404, '指定された情報は存在しません')
 
+      const updateAt = getCurrentTime()
       const items: Record<string, any>[] = req.body.map((item) => {
         const { productId, price, quantity } = item
         if (productId === undefined || price === undefined || quantity === undefined) throw new CustomError(400, '必須パラメータが不足しています')
         return {
-          Key: { pk: id, sk: this.addPrefix(productId, 'p#') },
+          Key: { pk: id, sk: addPrefix(productId, 'p#') },
           attrs: [
             { name: 'price', value: price },
             { name: 'quantity', value: quantity },
@@ -139,18 +160,16 @@ export default class Orders extends Base {
 
       await this.ddb.transactWrite('Update', this.table, items)
 
-      res.status(204).set(this.contentType).send({ id })
+      res.status(204).set(this.contentType).send()
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  delete = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private delete = async (req: Request, res: Response) => {
     try {
-      const id = this.addPrefix(req.url.replace('/', '') as string, this.prefixPK)
+      const id = addPrefix(req.url.replace('/', '') as string, this.prefixPK)
 
       const data = await this.ddb.query(
         this.table,
@@ -174,11 +193,8 @@ export default class Orders extends Base {
 
       await this.ddb.transactWrite('Delete', this.table, items)
 
-      res.status(204).set(this.contentType).send({ id })
+      res.status(204).set(this.contentType).send()
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }

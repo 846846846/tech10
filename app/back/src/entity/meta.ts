@@ -1,16 +1,14 @@
 import { Request, Response } from 'express'
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import moment from 'moment'
+import { getCurrentTime } from '../utlis'
+import Base from './base'
 import JWTWrap from '../utlis/jwt'
-import CustomError from '../utlis/customError'
 
-export default class Meta {
-  contentType = { 'content-type': 'applicaion/json' }
-
+export default class Meta extends Base {
   s3Client = process.env.IS_OFFLINE
     ? new S3Client({
-        region: 'ap-northeast-1',
+        region: process.env.REGION,
         forcePathStyle: true,
         endpoint: 'http://s3.localhost.localstack.cloud:4566',
         credentials: {
@@ -23,22 +21,33 @@ export default class Meta {
         forcePathStyle: true,
       })
 
-  health = async (_req: Request, res: Response) => {
+  constructor() {
+    super('meta', { 'content-type': 'applicaion/json' })
+  }
+
+  reqToOperation(req: Request) {
+    const operationMap = {
+      health: 'health',
+      presignedUrl: 'presignedUrl',
+    }
+    const operation = req.path.replace(/^\//, '')
+    return operationMap[operation] || undefined
+  }
+
+  // @ts-ignore
+  private health = async (_req: Request, res: Response) => {
     res.status(200).set(this.contentType).send({ message: 'Hello World!!' })
   }
 
-  presignedUrl = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private presignedUrl = async (req: Request, res: Response) => {
     const owner = new JWTWrap(req.headers['authorization']).getOwner()
     const name = req.query.name as string
     const type = req.query.type as string
     const upload = req.query.upload === undefined ? false : req.query.upload
 
     const Bucket = process.env.IS_OFFLINE ? 'images' : process.env.IMAGE_S3_BUCKET
-
-    const dir = owner + '/'
-    const jstTime = moment().tz('Asia/Tokyo').format('YYYYMMDDTHHmmssSSS')
-    const Key = upload ? dir + jstTime + '_' + name : name
-
+    const Key = upload ? owner + '/' + getCurrentTime() + '_' + name : name
     const expiresIn = 60 // 有効期限(秒).
 
     try {
@@ -55,9 +64,7 @@ export default class Meta {
       console.log(url)
       res.status(200).set(this.contentType).send({ url })
     } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
+      console.log(err)
       throw err
     }
   }

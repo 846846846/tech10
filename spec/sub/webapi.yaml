@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: ECSite API
-  description: エンドポイントの命名にはケバブケース、小文字、複数形を採用。
+  description: エンドポイントの命名にはキャメルケース、小文字、複数形を採用。
   version: 1.0.0
 
 servers:
@@ -22,7 +22,7 @@ tags:
     description: 注文情報
 
 paths:
-  /public/health:
+  /public/meta/health:
     get:
       tags:
         - meta
@@ -37,7 +37,7 @@ paths:
                 type: string
                 example: Hello World!!
 
-  /private/presigned-url:
+  /private/meta/presignedUrl:
     get:
       tags:
         - meta
@@ -55,7 +55,7 @@ paths:
         "400":
           description: 不正な入力パラメータ
         "500":
-          description: サーバーサイドエラー
+          description: 予期しないエラー
 
   /public/users/signup:
     post:
@@ -72,7 +72,7 @@ paths:
         "400":
           description: 不正な入力パラメータ
 
-  /public/users/confirm-signup:
+  /public/users/confirmSignup:
     post:
       summary: ユーザーを有効化する。
       description: ユーザーが入力したチャレンジレスポンスを送信し、Cognitoが管理するユーザーを有効化する。
@@ -116,6 +116,8 @@ paths:
       responses:
         "201":
           $ref: "#/components/responses/Product"
+        "500":
+          description: 予期しないエラー
     get:
       tags:
         - products
@@ -125,6 +127,10 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ProductList"
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
 
   /private/products/{id}:
     get:
@@ -137,6 +143,10 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ProductDetail"
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
     put:
       tags:
         - products
@@ -149,6 +159,10 @@ paths:
       responses:
         "204":
           description: 更新成功
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
     delete:
       tags:
         - products
@@ -159,6 +173,10 @@ paths:
       responses:
         "204":
           description: 削除成功
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
 
   /private/orders/:
     post:
@@ -172,6 +190,10 @@ paths:
       responses:
         "201":
           $ref: "#/components/responses/Order"
+        "400":
+          description: 必須パラメータが不足
+        "500":
+          description: 予期しないエラー
     get:
       tags:
         - orders
@@ -181,6 +203,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/OrderList"
+        "404":
+          description: 指定された情報が存在しない
 
   /private/orders/{id}:
     get:
@@ -193,6 +217,10 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/OrderDetail"
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
     put:
       tags:
         - orders
@@ -205,6 +233,12 @@ paths:
       responses:
         "204":
           description: 更新成功
+        "400":
+          description: 必須パラメータが不足
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
     delete:
       tags:
         - orders
@@ -215,6 +249,12 @@ paths:
       responses:
         "204":
           description: 削除成功
+        "400":
+          description: 必須パラメータが不足
+        "404":
+          description: 指定された情報が存在しない
+        "500":
+          description: 予期しないエラー
 
 components:
   schemas:
@@ -434,11 +474,8 @@ components:
           schema:
             allOf:
               - $ref: "#/components/schemas/ID"
-              - $ref: "#/components/schemas/Date"
             example:
               id: 12345
-              createAt: 20230828T050442+0900
-              updateAt: 20230828T050442+0900
     ProductList:
       description: 商品情報の一覧
       content:

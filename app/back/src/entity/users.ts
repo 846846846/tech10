@@ -12,11 +12,9 @@ import {
   InitiateAuthCommandInput,
   InitiateAuthCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider'
-import CustomError from '../utlis/customError'
+import Base from './base'
 
-export default class Users {
-  contentType = { 'content-type': 'applicaion/json' }
-
+export default class Users extends Base {
   REGION: string = process.env.REGION!
   CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
   AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
@@ -26,29 +24,23 @@ export default class Users {
     : // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })  // docker用.
       new CognitoIdentityProviderClient({ region: this.REGION })
 
-  exec = async (req: Request, res: Response) => {
-    try {
-      const parts = req.url.split('/')
-      const action = parts[parts.length - 1]
-      switch (action) {
-        case 'signup':
-          return await this.signup(req, res)
-        case 'confirmSignUp':
-          return await this.confirmSignUp(req, res)
-        case 'signin':
-          return await this.signin(req, res)
-        default:
-          throw new CustomError(400, '未サポートのアクションです')
-      }
-    } catch (err) {
-      const code = err instanceof CustomError ? err.code : 500
-      res.status(code).set(this.contentType).send({ message: err.message })
-
-      throw err
-    }
+  constructor() {
+    super('user', { 'content-type': 'applicaion/json' })
   }
 
-  signup = async (req: Request, res: Response) => {
+  reqToOperation(req: Request) {
+    const operationMap = {
+      signup: 'signup',
+      confirmSignUp: 'confirmSignUp',
+      signin: 'signin',
+    }
+    const parts = req.url.split('/')
+    const operation = parts[parts.length - 1]
+    return operationMap[operation] || undefined
+  }
+
+  // @ts-ignore
+  private signup = async (req: Request, res: Response) => {
     try {
       const { name, email, password, role } = req.body
 
@@ -71,13 +63,12 @@ export default class Users {
       await this.client.send(new SignUpCommand(params))
       res.status(200).set(this.contentType).send({ message: 'User has been signed up!' })
     } catch (err) {
-      res.status(err.$metadata.httpStatusCode).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  confirmSignUp = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private confirmSignUp = async (req: Request, res: Response) => {
     try {
       const { name, confirmationCode } = req.body
 
@@ -90,13 +81,12 @@ export default class Users {
       await this.client.send(new ConfirmSignUpCommand(params))
       res.status(200).set(this.contentType).send({ message: 'User has been activate!' })
     } catch (err) {
-      res.status(err.$metadata.httpStatusCode).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }
 
-  signin = async (req: Request, res: Response) => {
+  // @ts-ignore
+  private signin = async (req: Request, res: Response) => {
     try {
       const { name, password } = req.body
 
@@ -112,8 +102,6 @@ export default class Users {
       const result: InitiateAuthCommandOutput = await this.client.send(new InitiateAuthCommand(params))
       res.status(200).set(this.contentType).send(result.AuthenticationResult)
     } catch (err) {
-      res.status(err.$metadata.httpStatusCode).set(this.contentType).send({ message: err.message })
-
       throw err
     }
   }

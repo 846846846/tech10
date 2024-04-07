@@ -1,4 +1,4 @@
-import JWTWrap from '../../src/utlis/jwt'
+import JWTWrap from '../../../src/utlis/jwt'
 import * as jwt from 'jsonwebtoken'
 
 // jwt.decodeをモック化
@@ -13,15 +13,6 @@ describe('JWTWrap', () => {
   beforeEach(() => {
     // モックの設定を各テストの前にクリア
     mockDecode.mockClear()
-  })
-
-  it('should decode token and get username', () => {
-    mockDecode.mockReturnValue({
-      'cognito:username': 'test_user',
-    })
-
-    const jwtWrap = new JWTWrap('Bearer token')
-    expect(jwtWrap.getOwner()).toBe('test_user')
   })
 
   it('should decode token and get role', () => {

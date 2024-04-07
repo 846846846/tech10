@@ -1,6 +1,5 @@
 import serverlessExpress from '@vendia/serverless-express'
-import express from 'express'
-import { Request, Response } from 'express'
+import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import * as sourceMapSupport from 'source-map-support'
@@ -22,10 +21,10 @@ router.use(cors())
 
 const domain = '/api/v1/private'
 
-// [entity] AWS S3 PresignedUrl.
-router.get(domain + '/presigned-url', async (req: Request, res: Response, _next) => {
+// [entity] メタ情報.
+router.use(domain + '/meta', async (req: Request, res: Response) => {
   try {
-    await new Meta().presignedUrl(req, res)
+    await new Meta().exec(req, res)
   } catch (err) {
     console.error(err)
   }
