@@ -22,7 +22,7 @@ jobs:
 
       # back.
       - name: Install dependencies(back)
-        run: npm install
+        run: npm ci
         working-directory: app/back
 
       - name: Run Jest tests and collect coverage
@@ -39,7 +39,7 @@ jobs:
 
       # front.
       # - name: Install dependencies(front)
-      #   run: npm install
+      #   run: npm ci
       #   working-directory: app/front
 
       # - name: Build
