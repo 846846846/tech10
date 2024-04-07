@@ -1,6 +1,5 @@
-exports.handler = async (event) => {
-  console.log('call localAuth !!')
-  // console.log(event)
+export async function handler(event) {
+  // [TOFO] motoと連携して認証
   return {
     principalId: 'user',
     policyDocument: {

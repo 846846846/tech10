@@ -8,7 +8,7 @@ export default class MetaAPI extends ClientLib {
   public async health() {
     try {
       const req: Request = {
-        url: '/public/health',
+        url: '/public/meta/health',
       }
       return super.get(req)
     } catch (err) {
@@ -19,9 +19,7 @@ export default class MetaAPI extends ClientLib {
   public async generatePresignedUrl(params: any, upload: boolean) {
     try {
       const req: Request = {
-        url: upload
-          ? '/private/presigned-url/upload'
-          : '/private/presigned-url/download',
+        url: '/private/meta/presignedUrl',
         params,
         headers: {
           Authorization: this.getAuthorization(),

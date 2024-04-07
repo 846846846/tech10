@@ -21,7 +21,12 @@ jobs:
 
       # back.
       - name: Install dependencies(back)
-        run: npm install
+        run: npm ci
+        working-directory: app/back
+
+      - name: Run Jest tests and collect coverage
+        run: >
+          npm run test -- --coverage --coverageThreshold='{"global": {"branches": 100, "functions": 100, "lines": 100, "statements": 100}}'
         working-directory: app/back
 
       - name: Deploy to AWS using Serverless Framework
@@ -33,7 +38,7 @@ jobs:
 
       # front.
       - name: Install dependencies(front)
-        run: npm install
+        run: npm ci
         working-directory: app/front
 
       - name: Build

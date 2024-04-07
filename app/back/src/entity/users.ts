@@ -1,121 +1,108 @@
-import { Request } from 'express'
+import { Request, Response } from 'express'
 import {
   CognitoIdentityProviderClient,
   AuthFlowType,
   SignUpCommand,
   SignUpCommandInput,
-  SignUpCommandOutput,
+  // SignUpCommandOutput,
   ConfirmSignUpCommand,
   ConfirmSignUpCommandInput,
-  ConfirmSignUpCommandOutput,
+  // ConfirmSignUpCommandOutput,
   InitiateAuthCommand,
   InitiateAuthCommandInput,
   InitiateAuthCommandOutput,
 } from '@aws-sdk/client-cognito-identity-provider'
+import Base from './base'
 
-const REGION: string = process.env.REGION!
-const CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
-const AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
+export default class Users extends Base {
+  REGION: string = process.env.REGION!
+  CLIENTID: string = process.env.COGNITO_USER_POOL_CLIENT_ID!
+  AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
-const client = process.env.IS_OFFLINE
-  ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://localhost:5000' })
-  : // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })  // docker用.
-    new CognitoIdentityProviderClient({ region: REGION })
+  client = process.env.IS_OFFLINE
+    ? new CognitoIdentityProviderClient({ region: this.REGION, endpoint: 'http://localhost:5000' })
+    : // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })  // docker用.
+      new CognitoIdentityProviderClient({ region: this.REGION })
 
-export const signup = async (req: Request) => {
-  try {
-    const { name, email, password, role, ...rest } = req.body
+  constructor() {
+    super('user', { 'content-type': 'applicaion/json' })
+  }
 
-    const params: SignUpCommandInput = {
-      ClientId: CLIENTID,
-      Username: name,
-      Password: password,
-      UserAttributes: [
-        {
-          Name: 'email',
-          Value: email,
+  reqToOperation(req: Request) {
+    const operationMap = {
+      signup: 'signup',
+      confirmSignUp: 'confirmSignUp',
+      signin: 'signin',
+    }
+    const parts = req.url.split('/')
+    const operation = parts[parts.length - 1]
+    return operationMap[operation] || undefined
+  }
+
+  // @ts-ignore
+  private signup = async (req: Request, res: Response) => {
+    try {
+      const { name, email, password, role } = req.body
+
+      const params: SignUpCommandInput = {
+        ClientId: this.CLIENTID,
+        Username: name,
+        Password: password,
+        UserAttributes: [
+          {
+            Name: 'email',
+            Value: email,
+          },
+          {
+            Name: 'custom:role',
+            Value: role,
+          },
+        ],
+      }
+      // console.log(params)
+      await this.client.send(new SignUpCommand(params))
+      res.status(200).set(this.contentType).send({ message: 'User has been signed up!' })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // @ts-ignore
+  private confirmSignUp = async (req: Request, res: Response) => {
+    try {
+      const { name, confirmationCode } = req.body
+
+      const params: ConfirmSignUpCommandInput = {
+        ClientId: this.CLIENTID,
+        Username: name,
+        ConfirmationCode: confirmationCode,
+      }
+      console.log(params)
+      await this.client.send(new ConfirmSignUpCommand(params))
+      res.status(200).set(this.contentType).send({ message: 'User has been activate!' })
+    } catch (err) {
+      throw err
+    }
+  }
+
+  // @ts-ignore
+  private signin = async (req: Request, res: Response) => {
+    try {
+      const { name, password } = req.body
+
+      const params: InitiateAuthCommandInput = {
+        ClientId: this.CLIENTID,
+        AuthFlow: this.AUTHFLOW,
+        AuthParameters: {
+          USERNAME: name,
+          PASSWORD: password,
         },
-        {
-          Name: 'custom:role',
-          Value: role,
-          // Value: convertToCommaSeparatedString(role),
-        },
-      ],
-    }
-    // console.log(params)
-    const result: SignUpCommandOutput = await client.send(new SignUpCommand(params))
-    console.log(result)
-    return {
-      statusCode: 200,
-      body: JSON.stringify('User has been signed up!'),
-    }
-  } catch (err) {
-    console.error(err)
-    return {
-      statusCode: 400,
-      body: JSON.stringify(err.message),
+      }
+      console.log(params)
+      const result: InitiateAuthCommandOutput = await this.client.send(new InitiateAuthCommand(params))
+      res.status(200).set(this.contentType).send(result.AuthenticationResult)
+    } catch (err) {
+      throw err
     }
   }
-}
-
-export const confirmSignUp = async (req: Request) => {
-  try {
-    const { name, confirmationCode, ...rest } = req.body
-
-    const params: ConfirmSignUpCommandInput = {
-      ClientId: CLIENTID,
-      Username: name,
-      ConfirmationCode: confirmationCode,
-    }
-    console.log(params)
-    const result: ConfirmSignUpCommandOutput = await client.send(new ConfirmSignUpCommand(params))
-    console.log(result)
-    return {
-      statusCode: 200,
-      body: JSON.stringify('User has been activate!'),
-    }
-  } catch (err) {
-    console.error(err)
-    return {
-      statusCode: 400,
-      body: JSON.stringify(err.message),
-    }
-  }
-}
-
-export const signin = async (req: Request) => {
-  try {
-    const { name, password, ...rest } = req.body
-
-    const params: InitiateAuthCommandInput = {
-      ClientId: CLIENTID,
-      AuthFlow: AUTHFLOW,
-      AuthParameters: {
-        USERNAME: name,
-        PASSWORD: password,
-      },
-    }
-    console.log(params)
-    const result: InitiateAuthCommandOutput = await client.send(new InitiateAuthCommand(params))
-    console.log(result)
-    return {
-      statusCode: result.$metadata.httpStatusCode,
-      body: JSON.stringify(result.AuthenticationResult),
-    }
-  } catch (err) {
-    console.error(err)
-    return {
-      statusCode: err.$metadata.httpStatusCode,
-      body: JSON.stringify(err.message),
-    }
-  }
-}
-
-/*
- * ユーティリティ関数群.
- */
-// オブジェクトをカンマ区切りの文字列に変換する
-function convertToCommaSeparatedString(obj: { [key: string]: boolean }): string {
-  const trueKeys = Object.keys(obj).filter((key) => obj[key])
-  return trueKeys.join(', ')
 }

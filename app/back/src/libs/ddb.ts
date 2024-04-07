@@ -1,44 +1,21 @@
-import { DynamoDBClient, TransactWriteItem, GetItemCommand } from '@aws-sdk/client-dynamodb'
-import {
-  DynamoDBDocumentClient,
-  GetCommandInput,
-  QueryCommand,
-  QueryCommandInput,
-  TransactWriteCommand,
-  TransactWriteCommandInput,
-} from '@aws-sdk/lib-dynamodb'
+import { DynamoDBClient, TransactWriteItem } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, QueryCommand, QueryCommandInput, TransactWriteCommand, TransactWriteCommandInput } from '@aws-sdk/lib-dynamodb'
 
 export default class DDB {
-  dynamoDBClient = process.env.IS_OFFLINE
-    ? new DynamoDBClient({
-        region: process.env.REGION!,
-        endpoint: 'http://localhost:8000',
-        // endpoint: 'http://dynamodb-local:8000',  // docker用.
-      })
-    : new DynamoDBClient({
-        region: process.env.REGION!,
-      })
-  ddbDocClient = DynamoDBDocumentClient.from(this.dynamoDBClient)
+  private ddbDocClient: DynamoDBDocumentClient
 
-  getItem = async (TableName: string, primaryKey: string, primaryKeyValue: string, sortKey: string, sortKeyValue: string) => {
-    try {
-      const params: GetCommandInput = {
-        TableName,
-        Key: {
-          [primaryKey]: { S: primaryKeyValue },
-          [sortKey]: { S: sortKeyValue },
-        },
-      }
-
-      const response = await this.ddbDocClient.send(new GetItemCommand(params))
-      if (response.Item) {
-        return response.Item
-      } else {
-        return null
-      }
-    } catch (err) {
-      throw err
-    }
+  constructor() {
+    this.ddbDocClient = DynamoDBDocumentClient.from(
+      process.env.IS_OFFLINE
+        ? new DynamoDBClient({
+            region: process.env.REGION!,
+            endpoint: 'http://localhost:8000',
+            // endpoint: 'http://dynamodb-local:8000',  // docker用.
+          })
+        : new DynamoDBClient({
+            region: process.env.REGION!,
+          })
+    )
   }
 
   query = async (
@@ -116,8 +93,10 @@ export default class DDB {
               }
             }
             default:
-              return {}
+              console.error(`${action}は未サポートのaction`)
+              break
           }
+          return {}
         })
 
         const params: TransactWriteCommandInput = {
