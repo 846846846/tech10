@@ -7,7 +7,7 @@
     "deploy": "rm -rf .esbuild/ && sls deploy",
     "remove": "sls remove",
     "type-check": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest --coverage --maxWorkers=4 --coverageThreshold=\"{\\\"global\\\": {\\\"branches\\\": 100, \\\"functions\\\": 100, \\\"lines\\\": 100, \\\"statements\\\": 100}}\""
   },
   "dependencies": {
     "@vendia/serverless-express": "^4.10.1",
