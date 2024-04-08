@@ -21,11 +21,11 @@ export default class JWTWrap {
     return this.decodedToken['cognito:username']
   }
 
-  // public getRole() {
-  //   return this.decodedToken['custom:role']
-  // }
+  public getRole() {
+    return this.decodedToken['custom:role']
+  }
 
-  // public getEmail() {
-  //   return this.decodedToken['email']
-  // }
+  public getEmail() {
+    return this.decodedToken['email']
+  }
 }

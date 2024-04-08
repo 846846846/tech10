@@ -27,8 +27,6 @@ jobs:
 
       - name: Run Jest tests and collect coverage
         run: npm run test
-        # run: >
-        #   npm run test -- --coverage --maxWorkers=4 --coverageThreshold='{"global": {"branches": 100, "functions": 100, "lines": 100, "statements": 100}}'
         working-directory: app/back
 
       # - name: Deploy to AWS using Serverless Framework
