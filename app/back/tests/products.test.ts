@@ -56,6 +56,70 @@ describe('products api tests', () => {
       .expect(resBody)
   })
 
+  it('post return 400 if authorization header not found', async () => {
+    // モック
+    ddbDocumentClientMock.on(TransactWriteCommand).resolves({})
+
+    const mockUUID = '123e4567-e89b-12d3-a456-426614174000'
+    jest.spyOn(crypto, 'randomUUID').mockImplementation(() => mockUUID)
+
+    // リクエスト
+    const reqBody = {
+      name: 'FxSCgLyyAG',
+      owner: 'Owner1',
+      explanation: 'Gp3QMKEwR9ZiWfMacWksuzAFb0OiRQ0gz34XiQm0E0a0tw8x9XlXlvERQ2TcWZDKB1MfOcOMOrdSGYkPWPvVCZ25PbHbxWu8YmdO',
+      price: '2896',
+      image: ['Owner1/20240406T091624461_Healslime.png'],
+      category: 'pH2uhV3l7chXViBsfTdQOeEN84IOeL',
+    }
+
+    // レスポンス
+    const resBody = {
+      message: 'authorizationヘッダが見つかりません',
+    }
+
+    // テスト実行
+    await request(app)
+      .post('/api/v1/private/products')
+      // .set('authorization', CustomerBearer)
+      .send(reqBody)
+      .expect(400)
+      .expect('content-type', /json/)
+      .expect(resBody)
+  })
+
+  it('post return 400 if authorization header not include idToken', async () => {
+    // モック
+    ddbDocumentClientMock.on(TransactWriteCommand).resolves({})
+
+    const mockUUID = '123e4567-e89b-12d3-a456-426614174000'
+    jest.spyOn(crypto, 'randomUUID').mockImplementation(() => mockUUID)
+
+    // リクエスト
+    const reqBody = {
+      name: 'FxSCgLyyAG',
+      owner: 'Owner1',
+      explanation: 'Gp3QMKEwR9ZiWfMacWksuzAFb0OiRQ0gz34XiQm0E0a0tw8x9XlXlvERQ2TcWZDKB1MfOcOMOrdSGYkPWPvVCZ25PbHbxWu8YmdO',
+      price: '2896',
+      image: ['Owner1/20240406T091624461_Healslime.png'],
+      category: 'pH2uhV3l7chXViBsfTdQOeEN84IOeL',
+    }
+
+    // レスポンス
+    const resBody = {
+      message: 'idTokenが見つかりません',
+    }
+
+    // テスト実行
+    await request(app)
+      .post('/api/v1/private/products')
+      .set('authorization', CustomerBearer.replace('Bearer ', ''))
+      .send(reqBody)
+      .expect(400)
+      .expect('content-type', /json/)
+      .expect(resBody)
+  })
+
   it('post return 500 if unexpected error', async () => {
     // モック
     const httpStatusCode = 500
