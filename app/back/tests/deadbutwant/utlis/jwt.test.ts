@@ -35,10 +35,14 @@ describe('JWTWrap', () => {
 
   it('should throw error if authorization is undefined', () => {
     try {
+      console.log(1)
       new JWTWrap(undefined)
+      console.log(2)
     } catch (err) {
+      console.log(3)
       expect(err.code).toBe(400)
       expect(err.message).toBe('authorizationヘッダが見つかりません')
+      console.log(4)
     }
   })
 
