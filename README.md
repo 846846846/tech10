@@ -288,6 +288,10 @@
   - [備忘録] Nextjsプロジェクトにstorybookを導入する場合に発生するModule not found対応
     - https://qiita.com/sinnlosses/items/51e614570180c5f12e86
 
+## Jest
+  - Jest テストは Github Action では失敗しますが、ローカルでは成功します
+    - https://github.com/jestjs/jest/issues/11430
+
 ## 便利サイト
   - 任意サイズのダミー画像生成
     - https://placehold.jp/
