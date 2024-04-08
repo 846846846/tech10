@@ -1,4 +1,4 @@
-import JWTWrap from '../../../src/utlis/jwt'
+import JWTWrap from '../src/utlis/jwt'
 import * as jwt from 'jsonwebtoken'
 
 // jwt.decodeをモック化
