@@ -7,9 +7,14 @@ from package.moto import MOTO
 # seed.
 class SEED:
   def exec(self, arg1, arg2 = ""):
+    # DynamoDB
+    ddb = DDB()
+    ddb.exec("create")
+    # S3
     s3 = S3()
     s3.exec("cb")
     s3.exec("pbc")
+    # Cognito
     moto = MOTO()
     moto.exec("cup")
 
@@ -19,7 +24,7 @@ def run():
     # 機能一覧.
     funcs = {
       "req": Req(),
-      "ddb": DDB("ecsite"),
+      "ddb": DDB(),
       "s3": S3(),
       "moto": MOTO(),
       "seed": SEED(),
