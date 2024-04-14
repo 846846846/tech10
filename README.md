@@ -3,6 +3,7 @@ ECSiteアプリ
 
 # 説明
 以下のスキルセットをざっくり習得するために作成しました。
+![スキルセット](./spec//sub//skillset.png "スキルセット")
   |カテゴリ|名称|説明|備考|
   |--|--|--|--|
   |言語|HTML/CSS|Webコンテンツの構造と見た目を定義||
@@ -15,7 +16,7 @@ ECSiteアプリ
   |ツール|Serverless Framework|サーバレスアプリ特化のIaCツール||
 
 # デモ
-ECSiteアプリのデモサイトです(AWS上で稼働)。
+アプリのデモサイト(AWSで稼働しています)。
   - https://d3g1t7tx4q2vwo.cloudfront.net/
 
   - お試し用アカウント
@@ -120,11 +121,9 @@ AWSへのホスティングでは、事前にAWSアカウントを作成し、�
 
 ### チケット化したいアイテム
   - 固定ドメインを割り当てる。
-  - 画像ファイル格納用S3バケットを定期的にクリーニングする。
+  - 画像ファイル格納用S3バケットの定期クリーニングバッチの作成。
   - dockerのCPU使用率が100%から回復しない問題の対策。
-  - サブの商品画像の登録参照に対応する。
   - roleによるバックエンドAPIの機能利用制限
-  - AWS Well-Architected ツールを利用してレビューする。
 
 ## git
   - リモートブランチの新規作成
@@ -245,7 +244,7 @@ AWSへのホスティングでは、事前にAWSアカウントを作成し、�
     - Jest テストは Github Action では失敗しますが、ローカルでは成功します
       - https://github.com/jestjs/jest/issues/11430
 
-## README
+## READMEの書き方
   - 参考サイト
     - https://www.makeareadme.com/
     - https://github.com/matiassingers/awesome-readme

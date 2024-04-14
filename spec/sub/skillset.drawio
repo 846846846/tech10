@@ -1,0 +1,124 @@
+<mxfile host="65bd71144e">
+    <diagram id="9rGd7dCIgPQg7exdJFvF" name="ページ1">
+        <mxGraphModel dx="1431" dy="971" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="フロントエンド" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="280" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="バックエンド" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="440" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="AWS S3" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="620" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="オレ" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="334" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="HTML ＆ CSS" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="310" y="100" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="TypeScript" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="170" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Next.js(React)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="230" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Express" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="190" y="590" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="TypeScript" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="530" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Node.js" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="530" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="クラウドインフラ" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="440" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="AWS SDK" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="620" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="AWS DynamoDB" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="550" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="AWS API Gateway" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="890" y="590" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Serverless&lt;br&gt;Framework" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="660" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="AWS CloudFormation" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="680" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="AWS Lambda" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="490" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="Jest" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="690" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="StoryBook" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="80" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="BootStrap" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="140" y="120" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="SCSS" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="40" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="AWS CloudFront" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="630" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="AWS Cognito" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="990" y="490" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="Python" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="100" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="AWS CLI" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="740" y="30" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="Git" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="170" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="Draw.io" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="80" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="Markdawn" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="680" y="170" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="Mermaid" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="780" y="240" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="OpenAPI" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="90" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="ツール" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="280" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="Docker" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="980" y="150" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="MOTO" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="210" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="localstack" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="260" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="NoSQL WorkBench" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="880" y="20" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="react-hook-form" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="190" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="react-table" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="260" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="axios" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="30" width="120" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
