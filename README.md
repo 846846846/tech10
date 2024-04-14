@@ -2,18 +2,33 @@
 ECSiteアプリ
 
 # 説明
-以下のスキルセットをざっくり習得するために作成しました。
+このアプリを作る中で、以下のスキルセットがざっくり身につきました。
 ![スキルセット](./spec//sub//skillset.png "スキルセット")
+ 
+## フロントエンド
   |カテゴリ|名称|説明|備考|
   |--|--|--|--|
   |言語|HTML/CSS|Webコンテンツの構造と見た目を定義||
   |言語|TypeScript|型宣言可能なJavaScriptのスーパーセット||
-  |フロントエンド|Next.js|Reactフレームワーク||
-  |バックエンド|Node.js|JavaScriptのサーバーサイドランタイム環境||
+  |フレームワーク|Next.js|Reactフレームワーク||
+
+## バックエンド
+  |カテゴリ|名称|説明|備考|
+  |--|--|--|--|
+  |言語|TypeScript|型宣言可能なJavaScriptのスーパーセット||
+  |環境|Node.js|JavaScriptのサーバーサイドランタイム環境||
+  |IaC|Serverless Framework|サーバレスアプリ特化のIaCツール||
+
+## クラウドインフラ
+  |カテゴリ|名称|説明|備考|
+  |--|--|--|--|
   |インフラ|AWS|Amazonが運営するクラウドサービスプラットフォーム||
-  |管理|Git/GitHub|変更履歴を記録・追跡するための分散型バージョン管理システム||
+
+## 開発ツール
+  |カテゴリ|名称|説明|備考|
+  |--|--|--|--|
+  |管理|Git|変更履歴を記録・追跡するための分散型バージョン管理システム||
   |ツール|Docker|コンテナを利用した仮想化ツール||
-  |ツール|Serverless Framework|サーバレスアプリ特化のIaCツール||
 
 # デモ
 アプリのデモサイト(AWSで稼働しています)。
@@ -31,7 +46,10 @@ ECSiteアプリ
       - Bf12Asf123
 
 # 前提条件
-ECSiteアプリを開発するために必要になった最低限のソフトウェアです。
+アプリを開発するために必要だった最低限のソフトウェアです。
+
+## Windows
+Windows10で開発しました。それ以外のOSでは動作未確認です。
 
 ## node.js
 JavaScriptのサーバーサイドランタイム環境です。
@@ -40,7 +58,7 @@ v20で開発しました。
 
 ## docker desktop
 コンテナを利用した仮想化ツールです。
-ローカルPCで開発するときに利用しました。
+ローカルPCでの開発に利用しました。
   - https://www.docker.com/ja-jp/products/docker-desktop/
 
 ## aws cli
@@ -48,15 +66,15 @@ AWSのリソースを操作するためのコマンドラインプログラム�
  - https://aws.amazon.com/jp/cli/
 
 ## python
-テスト用のシェルスクリプトをPythonで作成しました。そのスクリプトを動かすときに使います。
+環境構築及び動作確認用のスクリプトを作成するときにpythonを利用しました。
   - https://www.python.org/downloads/
 
 ## NoSQL Workbench
-AWS DynamoDB のテーブル設計で利用しました。
+AWS DynamoDBのテーブル設計で利用しました。
   - https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/workbench.settingup.html
 
 # インストール
-ECSiteアプリのインストール手順です。ローカルPCで動かす場合とAWSにホスティングする場合の2ケースあります。
+アプリのインストール手順です。ローカルPCで動かす場合とAWSにホスティングする場合の2ケースあります。
 
 ## ローカルPC
 ### フロントエンド
@@ -87,7 +105,7 @@ ECSiteアプリのインストール手順です。ローカルPCで動かす場
     2. python t.py req userReg
 
 ## AWS
-AWSへのホスティングでは、事前にAWSアカウントを作成し、かつPCにAWSの認証情報を設定しました。
+AWSへのホスティングは、AWSアカウントを作成し、かつPCにAWSの認証情報を事前に設定する必要がありました。
   - https://aws.amazon.com/jp/register-flow/
   - https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-configure-files.html
 
