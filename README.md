@@ -2,10 +2,25 @@
 ECSiteアプリ
 
 # 説明
-・・・
+ユーザー管理と簡単なCRUD機能を備えたアプリ。Webアプリ開発の基礎的な[スキルセット](#スキルセット)を身につけるために作成しました。
+
+# デモ
+アプリのデモサイト(AWSで稼働しています)。
+  - https://d3g1t7tx4q2vwo.cloudfront.net/
+
+  - お試し用アカウント
+    - 所有者
+      - Owner1
+      - ayas88888+Owner1@gmail.com
+      - Bf12Asf123
+
+    - 顧客
+      - Customer1
+      - ayas88888+Customer1@gmail.com
+      - Bf12Asf123
 
 # スキルセット
-このアプリを作る中で、以下のスキルセットがざっくり身につきました。
+このアプリを作る中で、以下のスキルセットの基礎が身につきました。
 ![スキルセット](./spec//sub//skillset.png "スキルセット")
  
 ## フロントエンド
@@ -61,21 +76,8 @@ ECSiteアプリ
   |ツール|moto|Pythonベースのライブラリで、AWSサービスのモックを提供し、テスト時にAWS呼び出しをエミュレート|
   |ツール|AWS CLI|コマンドラインからAmazon Web Servicesを操作するためのツール、スクリプトの自動化や管理タスクに使用|
 
-
-# デモ
-アプリのデモサイト(AWSで稼働しています)。
-  - https://d3g1t7tx4q2vwo.cloudfront.net/
-
-  - お試し用アカウント
-    - 所有者
-      - Owner1
-      - ayas88888+Owner1@gmail.com
-      - Bf12Asf123
-
-    - 顧客
-      - Customer1
-      - ayas88888+Customer1@gmail.com
-      - Bf12Asf123
+# こだわりポイント
+・・・
 
 # 前提条件
 アプリを開発するために必要だった最低限のソフトウェアです。
