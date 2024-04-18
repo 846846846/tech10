@@ -5,6 +5,7 @@ import { Container } from 'react-bootstrap'
 import styles from './Customer.module.scss'
 import EntityAPI from '../../libs/webapi/entity'
 import MetaAPI from '../../libs/webapi/meta'
+import LocalStorageLib from '../../libs/storage/localStorage'
 import NavBar from '@/components/NavBar'
 import CardList, { CardItemType } from '@/components/CardList'
 import Pagination from '@/components/Pagination'
@@ -24,6 +25,7 @@ const ProductsList: NextPage = () => {
   // hooks.
   const [data, setData] = useState<Array<ListItems>>([])
   const [currentPage, setCurrentPage] = useState(1)
+  const [cart, setCart] = useState<Orders[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +70,11 @@ const ProductsList: NextPage = () => {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    const storedCart = new LocalStorageLib().getCart()
+    if (storedCart) setCart(storedCart)
+  }, [])
+
   // display.
   const title = '商品一覧'
   const currentItems = data.slice(
@@ -95,7 +102,7 @@ const ProductsList: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <main className={styles.main}>
-        <NavBar />
+        <NavBar itemNum={cart.length} arg={setCart} />
         <Breadcrumbs items={breadcrumbItems} />
         <Container className={styles.container}>
           <CardList items={cardList} itemsPerRow={ITEMS_PER_ROW} />

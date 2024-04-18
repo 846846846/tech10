@@ -125,7 +125,8 @@ AWS DynamoDBのテーブル設計で利用しました。
   - https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/workbench.settingup.html
 
 # インストール
-アプリのインストール手順です。ローカルPCで動かす場合とAWSにホスティングする場合の2ケースあります。
+アプリのインストール手順です。  
+ローカルPCで動かす場合とAWSにホスティングする場合の2ケースあります。
 
 ## ローカルPC
 ### フロントエンド
@@ -156,20 +157,22 @@ AWS DynamoDBのテーブル設計で利用しました。
     2. python t.py req userReg
 
 ## AWS
-AWSへのホスティングは、AWSアカウントを作成し、かつPCにAWSの認証情報を事前に設定する必要がありました。
-  - https://aws.amazon.com/jp/register-flow/
-  - https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-configure-files.html
+AWSアカウントの作成と認証情報の設定が事前に必要でした。
+  1. AWSアカウントの作成
+      - https://aws.amazon.com/jp/register-flow/
+  2. AWS認証情報の設定
+      - https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-configure-files.html
 
 ### フロントエンド
   - 初回のみ実行(コンテンツ格納用S3バケットやCloudFront(CDN)のセットアップ)。
     1. cd app/front/
     2. npm run cfn
     3. コンテンツ格納用S3バケットの物理IDを転記.
-      - 実行したスタックのステータスが"CREATE_COMPLETE"となることを確認
-      - リソースタブに移動
-      - 論理ID"NextJS"に該当する物理IDをコピーし、"s3://{物理ID}"の形式に加工.
-      - 下記値を"s3://{物理ID}"で更新.
-        - app/front/package.json > config > s3buket
+        - 実行したスタックのステータスが"CREATE_COMPLETE"となることを確認
+        - リソースタブに移動
+        - 論理ID"NextJS"に該当する物理IDをコピーし、"s3://{物理ID}"の形式に加工.
+        - 下記値を"s3://{物理ID}"で更新.
+          - app/front/package.json > config > s3buket
 
   - 毎回
     1. cd app/front/
