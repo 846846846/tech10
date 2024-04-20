@@ -67,6 +67,17 @@ provider:
   runtime: nodejs20.x
   region: ap-northeast-1
   stage: ${opt:stage, self:custom.defaultStage}
+  apiGateway:
+    apiKeys:
+      - myFirstKey
+    usagePlan:
+      quota:
+        limit: 5000
+        offset: 2
+        period: MONTH
+      throttle:
+        burstLimit: 200
+        rateLimit: 100
   iam:
     role:
       statements:
@@ -92,7 +103,6 @@ provider:
             - s3:PutObject
             - s3:GetObject
           Resource: !Sub 'arn:aws:s3:::${self:custom.s3.bucketName}/*'
-
   environment:
     REGION: ${self:provider.region}
     TABLE_NAME: ${self:custom.dynamodb.table.0}
@@ -114,11 +124,13 @@ functions:
           path: api/v1/private
           cors: true
           authorizer: ${self:custom.authorizers.${self:provider.stage}, self:custom.authorizers.dev}
+          private: true
       - http:
           method: ANY
           path: api/v1/private/{any+}
           cors: true
           authorizer: ${self:custom.authorizers.${self:provider.stage}, self:custom.authorizers.dev}
+          private: true
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
       COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
@@ -130,10 +142,12 @@ functions:
           method: ANY
           path: api/v1/public
           cors: true
+          private: true
       - http:
           method: ANY
           path: api/v1/public/{any+}
           cors: true
+          private: true
     environment:
       COGNITO_USER_POOL_ID: !Ref CognitoUserPool
       COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
