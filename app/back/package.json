@@ -1,0 +1,50 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "local": "sls offline start --stage local",
+    "deploy": "rm -rf .esbuild/ && sls deploy",
+    "remove": "sls remove",
+    "type-check": "tsc --noEmit",
+    "test": "jest --coverage --maxWorkers=4 --coverageThreshold=\"{\\\"global\\\": {\\\"branches\\\": 100, \\\"functions\\\": 100, \\\"lines\\\": 100, \\\"statements\\\": 100}}\""
+  },
+  "dependencies": {
+    "@vendia/serverless-express": "^4.10.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "source-map-support": "^0.5.21",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.438.0",
+    "@aws-sdk/client-dynamodb": "^3.370.0",
+    "@aws-sdk/client-s3": "^3.405.0",
+    "@aws-sdk/lib-dynamodb": "^3.370.0",
+    "@aws-sdk/s3-request-presigner": "^3.405.0",
+    "@types/aws-lambda": "^8.10.114",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^18.15.11",
+    "@types/source-map-support": "^0.5.6",
+    "@types/supertest": "^6.0.2",
+    "aws-sdk-client-mock": "^4.0.0",
+    "esbuild": "^0.17.16",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "jest": "^29.7.0",
+    "prettier": "^2.8.7",
+    "serverless": "^3.38.0",
+    "serverless-esbuild": "^1.52.1",
+    "serverless-offline": "^13.3.3",
+    "supertest": "^6.3.4",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.4"
+  }
+}

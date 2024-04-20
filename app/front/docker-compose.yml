@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tech10/front:latest
+    container_name: tech10_front
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true # Hot Reload.

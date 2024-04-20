@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  back:
+    build: .
+    image: tech10/back:latest
+    container_name: tech10_back
+    command: npm run local
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - C:/Users/ss7wp/.aws:/root/.aws:ro # ホストOSのAWSAWS認証情報をマウント.
+    environment:
+      - NODE_ENV=development
+    networks:
+      - tech10_network
+
+networks:
+  tech10_network:
+    external: true
