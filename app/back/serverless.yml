@@ -101,6 +101,7 @@ provider:
 
 # このセクションには、サービスで定義するすべての関数が含まれます。
 # 各関数は、実行するハンドラと、関数をトリガするイベント（HTTPリクエスト、S3バケットの変更など）を指定します。
+# API Gateway と Lambda
 functions:
   localAuthFunction:
     handler: src/handler/localAuth.handler
@@ -138,9 +139,11 @@ functions:
       COGNITO_USER_POOL_CLIENT_ID: ${self:custom.clientId.${self:provider.stage}, self:custom.clientId.dev}
     timeout: 10
 
-# AWS CloudFormationテンプレートの形式で、AWSのリソース（DynamoDBテーブル、S3バケットなど）を直接定義することができます。
+# API GatewayとLambda以外のAWSリソースを定義.
+# offline(ローカルPC)では作られないためそちらでは別手段をとる.
 resources:
   Resources:
+    MyDynamoDBTable: ${file(dynamodb-table.json)}
     ImageS3Bucket:
       Type: AWS::S3::Bucket
       Properties:

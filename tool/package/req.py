@@ -65,7 +65,7 @@ class Req:
     headers = {'Content-Type': 'application/json'}
     payload = {
       'name': 'Owner1', 
-      'email': 'ayas88888+Owner1@gmail.com', 
+      'email': 'hello8463job+Owner1@gmail.com', 
       'password': 'Bf12Asf123',
       'role': {'seller': True, 'buyer': False},
     }
@@ -96,13 +96,13 @@ class Req:
     userLists = [
       {
         'name': 'Owner1', 
-        'email': 'ayas88888+Owner1@gmail.com', 
+        'email': 'hello8463job+Owner1@gmail.com', 
         'password': 'Bf12Asf123',
         'role': 'Owner',
       },
       {
         'name': 'Customer1', 
-        'email': 'ayas88888+Customer1@gmail.com', 
+        'email': 'hello8463job+Customer1@gmail.com', 
         'password': 'Bf12Asf123',
         'role': 'Customer',
       },

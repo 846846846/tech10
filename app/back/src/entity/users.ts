@@ -31,7 +31,7 @@ export default class Users extends Base {
   reqToOperation(req: Request) {
     const operationMap = {
       signup: 'signup',
-      confirmSignUp: 'confirmSignUp',
+      confirmSignup: 'confirmSignup',
       signin: 'signin',
     }
     const parts = req.url.split('/')
@@ -68,7 +68,7 @@ export default class Users extends Base {
   }
 
   // @ts-ignore
-  private confirmSignUp = async (req: Request, res: Response) => {
+  private confirmSignup = async (req: Request, res: Response) => {
     try {
       const { name, confirmationCode } = req.body
 

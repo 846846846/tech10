@@ -15,7 +15,8 @@
     "deploy": "rm -rf out/ && npm run build && npm run s3:rm && npm run s3:sy",
     "lint": "next lint",
     "sb": "storybook dev",
-    "sb-build": "storybook build"
+    "sb-build": "storybook build",
+    "cfn": "aws cloudformation create-stack --stack-name tech10-front-dev --template-body file://cfn.yaml"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",

@@ -47,6 +47,9 @@ const CartView: NextPage = () => {
       const res = await new EntityAPI('orders').create(reqBody)
       if (res.status === 201) {
         ls.removeCart()
+        setCart([])
+        setTotalAmount(0)
+        alert('注文されました。')
       } else {
         console.error('注文情報の登録に失敗', res.status)
       }
