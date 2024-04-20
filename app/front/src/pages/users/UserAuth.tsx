@@ -159,8 +159,8 @@ const UserAuth: NextPage = () => {
       type: 'check',
       placeholder: 'ロール',
       children: [
-        { value: 'Owner', type: 'radio', label: '販売者' },
-        { value: 'Customer', type: 'radio', label: '購入者' },
+        { value: 'Owner', type: 'radio', label: '所有者' },
+        { value: 'Customer', type: 'radio', label: '顧客' },
       ],
     },
     {
