@@ -183,7 +183,8 @@ AWSアカウントの作成と認証情報の設定が事前に必要でした�
 
 ### バックエンド
   1. cd app/back/
-  2. npm run deploy
+  2. npm i
+  3. npm run deploy
 
 # ライセンス
 このプロジェクトはMITライセンスのもとで公開されています。  
