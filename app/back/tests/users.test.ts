@@ -56,8 +56,8 @@ describe('users api tests', () => {
     await request(app).post('/api/v1/public/users/signup').send(reqBody).expect(500).expect('Content-Type', /json/).expect(resBody)
   })
 
-  // confirmSignUp
-  it('confirmSignUp should return 200', async () => {
+  // confirmSignup
+  it('confirmSignup should return 200', async () => {
     // モック
     cognitoIdentityProviderClientMock.on(ConfirmSignUpCommand).resolves({})
 
@@ -68,10 +68,10 @@ describe('users api tests', () => {
     const resBody = { message: 'User has been activate!' }
 
     // テスト実行
-    await request(app).post('/api/v1/public/users/confirmSignUp').send(reqBody).expect(200).expect('Content-Type', /json/).expect(resBody)
+    await request(app).post('/api/v1/public/users/confirmSignup').send(reqBody).expect(200).expect('Content-Type', /json/).expect(resBody)
   })
 
-  it('confirmSignUp should return 500 if unexpected error', async () => {
+  it('confirmSignup should return 500 if unexpected error', async () => {
     // モック
     const httpStatusCode = 500
     const message = 'unexpected error'
@@ -90,7 +90,7 @@ describe('users api tests', () => {
     const resBody = { message }
 
     // テスト実行
-    await request(app).post('/api/v1/public/users/confirmSignUp').send(reqBody).expect(500).expect('Content-Type', /json/).expect(resBody)
+    await request(app).post('/api/v1/public/users/confirmSignup').send(reqBody).expect(500).expect('Content-Type', /json/).expect(resBody)
   })
 
   // signin
