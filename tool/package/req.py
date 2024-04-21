@@ -35,9 +35,8 @@ class Req:
   # meta.
   def _health(self, op1):
     url = self.domain + '/public/meta/health'
-    headers = {'x-api-key': 'generatedToken'}
     print(url)
-    return requests.get(url, headers=headers)
+    return requests.get(url)
 
   def _upload(self, op1):
     url = self.domain + '/private/meta/presignedUrl'
