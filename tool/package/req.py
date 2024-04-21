@@ -8,7 +8,6 @@ import re
 class Req:
   def __init__(self):
     self.domain = "http://localhost:3001/local/api/v1"
-    # self.domain = "https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1"
 
   # private.
   def _generate_dummy_integer(self, max_value=100):
