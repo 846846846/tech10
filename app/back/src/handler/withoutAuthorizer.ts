@@ -22,7 +22,6 @@ const domain = '/api/v1/public'
 
 // [entity] メタ情報.
 router.use(domain + '/meta', async (req: Request, res: Response) => {
-  console.log(1)
   await new Meta().exec(req, res)
 })
 
