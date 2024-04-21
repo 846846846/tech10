@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "local": "sls offline start --stage local",
+    "local": "sls offline start --stage local --noAuth",
     "deploy": "rm -rf .esbuild/ && sls deploy",
     "remove": "sls remove",
     "type-check": "tsc --noEmit",
