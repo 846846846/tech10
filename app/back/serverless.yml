@@ -47,9 +47,9 @@ custom:
     httpPort: 3001
     host: '0.0.0.0'
   authorizers:
-    local:
-      name: localAuthFunction
-      identitySource: method.request.header.Authorization
+    # local:
+    #   name: localAuthFunction
+    #   identitySource: method.request.header.Authorization
     dev:
       type: COGNITO_USER_POOLS
       authorizerId:
@@ -113,9 +113,9 @@ provider:
 # 各関数は、実行するハンドラと、関数をトリガするイベント（HTTPリクエスト、S3バケットの変更など）を指定します。
 # API Gateway と Lambda
 functions:
-  localAuthFunction:
-    handler: src/handler/localAuth.handler
-    timeout: 10
+  # localAuthFunction:
+  #   handler: src/handler/localAuth.handler
+  #   timeout: 10
   appWithAuthorizer:
     handler: src/handler/withAuthorizer.handler
     events:

@@ -31,10 +31,14 @@ export default class ClientLib {
   public async post(req: Request, autoAddHost: boolean = true) {
     try {
       const { url, params, headers } = { ...req }
+      const updatedHeaders = {
+        ...headers,
+        'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
+      }
       const res = await axios.post(
         autoAddHost || url == undefined ? this.host + url : url,
         params,
-        { headers }
+        { headers: updatedHeaders }
       )
       return res
     } catch (err) {
@@ -45,11 +49,15 @@ export default class ClientLib {
   public async get(req: Request, autoAddHost: boolean = true) {
     try {
       const { url, params, headers } = { ...req }
+      const updatedHeaders = {
+        ...headers,
+        'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
+      }
       const res = await axios.get(
         autoAddHost || url == undefined ? this.host + url : url,
         {
           params,
-          headers,
+          headers: updatedHeaders,
         }
       )
       return res
@@ -61,11 +69,15 @@ export default class ClientLib {
   public async put(req: Request, autoAddHost: boolean = true) {
     try {
       const { url, params, headers } = { ...req }
+      const updatedHeaders = {
+        ...headers,
+        'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
+      }
       const res = await axios.put(
         autoAddHost || url == undefined ? this.host + url : url,
         params,
         {
-          headers,
+          headers: updatedHeaders,
         }
       )
       return res
@@ -77,7 +89,13 @@ export default class ClientLib {
   public async delete(req: Request) {
     try {
       const { url, params, headers } = { ...req }
-      const res = await axios.delete(this.host + url, { headers })
+      const updatedHeaders = {
+        ...headers,
+        'x-api-key': process.env.NEXT_PUBLIC_API_KEY,
+      }
+      const res = await axios.delete(this.host + url, {
+        headers: updatedHeaders,
+      })
       return res
     } catch (err) {
       throw err

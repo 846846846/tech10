@@ -1,5 +1,6 @@
 export async function handler(event) {
   // [TOFO] motoと連携して認証
+  console.log(event)
   return {
     principalId: 'user',
     policyDocument: {
