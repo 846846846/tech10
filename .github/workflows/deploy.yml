@@ -5,10 +5,14 @@ on:
     branches:
       - main
       - develop
+      - ECSITE-41
 
 jobs:
   deploy-to-aws:
     runs-on: ubuntu-latest
+
+    environment:
+      name: prd
 
     steps:
       - name: Checkout Repository
@@ -43,6 +47,9 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: app/front
+        env:
+          - NEXT_PUBLIC_API_HOST: ${{ secrets.NEXT_PUBLIC_API_HOST }}
+          - NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
