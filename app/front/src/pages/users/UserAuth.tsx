@@ -274,6 +274,8 @@ const UserAuth: NextPage = () => {
             <Col>{title()}</Col>
           </Row>
           <Row>
+            <p>Host is: {process.env.NEXT_PUBLIC_API_HOST}</p>
+            <p>API key is: {process.env.NEXT_PUBLIC_API_KEY}</p>
             <Form
               formItems={formItems}
               formRef={formRef}
