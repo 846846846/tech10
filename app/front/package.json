@@ -16,7 +16,9 @@
     "lint": "next lint",
     "sb": "storybook dev",
     "sb-build": "storybook build",
-    "cfn": "aws cloudformation create-stack --stack-name tech10-front-dev --template-body file://cfn.yaml"
+    "cfn-cs": "aws cloudformation create-stack --stack-name tech10-front-dev --template-body file://cfn.yml",
+    "cfn-us": "aws cloudformation update-stack --stack-name tech10-front-dev --template-body file://cfn.yml",
+    "cfn-ds": "aws cloudformation delete-stack --stack-name tech10-front-dev"
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",

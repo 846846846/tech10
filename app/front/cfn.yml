@@ -58,6 +58,8 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
+        Aliases:
+          - hello8463.com
         DefaultRootObject: index.html
         Origins:
           - Id: S3Origin
@@ -92,6 +94,9 @@ Resources:
           Bucket: !GetAtt [CloudFrontLogs, DomainName]
           IncludeCookies: false
           Prefix: 'my-log-prefix/'
+        ViewerCertificate:
+          AcmCertificateArn: arn:aws:acm:us-east-1:126398259938:certificate/968e3f1f-5d80-4476-94ae-0e89e4c3b265
+          SslSupportMethod: sni-only
 
 Outputs:
   CloudFrontDistributionUrl:
