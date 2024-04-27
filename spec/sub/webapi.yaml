@@ -8,8 +8,6 @@ info:
 servers:
   - url: http://localhost:3001/local/api/v1
     description: localhost
-  - url: https://r2a4d8x5za.execute-api.ap-northeast-1.amazonaws.com/dev/api/v1
-    description: dev server
 
 tags:
   - name: meta
