@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template to create maintenance.
+
+Resources:
+  BudgetAlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: BudgetAlertTopic
+
+  BudgetAlertSnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref BudgetAlertTopic
+      Protocol: lambda
+      Endpoint: !GetAtt BudgetAlertLambda.Arn
+
+  BudgetAlertLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: "budgetAlert.lambda_handler"
+      Role: !GetAtt BudgetAlertLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: !ImportValue S3BucketMaintLambdaSource
+        S3Key: "budgetAlert.zip"
+      Runtime: python3.12
+      Timeout: 120
+
+  BudgetAlertLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: BudgetAlertLambdaPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - s3:GetObject
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - cloudfront:UpdateDistribution
+                  - cloudfront:GetDistributionConfig
+                Resource: "*"
+
+Outputs:
+  LambdaBudgetAlert:
+    Description: "Budget Alert Lambda Function Name"
+    Value: !Ref BudgetAlertLambda
