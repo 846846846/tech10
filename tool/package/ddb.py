@@ -1,6 +1,7 @@
 import subprocess
 import json
 import os
+import shlex
 class DDB:
   def __init__(self):
     self.db_table = "ecsite" # 適時変更.
@@ -11,12 +12,12 @@ class DDB:
   def _lt(self, op1):
     cmd = "aws dynamodb list-tables" + ( "" if op1 == "remote" else self.rocal )
     print(cmd)
-    return subprocess.run(cmd)
+    return subprocess.run(shlex.split(cmd))
 
   def _dest(self, op1):
     cmd = "aws dynamodb describe-table --table-name " + self.db_table + ( "" if op1 == "remote" else self.rocal )
     print(cmd)
-    return subprocess.run(cmd)
+    return subprocess.run(shlex.split(cmd))
 
   def _create(self, op1):
     # CloudFormationと--cli-input-jsonで指定可能な定義が異なるためJSONファイルを微調整.
@@ -28,7 +29,7 @@ class DDB:
 
     cmd = "aws dynamodb create-table --cli-input-json file://properties.json" + ( "" if op1 == "remote" else self.rocal )
     print(cmd)
-    result = subprocess.run(cmd)
+    result = subprocess.run(shlex.split(cmd))
     os.remove("properties.json")  # 調整後のJSONファイルは削除.
     return result
 

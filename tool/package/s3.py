@@ -1,4 +1,5 @@
 import subprocess
+import shlex
 
 class S3:
   # private.
@@ -22,4 +23,4 @@ class S3:
     }
     cmd = cmdList.get(arg1, "na")
     print(cmd)
-    subprocess.run(cmd)
+    subprocess.run(shlex.split(cmd))
