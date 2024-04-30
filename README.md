@@ -148,7 +148,7 @@ AWS DynamoDBのテーブル設計で利用しました。
   - AWSスタブ群の起動
     1. cd tool
     2. docker compose up -d
-    3. python t.py seed
+    3. python3 t.py seed
 
   - アプリ起動
     1. cd app/back/
@@ -156,7 +156,7 @@ AWS DynamoDBのテーブル設計で利用しました。
 
   - お試し用アカウントの登録
     1. cd tool
-    2. python t.py req userReg
+    2. python3 t.py req userReg
 
 ## AWS
 AWSアカウントの作成と認証情報の設定が事前に必要でした。

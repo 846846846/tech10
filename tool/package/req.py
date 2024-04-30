@@ -71,8 +71,8 @@ class Req:
     print(url)
     return requests.post(url, headers=headers, json=payload)
 
-  def _confirmSignUp(self, op1):
-    url = self.domain + '/public/users/confirmSignUp'
+  def _confirmSignup(self, op1):
+    url = self.domain + '/public/users/confirmSignup'
     headers = {'Content-Type': 'application/json'}
     payload = {
       'name': 'Owner1', 
@@ -121,7 +121,7 @@ class Req:
       print(response.status_code)
       print(response.text)
 
-      url = self.domain + '/public/users/confirmSignUp'
+      url = self.domain + '/public/users/confirmSignup'
       print(url)
       payload = {
         'name': user['name'], 
@@ -272,7 +272,7 @@ class Req:
       "upload": self._upload,
       "download": self._download,
       "signup": self._signup,
-      "confirmSignUp": self._confirmSignUp,
+      "confirmSignup": self._confirmSignup,
       "signin": self._signin,
       "userReg": self._userReg,
       "p_post": self._p_post,

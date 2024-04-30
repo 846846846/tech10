@@ -1,20 +1,18 @@
-import subprocess
 import boto3
-from moto import mock_cognitoidp
+from moto import mock_aws
 
 # moto server.
 class MOTO:
   def __init__(self):
-    self.moto_server_url = "http://localhost:5000"
+    self.moto_server_url = "http://localhost:5001"
 
   # priate.
   def _cup(self, op1):
-    @mock_cognitoidp
+    @mock_aws
     def create_user_pool():
-
       # Cognito Identity Provider サービスクライアントの作成
       client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=self.moto_server_url)
-      
+
       # ユーザープールの作成
       user_pool = client.create_user_pool(
           PoolName='MyUserPool',
@@ -70,7 +68,7 @@ class MOTO:
     create_user_pool()
 
   def _sup(self, op1):
-    @mock_cognitoidp
+    @mock_aws
     def show_user_pool():
       # Cognito Identity Provider サービスクライアントの作成
       client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=self.moto_server_url)
@@ -93,7 +91,7 @@ class MOTO:
     show_user_pool()
 
   def _dup(self, op1):
-    @mock_cognitoidp
+    @mock_aws
     def delete_user_pool():
       # Cognito Identity Provider サービスクライアントの作成
       client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=self.moto_server_url)
@@ -110,7 +108,7 @@ class MOTO:
     delete_user_pool()
 
   def _lu(self, op1):
-    @mock_cognitoidp
+    @mock_aws
     def list_users():
       # Cognito Identity Provider サービスクライアントの作成
       client = boto3.client('cognito-idp', region_name='ap-northeast-1', endpoint_url=self.moto_server_url)

@@ -20,8 +20,8 @@ export default class Users extends Base {
   AUTHFLOW: AuthFlowType = 'USER_PASSWORD_AUTH'
 
   client = process.env.IS_OFFLINE
-    ? new CognitoIdentityProviderClient({ region: this.REGION, endpoint: 'http://localhost:5000' })
-    : // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5000' })  // docker用.
+    ? new CognitoIdentityProviderClient({ region: this.REGION, endpoint: 'http://localhost:5001' })
+    : // ? new CognitoIdentityProviderClient({ region: REGION, endpoint: 'http://moto:5001' })  // docker用.
       new CognitoIdentityProviderClient({ region: this.REGION })
 
   constructor() {
